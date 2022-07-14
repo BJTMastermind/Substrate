@@ -5,10 +5,8 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Ionic.Zlib;
 
-namespace Substrate.Core
-{
-    public class RegionFile : IDisposable
-    {
+namespace Substrate.Core {
+    public class RegionFile : IDisposable {
         private static Regex _namePattern = new Regex("r\\.(-?[0-9]+)\\.(-?[0-9]+)\\.mc[ar]$");
 
         private const int VERSION_GZIP = 1;
@@ -40,8 +38,7 @@ namespace Substrate.Core
 
         private bool _disposed = false;
 
-        public RegionFile (string path)
-        {
+        public RegionFile (string path) {
             offsets = new int[SectorInts];
             chunkTimestamps = new int[SectorInts];
 
@@ -53,19 +50,16 @@ namespace Substrate.Core
             ReadFile();
         }
 
-        ~RegionFile ()
-        {
+        ~RegionFile () {
             Dispose(false);
         }
 
-        public void Dispose ()
-        {
+        public void Dispose () {
             Dispose(true);
             System.GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose (bool disposing)
-        {
+        protected virtual void Dispose (bool disposing) {
             if (!_disposed) {
                 if (disposing) {
                     // Cleanup managed resources
@@ -82,8 +76,7 @@ namespace Substrate.Core
             _disposed = true;
         }
 
-        protected void ReadFile ()
-        {
+        protected void ReadFile () {
             if (_disposed) {
                 throw new ObjectDisposedException("RegionFile", "Attempting to use a RegionFile after it has been disposed.");
             }
@@ -94,8 +87,7 @@ namespace Substrate.Core
                 if (File.Exists(fileName)) {
                     newModified = Timestamp(File.GetLastWriteTime(fileName));
                 }
-            }
-            catch (UnauthorizedAccessException e) {
+            } catch (UnauthorizedAccessException e) {
                 Console.WriteLine(e.Message);
                 return;
             }
@@ -177,50 +169,42 @@ namespace Substrate.Core
                         chunkTimestamps[i] = lastModValue;
                     }
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 System.Console.WriteLine(e.Message);
                 System.Console.WriteLine(e.StackTrace);
             }
         }
 
         /* the modification date of the region file when it was first opened */
-        public long LastModified ()
-        {
+        public long LastModified () {
             return lastModified;
         }
 
         /* gets how much the region file has grown since it was last checked */
-        public int GetSizeDelta ()
-        {
+        public int GetSizeDelta () {
             int ret = sizeDelta;
             sizeDelta = 0;
             return ret;
         }
 
         // various small debug printing helpers
-        private void Debug (String str)
-        {
+        private void Debug (String str) {
             //        System.Consle.Write(str);
         }
 
-        private void Debugln (String str)
-        {
+        private void Debugln (String str) {
             Debug(str + "\n");
         }
 
-        private void Debug (String mode, int x, int z, String str)
-        {
+        private void Debug (String mode, int x, int z, String str) {
             Debug("REGION " + mode + " " + fileName + "[" + x + "," + z + "] = " + str);
         }
 
-        private void Debug (String mode, int x, int z, int count, String str)
-        {
+        private void Debug (String mode, int x, int z, int count, String str) {
             Debug("REGION " + mode + " " + fileName + "[" + x + "," + z + "] " + count + "B = " + str);
         }
 
-        private void Debugln (String mode, int x, int z, String str)
-        {
+        private void Debugln (String mode, int x, int z, String str) {
             Debug(mode, x, z, str + "\n");
         }
 
@@ -228,8 +212,7 @@ namespace Substrate.Core
          * gets an (uncompressed) stream representing the chunk data returns null if
          * the chunk is not found or an error occurs
          */
-        public Stream GetChunkDataInputStream (int x, int z)
-        {
+        public Stream GetChunkDataInputStream (int x, int z) {
             if (_disposed) {
                 throw new ObjectDisposedException("RegionFile", "Attempting to use a RegionFile after it has been disposed.");
             }
@@ -249,8 +232,7 @@ namespace Substrate.Core
                 int sectorNumber = offset >> 8;
                 int numSectors = offset & 0xFF;
 
-                lock (this.fileLock)
-                {
+                lock (this.fileLock) {
                     if (sectorNumber + numSectors > sectorFree.Count) {
                         Debugln("READ", x, z, "invalid sector");
                         return null;
@@ -277,8 +259,7 @@ namespace Substrate.Core
                         Stream ret = new GZipStream(new MemoryStream(data), CompressionMode.Decompress);
 
                         return ret;
-                    }
-                    else if (version == VERSION_DEFLATE) {
+                    } else if (version == VERSION_DEFLATE) {
                         byte[] data = new byte[length - 1];
                         file.Read(data, 0, data.Length);
 
@@ -298,22 +279,19 @@ namespace Substrate.Core
                     Debugln("READ", x, z, "unknown version " + version);
                     return null;
                 }
-            }
-            catch (IOException) {
+            } catch (IOException) {
                 Debugln("READ", x, z, "exception");
                 return null;
             }
         }
 
-        public Stream GetChunkDataOutputStream (int x, int z)
-        {
+        public Stream GetChunkDataOutputStream (int x, int z) {
             if (OutOfBounds(x, z)) return null;
 
             return new ZlibStream(new ChunkBuffer(this, x, z), CompressionMode.Compress);
         }
 
-        public Stream GetChunkDataOutputStream (int x, int z, int timestamp)
-        {
+        public Stream GetChunkDataOutputStream (int x, int z, int timestamp) {
             if (OutOfBounds(x, z)) return null;
 
             return new ZlibStream(new ChunkBuffer(this, x, z, timestamp), CompressionMode.Compress);
@@ -323,46 +301,39 @@ namespace Substrate.Core
          * lets chunk writing be multithreaded by not locking the whole file as a
          * chunk is serializing -- only writes when serialization is over
          */
-        class ChunkBuffer : MemoryStream
-        {
+        class ChunkBuffer : MemoryStream {
             private int x, z;
             private RegionFile region;
 
             private int? _timestamp;
 
             public ChunkBuffer (RegionFile r, int x, int z)
-                : base(8096)
-            {
+                : base(8096) {
                 this.region = r;
                 this.x = x;
                 this.z = z;
             }
 
             public ChunkBuffer (RegionFile r, int x, int z, int timestamp)
-                : this(r, x, z)
-            {
+                : this(r, x, z) {
                 _timestamp = timestamp;
             }
 
-            public override void Close ()
-            {
+            public override void Close () {
                 if (_timestamp == null) {
                     region.Write(x, z, this.GetBuffer(), (int)this.Length);
-                }
-                else {
+                } else {
                     region.Write(x, z, this.GetBuffer(), (int)this.Length, (int)_timestamp);
                 }
             }
         }
 
-        protected void Write (int x, int z, byte[] data, int length)
-        {
+        protected void Write (int x, int z, byte[] data, int length) {
             Write(x, z, data, length, Timestamp());
         }
 
         /* write a chunk at (x,z) with length bytes of data to disk */
-        protected void Write (int x, int z, byte[] data, int length, int timestamp)
-        {
+        protected void Write (int x, int z, byte[] data, int length, int timestamp) {
             if (_disposed) {
                 throw new ObjectDisposedException("RegionFile", "Attempting to use a RegionFile after it has been disposed.");
             }
@@ -382,8 +353,7 @@ namespace Substrate.Core
                     /* we can simply overwrite the old sectors */
                     Debug("SAVE", x, z, length, "rewrite");
                     Write(sectorNumber, data, length);
-                }
-                else {
+                } else {
                     /* we need to allocate new sectors */
 
                     lock (this.fileLock) {
@@ -398,10 +368,12 @@ namespace Substrate.Core
                         if (runStart != -1) {
                             for (int i = runStart; i < sectorFree.Count; ++i) {
                                 if (runLength != 0) {
-                                    if (sectorFree[i]) runLength++;
-                                    else runLength = 0;
-                                }
-                                else if (sectorFree[i]) {
+                                    if (sectorFree[i]) {
+                                        runLength++;
+                                    } else {
+                                        runLength = 0;
+                                    }
+                                } else if (sectorFree[i]) {
                                     runStart = i;
                                     runLength = 1;
                                 }
@@ -420,8 +392,7 @@ namespace Substrate.Core
                                 sectorFree[sectorNumber + i] = false;
                             }
                             Write(sectorNumber, data, length);
-                        }
-                        else {
+                        } else {
                             /*
                              * no free space large enough found -- we need to grow the
                              * file
@@ -441,15 +412,13 @@ namespace Substrate.Core
                     }
                 }
                 SetTimestamp(x, z, timestamp);
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 Console.WriteLine(e.StackTrace);
             }
         }
 
         /* write a chunk data to the region file at specified sector number */
-        private void Write (int sectorNumber, byte[] data, int length)
-        {
+        private void Write (int sectorNumber, byte[] data, int length) {
             lock (this.fileLock) {
                 Debugln(" " + sectorNumber);
                 file.Seek(sectorNumber * SectorBytes, SeekOrigin.Begin);
@@ -465,8 +434,7 @@ namespace Substrate.Core
             }
         }
 
-        public void DeleteChunk (int x, int z)
-        {
+        public void DeleteChunk (int x, int z) {
             lock (this.fileLock) {
                 int offset = GetOffset(x, z);
                 int sectorNumber = offset >> 8;
@@ -483,23 +451,19 @@ namespace Substrate.Core
         }
 
         /* is this an invalid chunk coordinate? */
-        private bool OutOfBounds (int x, int z)
-        {
+        private bool OutOfBounds (int x, int z) {
             return x < 0 || x >= 32 || z < 0 || z >= 32;
         }
 
-        private int GetOffset (int x, int z)
-        {
+        private int GetOffset (int x, int z) {
             return offsets[x + z * 32];
         }
 
-        public bool HasChunk (int x, int z)
-        {
+        public bool HasChunk (int x, int z) {
             return GetOffset(x, z) != 0;
         }
 
-        private void SetOffset (int x, int z, int offset)
-        {
+        private void SetOffset (int x, int z, int offset) {
             lock (this.fileLock) {
                 offsets[x + z * 32] = offset;
                 file.Seek((x + z * 32) * 4, SeekOrigin.Begin);
@@ -514,25 +478,21 @@ namespace Substrate.Core
             }
         }
 
-        private int Timestamp ()
-        {
+        private int Timestamp () {
             DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             return (int)((DateTime.UtcNow - epoch).Ticks / (10000L * 1000L));
         }
 
-        private int Timestamp (DateTime time)
-        {
+        private int Timestamp (DateTime time) {
             DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             return (int)((time - epoch).Ticks / (10000L * 1000L));
         }
 
-        public int GetTimestamp (int x, int z)
-        {
+        public int GetTimestamp (int x, int z) {
             return chunkTimestamps[x + z * 32];
         }
 
-        public void SetTimestamp (int x, int z, int value)
-        {
+        public void SetTimestamp (int x, int z, int value) {
             lock (this.fileLock) {
                 chunkTimestamps[x + z * 32] = value;
                 file.Seek(SectorBytes + (x + z * 32) * 4, SeekOrigin.Begin);
@@ -547,15 +507,13 @@ namespace Substrate.Core
             }
         }
 
-        public void Close ()
-        {
+        public void Close () {
             lock (this.fileLock) {
                 file.Close();
             }
         }
 
-        public virtual RegionKey parseCoordinatesFromName ()
-        {
+        public virtual RegionKey parseCoordinatesFromName () {
             int x = 0;
             int z = 0;
 
@@ -570,18 +528,15 @@ namespace Substrate.Core
             return new RegionKey(x, z);
         }
 
-        protected virtual int SectorBytes
-        {
+        protected virtual int SectorBytes {
             get { return SECTOR_BYTES; }
         }
 
-        protected virtual int SectorInts
-        {
+        protected virtual int SectorInts {
             get { return SECTOR_BYTES / 4; }
         }
 
-        protected virtual byte[] EmptySector
-        {
+        protected virtual byte[] EmptySector {
             get { return emptySector; }
         }
     }

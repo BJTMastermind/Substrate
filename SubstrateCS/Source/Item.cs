@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using Substrate.Core;
 using Substrate.Nbt;
 
-namespace Substrate
-{
+namespace Substrate {
     /// <summary>
     /// Represents an item (or item stack) within an item slot.
     /// </summary>
-    public class Item : INbtObject<Item>, ICopyable<Item>
-    {
-        private static readonly SchemaNodeCompound _schema = new SchemaNodeCompound("")
-        {
+    public class Item : INbtObject<Item>, ICopyable<Item> {
+        private static readonly SchemaNodeCompound _schema = new SchemaNodeCompound("") {
             new SchemaNodeScaler("id", TagType.TAG_SHORT),
             new SchemaNodeScaler("Damage", TagType.TAG_SHORT),
             new SchemaNodeScaler("Count", TagType.TAG_BYTE),
@@ -34,8 +31,7 @@ namespace Substrate
         /// <summary>
         /// Constructs an empty <see cref="Item"/> instance.
         /// </summary>
-        public Item ()
-        {
+        public Item () {
             _enchantments = new List<Enchantment>();
             _source = new TagNodeCompound();
         }
@@ -45,8 +41,7 @@ namespace Substrate
         /// </summary>
         /// <param name="id">An item id.</param>
         public Item (int id)
-            : this()
-        {
+            : this() {
             _id = (short)id;
         }
 
@@ -55,16 +50,14 @@ namespace Substrate
         /// <summary>
         /// Gets an <see cref="ItemInfo"/> entry for this item's type.
         /// </summary>
-        public ItemInfo Info
-        {
+        public ItemInfo Info {
             get { return ItemInfo.ItemTable[_id]; }
         }
 
         /// <summary>
         /// Gets or sets the current type (id) of the item.
         /// </summary>
-        public int ID
-        {
+        public int ID {
             get { return _id; }
             set { _id = (short)value; }
         }
@@ -73,8 +66,7 @@ namespace Substrate
         /// Gets or sets the damage value of the item.
         /// </summary>
         /// <remarks>The damage value may represent a generic data value for some items.</remarks>
-        public int Damage
-        {
+        public int Damage {
             get { return _damage; }
             set { _damage = (short)value; }
         }
@@ -82,8 +74,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the number of this item stacked together in an item slot.
         /// </summary>
-        public int Count
-        {
+        public int Count {
             get { return _count; }
             set { _count = (byte)value; }
         }
@@ -91,24 +82,21 @@ namespace Substrate
         /// <summary>
         /// Gets the list of <see cref="Enchantment"/>s applied to this item.
         /// </summary>
-        public IList<Enchantment> Enchantments
-        {
+        public IList<Enchantment> Enchantments {
             get { return _enchantments; }
         }
 
         /// <summary>
         /// Gets the source <see cref="TagNodeCompound"/> used to create this <see cref="Item"/> if it exists.
         /// </summary>
-        public TagNodeCompound Source
-        {
+        public TagNodeCompound Source {
             get { return _source; }
         }
 
         /// <summary>
         /// Gets a <see cref="SchemaNode"/> representing the schema of an item.
         /// </summary>
-        public static SchemaNodeCompound Schema
-        {
+        public static SchemaNodeCompound Schema {
             get { return _schema; }
         }
 
@@ -117,8 +105,7 @@ namespace Substrate
         #region ICopyable<Item> Members
 
         /// <inheritdoc/>
-        public Item Copy ()
-        {
+        public Item Copy () {
             Item item = new Item();
             item._id = _id;
             item._count = _count;
@@ -140,8 +127,7 @@ namespace Substrate
         #region INBTObject<Item> Members
 
         /// <inheritdoc/>
-        public Item LoadTree (TagNode tree)
-        {
+        public Item LoadTree (TagNode tree) {
             TagNodeCompound ctree = tree as TagNodeCompound;
             if (ctree == null) {
                 return null;
@@ -170,8 +156,7 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public Item LoadTreeSafe (TagNode tree)
-        {
+        public Item LoadTreeSafe (TagNode tree) {
             if (!ValidateTree(tree)) {
                 return null;
             }
@@ -180,8 +165,7 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public TagNode BuildTree ()
-        {
+        public TagNode BuildTree () {
             TagNodeCompound tree = new TagNodeCompound();
             tree["id"] = new TagNodeShort(_id);
             tree["Count"] = new TagNodeByte(_count);
@@ -211,8 +195,7 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public bool ValidateTree (TagNode tree)
-        {
+        public bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, _schema).Verify();
         }
 

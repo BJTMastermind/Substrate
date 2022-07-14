@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.Entities
-{
+namespace Substrate.Entities {
     using Substrate.Nbt;
 
-    public enum VillagerProfession
-    {
+    public enum VillagerProfession {
         Farmer = 0,
         Librarian = 1,
         Priest = 2,
@@ -15,40 +13,33 @@ namespace Substrate.Entities
         Butcher = 4,
     }
 
-    public class EntityVillager : EntityMob
-    {
-        public static readonly SchemaNodeCompound VillagerSchema = MobSchema.MergeInto(new SchemaNodeCompound("")
-        {
+    public class EntityVillager : EntityMob {
+        public static readonly SchemaNodeCompound VillagerSchema = MobSchema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeString("id", TypeId),
             new SchemaNodeScaler("Profession", TagType.TAG_INT),
         });
 
-        public static new string TypeId
-        {
+        public static new string TypeId {
             get { return "Villager"; }
         }
 
         private int _profession;
 
-        public VillagerProfession Profession
-        {
+        public VillagerProfession Profession {
             get { return (VillagerProfession)_profession; }
             set { _profession = (int)value; }
         }
 
         protected EntityVillager (string id)
-            : base(id)
-        {
+            : base(id) {
         }
 
         public EntityVillager ()
-            : this(TypeId)
-        {
+            : this(TypeId) {
         }
 
         public EntityVillager (TypedEntity e)
-            : base(e)
-        {
+            : base(e) {
             EntityVillager e2 = e as EntityVillager;
             if (e2 != null) {
                 _profession = e2._profession;
@@ -58,8 +49,7 @@ namespace Substrate.Entities
 
         #region INBTObject<Entity> Members
 
-        public override TypedEntity LoadTree (TagNode tree)
-        {
+        public override TypedEntity LoadTree (TagNode tree) {
             TagNodeCompound ctree = tree as TagNodeCompound;
             if (ctree == null || base.LoadTree(tree) == null) {
                 return null;
@@ -70,16 +60,14 @@ namespace Substrate.Entities
             return this;
         }
 
-        public override TagNode BuildTree ()
-        {
+        public override TagNode BuildTree () {
             TagNodeCompound tree = base.BuildTree() as TagNodeCompound;
             tree["Profession"] = new TagNodeInt(_profession);
 
             return tree;
         }
 
-        public override bool ValidateTree (TagNode tree)
-        {
+        public override bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, VillagerSchema).Verify();
         }
 
@@ -88,8 +76,7 @@ namespace Substrate.Entities
 
         #region ICopyable<Entity> Members
 
-        public override TypedEntity Copy ()
-        {
+        public override TypedEntity Copy () {
             return new EntityVillager(this);
         }
 

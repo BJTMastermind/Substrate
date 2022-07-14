@@ -5,22 +5,19 @@ using System.IO;
 using Substrate.Nbt;
 using System.Text.RegularExpressions;
 
-namespace Substrate.Data
-{
+namespace Substrate.Data {
     /// <summary>
     /// Functions to manage all <see cref="Map"/> data resources.
     /// </summary>
     /// <remarks>This manager is intended for map files stored in standard compressed NBT format.</remarks>
-    public class MapManager : IMapManager, IEnumerable<Map>
-    {
+    public class MapManager : IMapManager, IEnumerable<Map> {
         private NbtWorld _world;
 
         /// <summary>
         /// Create a new <see cref="MapManager"/> for a given world.
         /// </summary>
         /// <param name="world">World containing data files.</param>
-        public MapManager (NbtWorld world)
-        {
+        public MapManager (NbtWorld world) {
             _world = world;
         }
 
@@ -29,8 +26,7 @@ namespace Substrate.Data
         /// </summary>
         /// <param name="id">The id of the map to fetch.</param>
         /// <returns>A <see cref="MapFile"/> for the given map.</returns>
-        protected MapFile GetMapFile (int id)
-        {
+        protected MapFile GetMapFile (int id) {
             return new MapFile(Path.Combine(_world.Path, _world.DataDirectory), id);
         }
 
@@ -40,13 +36,10 @@ namespace Substrate.Data
         /// <param name="id">The id of the map to fetch.</param>
         /// <returns>An <see cref="NbtTree"/> containing the given map's raw data.</returns>
         /// <exception cref="NbtIOException">Thrown when the manager cannot read in an NBT data stream.</exception>
-        public NbtTree GetMapTree (int id)
-        {
+        public NbtTree GetMapTree (int id) {
             MapFile mf = GetMapFile(id);
-            using (Stream nbtstr = mf.GetDataInputStream())
-            {
-                if (nbtstr == null)
-                {
+            using (Stream nbtstr = mf.GetDataInputStream()) {
+                if (nbtstr == null) {
                     throw new NbtIOException("Failed to initialize NBT data stream for input.");
                 }
 
@@ -60,13 +53,10 @@ namespace Substrate.Data
         /// <param name="id">The id of the map to write data to.</param>
         /// <param name="tree">The map's data as an <see cref="NbtTree"/>.</param>
         /// <exception cref="NbtIOException">Thrown when the manager cannot initialize an NBT data stream for output.</exception>
-        public void SetMapTree (int id, NbtTree tree)
-        {
+        public void SetMapTree (int id, NbtTree tree) {
             MapFile mf = GetMapFile(id);
-            using (Stream zipstr = mf.GetDataOutputStream())
-            {
-                if (zipstr == null)
-                {
+            using (Stream zipstr = mf.GetDataOutputStream()) {
+                if (zipstr == null) {
                     throw new NbtIOException("Failed to initialize NBT data stream for output.");
                 }
 
@@ -78,8 +68,7 @@ namespace Substrate.Data
 
         /// <inherit />
         /// <exception cref="DataIOException">Thrown when the manager cannot read in a map that should exist.</exception>
-        public Map GetMap (int id)
-        {
+        public Map GetMap (int id) {
             if (!MapExists(id)) {
                 return null;
             }
@@ -88,8 +77,7 @@ namespace Substrate.Data
                 Map m = new Map().LoadTreeSafe(GetMapTree(id).Root);
                 m.Id = id;
                 return m;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 DataIOException pex = new DataIOException("Could not load map", ex);
                 pex.Data["MapId"] = id;
                 throw pex;
@@ -98,12 +86,10 @@ namespace Substrate.Data
 
         /// <inherit />
         /// <exception cref="DataIOException">Thrown when the manager cannot write out the map</exception>
-        public void SetMap (int id, Map map)
-        {
+        public void SetMap (int id, Map map) {
             try {
                 SetMapTree(id, new NbtTree(map.BuildTree() as TagNodeCompound));
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 DataIOException pex = new DataIOException("Could not save map", ex);
                 pex.Data["MapId"] = id;
                 throw pex;
@@ -115,25 +101,21 @@ namespace Substrate.Data
         /// </summary>
         /// <param name="map">The <see cref="Map"/> object containing the data to write back.</param>
         /// <exception cref="DataIOException">Thrown when the manager cannot write out the map</exception>
-        public void SetMap (Map map)
-        {
+        public void SetMap (Map map) {
             SetMap(map.Id, map);
         }
 
         /// <inherit />
-        public bool MapExists (int id)
-        {
+        public bool MapExists (int id) {
             return new MapFile(Path.Combine(_world.Path, _world.DataDirectory), id).Exists();
         }
 
         /// <inherit />
         /// <exception cref="DataIOException">Thrown when the manager cannot delete the map.</exception>
-        public void DeleteMap (int id)
-        {
+        public void DeleteMap (int id) {
             try {
                 new MapFile(Path.Combine(_world.Path, _world.DataDirectory), id).Delete();
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 DataIOException pex = new DataIOException("Could not remove map", ex);
                 pex.Data["MapId"] = id;
                 throw pex;
@@ -148,8 +130,7 @@ namespace Substrate.Data
         /// Gets an enumerator that iterates through all the maps in the world's data directory.
         /// </summary>
         /// <returns>An enumerator for this manager.</returns>
-        public IEnumerator<Map> GetEnumerator ()
-        {
+        public IEnumerator<Map> GetEnumerator () {
             string path = Path.Combine(_world.Path, _world.DataDirectory);
 
             if (!Directory.Exists(path)) {
@@ -173,15 +154,13 @@ namespace Substrate.Data
 
         #region IEnumerable Members
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
-        {
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator () {
             return GetEnumerator();
         }
 
         #endregion
 
-        private bool ParseFileName (string filename)
-        {
+        private bool ParseFileName (string filename) {
             Match match = _namePattern.Match(filename);
             if (!match.Success) {
                 return false;

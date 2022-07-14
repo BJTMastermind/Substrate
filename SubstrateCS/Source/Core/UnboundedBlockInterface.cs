@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.Core
-{
+namespace Substrate.Core {
     /// <summary>
     /// A basic unconstrained container of blocks.
     /// </summary>
     /// <remarks>The scope of coordinates is undefined for unconstrained block containers.</remarks>
-    public interface IBlockCollection
-    {
+    public interface IBlockCollection {
         /// <summary>
         /// Gets a basic block from an unbounded block container.
         /// </summary>
@@ -69,8 +67,7 @@ namespace Substrate.Core
     /// An unbounded container of blocks supporting data fields.
     /// </summary>
     /// <seealso cref="IBoundedDataBlockCollection"/>
-    public interface IDataBlockCollection : IBlockCollection
-    {
+    public interface IDataBlockCollection : IBlockCollection {
         /// <summary>
         /// Gets a block with data field from an unbounded block container.
         /// </summary>
@@ -121,8 +118,7 @@ namespace Substrate.Core
     /// An unbounded container of blocks supporting dual-source lighting.
     /// </summary>
     /// <seealso cref="IBoundedLitBlockCollection"/>
-    public interface ILitBlockCollection : IBlockCollection
-    {
+    public interface ILitBlockCollection : IBlockCollection {
         /// <summary>
         /// Gets a block with lighting information from an unbounded block container.
         /// </summary>
@@ -239,8 +235,7 @@ namespace Substrate.Core
     /// An unbounded container for blocks supporting extra properties.
     /// </summary>
     /// <seealso cref="IBoundedPropertyBlockCollection"/>
-    public interface IPropertyBlockCollection : IBlockCollection
-    {
+    public interface IPropertyBlockCollection : IBlockCollection {
         /// <summary>
         /// Gets a block supporting extra properties from an unbounded block container.
         /// </summary>
@@ -311,8 +306,7 @@ namespace Substrate.Core
     /// An unbounded container for blocks supporting active processing properties.
     /// </summary>
     /// <seealso cref="IBoundedActiveBlockCollection"/>
-    public interface IActiveBlockCollection : IBlockCollection
-    {
+    public interface IActiveBlockCollection : IBlockCollection {
         /// <summary>
         /// Gets a block supporting active processing properties from an unbounded block container.
         /// </summary>
@@ -397,8 +391,7 @@ namespace Substrate.Core
     /// An unbounded container of blocks supporting data, lighting, and properties.
     /// </summary>
     /// <seealso cref="IBoundedAlphaBlockCollection"/>
-    public interface IAlphaBlockCollection : IDataBlockCollection, ILitBlockCollection, IPropertyBlockCollection
-    {
+    public interface IAlphaBlockCollection : IDataBlockCollection, ILitBlockCollection, IPropertyBlockCollection {
         /// <summary>
         /// Gets a context-insensitive Alpha-compatible block from an unbounded block container.
         /// </summary>

@@ -3,16 +3,14 @@ using System.IO;
 using System.Collections.Generic;
 using Substrate.Core;
 
-namespace Substrate
-{
+namespace Substrate {
     /// <summary>
     /// Provides a wrapper around a physical Chunk stored in a chunk container.
     /// </summary>
     /// <remarks>
     /// Modifying data in a ChunkRef will signal to the chunk container that the physical chunk needs to be saved.
     /// </remarks>
-    public class ChunkRef : IChunk
-    {
+    public class ChunkRef : IChunk {
         private IChunkContainer _container;
         private IChunk _chunk;
 
@@ -28,44 +26,37 @@ namespace Substrate
         /// <summary>
         /// Gets the global X-coordinate of the chunk.
         /// </summary>
-        public int X
-        {
+        public int X {
             get { return _container.ChunkGlobalX(_cx); }
         }
 
         /// <summary>
         /// Gets the global Z-coordinate of the chunk.
         /// </summary>
-        public int Z
-        {
+        public int Z {
             get { return _container.ChunkGlobalZ(_cz); }
         }
 
         /// <summary>
         /// Gets the local X-coordinate of the chunk within container.
         /// </summary>
-        public int LocalX
-        {
+        public int LocalX {
             get { return _container.ChunkLocalX(_cx); }
         }
 
         /// <summary>
         /// Gets the local Z-coordinate of the chunk within container.
         /// </summary>
-        public int LocalZ
-        {
+        public int LocalZ {
             get { return _container.ChunkLocalZ(_cz); }
         }
 
         /// <summary>
         /// Gets the collection of all blocks and their data stored in the chunk.
         /// </summary>
-        public AlphaBlockCollection Blocks
-        {
-            get
-            {
-                if (_blocks == null)
-                {
+        public AlphaBlockCollection Blocks {
+            get {
+                if (_blocks == null) {
                     GetChunk();
                 }
                 return _blocks;
@@ -75,12 +66,9 @@ namespace Substrate
         /// <summary>
         /// Gets the collection of all blocks and their data stored in the chunk.
         /// </summary>
-        public AnvilBiomeCollection Biomes
-        {
-            get
-            {
-                if (_biomes == null)
-                {
+        public AnvilBiomeCollection Biomes {
+            get {
+                if (_biomes == null) {
                     GetChunk();
                 }
                 return _biomes;
@@ -90,10 +78,8 @@ namespace Substrate
         /// <summary>
         /// Gets the collection of all entities stored in the chunk.
         /// </summary>
-        public EntityCollection Entities
-        {
-            get
-            {
+        public EntityCollection Entities {
+            get {
                 if (_entities == null) {
                     GetChunk();
                 }
@@ -104,17 +90,14 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the value indicating that the chunk has been modified, but not saved.
         /// </summary>
-        public bool IsDirty
-        {
-            get
-            {
+        public bool IsDirty {
+            get {
                 return _dirty
                     || (_blocks != null && _blocks.IsDirty)
                     || (_entities != null && _entities.IsDirty);
             }
 
-            set
-            {
+            set {
                 _dirty = value;
                 if (_blocks != null)
                     _blocks.IsDirty = false;
@@ -126,8 +109,7 @@ namespace Substrate
         /// <summary>
         /// Forbid direct instantiation of ChunkRef objects
         /// </summary>
-        private ChunkRef ()
-        {
+        private ChunkRef () {
         }
 
         /// <summary>
@@ -137,8 +119,7 @@ namespace Substrate
         /// <param name="cx">Local X-coordinate of chunk within container.</param>
         /// <param name="cz">Local Z-coordinate of chunk within container.</param>
         /// <returns>ChunkRef representing a reference to a physical chunk at the specified location within the container.</returns>
-        public static ChunkRef Create (IChunkContainer container, int cx, int cz)
-        {
+        public static ChunkRef Create (IChunkContainer container, int cx, int cz) {
             if (!container.ChunkExists(cx, cz)) {
                 return null;
             }
@@ -155,11 +136,9 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the chunk's TerrainPopulated status.
         /// </summary>
-        public bool IsTerrainPopulated
-        {
+        public bool IsTerrainPopulated {
             get { return GetChunk().IsTerrainPopulated; }
-            set
-            {
+            set {
                 if (GetChunk().IsTerrainPopulated != value) {
                     GetChunk().IsTerrainPopulated = value;
                     _dirty = true;
@@ -172,8 +151,7 @@ namespace Substrate
         /// </summary>
         /// <param name="outStream">An open output stream.</param>
         /// <returns>A value indicating whether the chunk is no longer considered dirty.</returns>
-        public bool Save (Stream outStream)
-        {
+        public bool Save (Stream outStream) {
             if (IsDirty) {
                 if (GetChunk().Save(outStream)) {
                     IsDirty = false;
@@ -184,8 +162,7 @@ namespace Substrate
             return true;
         }
 
-        public void SetLocation (int x, int z)
-        {
+        public void SetLocation (int x, int z) {
             int relX = LocalX + (x - X);
             int relZ = LocalZ + (z - Z);
 
@@ -200,8 +177,7 @@ namespace Substrate
         /// Gets a ChunkRef to the chunk positioned immediately north (X - 1).
         /// </summary>
         /// <returns>ChunkRef to the northern neighboring chunk.</returns>
-        public ChunkRef GetNorthNeighbor ()
-        {
+        public ChunkRef GetNorthNeighbor () {
             return _container.GetChunkRef(_cx - 1, _cz);
         }
 
@@ -209,8 +185,7 @@ namespace Substrate
         /// Gets a ChunkRef to the chunk positioned immediately south (X + 1).
         /// </summary>
         /// <returns>ChunkRef to the southern neighboring chunk.</returns>
-        public ChunkRef GetSouthNeighbor ()
-        {
+        public ChunkRef GetSouthNeighbor () {
             return _container.GetChunkRef(_cx + 1, _cz);
         }
 
@@ -218,8 +193,7 @@ namespace Substrate
         /// Gets a ChunkRef to the chunk positioned immediatly east (Z - 1).
         /// </summary>
         /// <returns>ChunkRef to the eastern neighboring chunk.</returns>
-        public ChunkRef GetEastNeighbor ()
-        {
+        public ChunkRef GetEastNeighbor () {
             return _container.GetChunkRef(_cx, _cz - 1);
         }
 
@@ -227,8 +201,7 @@ namespace Substrate
         /// Gets a ChunkRef to the chunk positioned immedately west (Z + 1).
         /// </summary>
         /// <returns>ChunkRef to the western neighboring chunk.</returns>
-        public ChunkRef GetWestNeighbor ()
-        {
+        public ChunkRef GetWestNeighbor () {
             return _container.GetChunkRef(_cx, _cz + 1);
         }
 
@@ -236,8 +209,7 @@ namespace Substrate
         /// Returns a deep copy of the physical chunk underlying the ChunkRef.
         /// </summary>
         /// <returns>A copy of the physical Chunk object.</returns>
-        /*public Chunk GetChunkCopy ()
-        {
+        /*public Chunk GetChunkCopy () {
             return GetChunk().Copy();
         }*/
 
@@ -252,8 +224,7 @@ namespace Substrate
         /// to modify them without intending to permanently store the changes.
         /// </remarks>
         /// <returns>The physical Chunk object underlying the ChunkRef</returns>
-        public IChunk GetChunkRef ()
-        {
+        public IChunk GetChunkRef () {
             IChunk chunk = GetChunk();
             _chunk = null;
             _dirty = false;
@@ -269,8 +240,7 @@ namespace Substrate
         /// move a physical chunk between locations within a container (by taking the reference from another ChunkRef).
         /// </remarks>
         /// <param name="chunk">Physical Chunk to store into the location represented by this ChunkRef.</param>
-        public void SetChunkRef (IChunk chunk)
-        {
+        public void SetChunkRef (IChunk chunk) {
             _chunk = chunk;
             _chunk.SetLocation(X, Z);
             _dirty = true;
@@ -280,13 +250,11 @@ namespace Substrate
         /// Gets an internal Chunk reference from cache or queries the container for it.
         /// </summary>
         /// <returns>The ChunkRef's underlying Chunk.</returns>
-        private IChunk GetChunk ()
-        {
+        private IChunk GetChunk () {
             if (_chunk == null) {
                 _chunk = _container.GetChunk(_cx, _cz);
 
-                if (_chunk != null)
-                {
+                if (_chunk != null) {
                     _blocks = _chunk.Blocks;
                     _biomes = _chunk.Biomes;
                     _entities = _chunk.Entities;
@@ -306,8 +274,7 @@ namespace Substrate
         /// <param name="rely">Relative offset from the Y-coordinate.</param>
         /// <param name="relz">Relative offset from the Z-coordinate.</param>
         /// <returns>Another ChunkRef's underlying block collection, or null if the ChunkRef cannot be found.</returns>
-        private AlphaBlockCollection ResolveNeighborHandler (int relx, int rely, int relz)
-        {
+        private AlphaBlockCollection ResolveNeighborHandler (int relx, int rely, int relz) {
             ChunkRef cr = _container.GetChunkRef(_cx + relx, _cz + relz);
             if (cr != null) {
                 return cr.Blocks;
@@ -323,8 +290,7 @@ namespace Substrate
         /// <param name="ly">Chunk-local Y-coordinate.</param>
         /// <param name="lz">Chunk-local Z-coordinate.</param>
         /// <returns>BlockKey containing the global block coordinates.</returns>
-        private BlockKey TranslateCoordinatesHandler (int lx, int ly, int lz)
-        {
+        private BlockKey TranslateCoordinatesHandler (int lx, int ly, int lz) {
             int x = X * _blocks.XDim + lx;
             int z = Z * _blocks.ZDim + lz;
 

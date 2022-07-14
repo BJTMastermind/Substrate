@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Substrate.Nbt
-{
+namespace Substrate.Nbt {
     /// <summary>
     /// An NBT node representing a list tag type containing other nodes.
     /// </summary>
@@ -10,8 +9,7 @@ namespace Substrate.Nbt
     /// A list node contains 0 or more nodes of the same type.  The nodes are unnamed
     /// but can be accessed by sequential index.
     /// </remarks>
-    public sealed class TagNodeList : TagNode, IList<TagNode>
-    {
+    public sealed class TagNodeList : TagNode, IList<TagNode> {
         private TagType _type = TagType.TAG_END;
 
         private List<TagNode> _items = null;
@@ -20,8 +18,7 @@ namespace Substrate.Nbt
         /// Converts the node to itself.
         /// </summary>
         /// <returns>A reference to itself.</returns>
-        public override TagNodeList ToTagList () 
-        {
+        public override TagNodeList ToTagList () {
             return this;
         }
 
@@ -37,16 +34,14 @@ namespace Substrate.Nbt
         /// <summary>
         /// Gets the number of subnodes contained in the list.
         /// </summary>
-        public int Count
-        {
+        public int Count {
             get { return _items.Count; }
         }
 
         /// <summary>
         /// Gets the tag type of the subnodes contained in the list.
         /// </summary>
-        public TagType ValueType
-        {
+        public TagType ValueType {
             get { return _type; }
         }
 
@@ -54,8 +49,7 @@ namespace Substrate.Nbt
         /// Constructs a new empty list node.
         /// </summary>
         /// <param name="type">The tag type of the list's subnodes.</param>
-        public TagNodeList (TagType type)
-        {
+        public TagNodeList (TagType type) {
             _type = type;
             _items = new List<TagNode>();
         }
@@ -65,8 +59,7 @@ namespace Substrate.Nbt
         /// </summary>
         /// <param name="type">The tag type of the list's subnodes.</param>
         /// <param name="items">A list containing node objects matching the type parameter.</param>
-        public TagNodeList (TagType type, List<TagNode> items)
-        {
+        public TagNodeList (TagType type, List<TagNode> items) {
             _type = type;
             _items = items;
         }
@@ -75,8 +68,7 @@ namespace Substrate.Nbt
         /// Makes a deep copy of the node.
         /// </summary>
         /// <returns>A new list node containing new subnodes representing the same data.</returns>
-        public override TagNode Copy ()
-        {
+        public override TagNode Copy () {
             TagNodeList list = new TagNodeList(_type);
             foreach (TagNode item in _items) {
                 list.Add(item.Copy());
@@ -89,8 +81,7 @@ namespace Substrate.Nbt
         /// </summary>
         /// <param name="match">The <see cref="Predicate{TagNode}"/> delegate that defines the conditions of the subnode to search for.</param>
         /// <returns>The first subnode matching the predicate.</returns>
-        public TagNode Find (Predicate<TagNode> match)
-        {
+        public TagNode Find (Predicate<TagNode> match) {
             return _items.Find(match);
         }
 
@@ -99,8 +90,7 @@ namespace Substrate.Nbt
         /// </summary>
         /// <param name="match">The <see cref="Predicate{TagNode}"/> delegate that defines the conditions of the subnode to search for.</param>
         /// <returns>A list of all subnodes matching the predicate.</returns>
-        public List<TagNode> FindAll (Predicate<TagNode> match)
-        {
+        public List<TagNode> FindAll (Predicate<TagNode> match) {
             return _items.FindAll(match);
         }
 
@@ -109,16 +99,14 @@ namespace Substrate.Nbt
         /// </summary>
         /// <param name="match">The <see cref="Predicate{TagNode}"/> delegate that defines the conditions of the subnode to search for.</param>
         /// <returns>The number of subnodes removed from the node.</returns>
-        public int RemoveAll (Predicate<TagNode> match)
-        {
+        public int RemoveAll (Predicate<TagNode> match) {
             return _items.RemoveAll(match);
         }
 
         /// <summary>
         /// Reverses the order of all the subnodes in the list.
         /// </summary>
-        public void Reverse ()
-        {
+        public void Reverse () {
             _items.Reverse();
         }
 
@@ -130,16 +118,14 @@ namespace Substrate.Nbt
         /// <exception cref="ArgumentOutOfRangeException"><para><paramref name="index"/> is less than 0.</para><para>-or-</para>
         ///   <para><paramref name="count"/> is less than 0.</para></exception>
         /// <exception cref="ArgumentException"><paramref name="index"/> and <paramref name="count"/> do not denote a valid range of elements in the list.</exception>
-        public void Reverse (int index, int count)
-        {
+        public void Reverse (int index, int count) {
             _items.Reverse(index, count);
         }
 
         /// <summary>
         /// Sorts all the subnodes in the list using the default comparator
         /// </summary>
-        public void Sort ()
-        {
+        public void Sort () {
             _items.Sort();
         }
 
@@ -147,8 +133,7 @@ namespace Substrate.Nbt
         /// Gets a string representation of the node's data.
         /// </summary>
         /// <returns>String representation of the node's data.</returns>
-        public override string ToString ()
-        {
+        public override string ToString () {
             return _items.ToString();
         }
 
@@ -156,8 +141,7 @@ namespace Substrate.Nbt
         /// Resets and changes the storage type of the list.
         /// </summary>
         /// <param name="type">The new tag type to store in the list.</param>
-        public void ChangeValueType (TagType type)
-        {
+        public void ChangeValueType (TagType type) {
             if (type == _type)
                 return;
 
@@ -172,8 +156,7 @@ namespace Substrate.Nbt
         /// </summary>
         /// <param name="item">The subnode to locate.</param>
         /// <returns>The zero-based index of the subnode within the node's list if found, or -1 otherwise.</returns>
-        public int IndexOf (TagNode item)
-        {
+        public int IndexOf (TagNode item) {
             return _items.IndexOf(item);
         }
 
@@ -183,8 +166,7 @@ namespace Substrate.Nbt
         /// <param name="index">The zero-based index at which the subnode should be inserted.</param>
         /// <param name="item">The subnode to insert.</param>
         /// <exception cref="ArgumentException">Thrown when a subnode being inserted has the wrong tag type.</exception>
-        public void Insert (int index, TagNode item)
-        {
+        public void Insert (int index, TagNode item) {
             if (item.GetTagType() != _type) {
                 throw new ArgumentException("The tag type of item is invalid for this node");
             }
@@ -195,8 +177,7 @@ namespace Substrate.Nbt
         /// Removes the subnode from the node's list at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index to remove a subnode at.</param>
-        public void RemoveAt (int index)
-        {
+        public void RemoveAt (int index) {
             _items.RemoveAt(index);
         }
 
@@ -206,14 +187,9 @@ namespace Substrate.Nbt
         /// <param name="index">The zero-based index to get or set from.</param>
         /// <returns>The subnode at the specified index.</returns>
         /// <exception cref="ArgumentException">Thrown when a subnode being assigned has the wrong tag type.</exception>
-        public TagNode this[int index]
-        {
-            get
-            {
-                return _items[index];
-            }
-            set
-            {
+        public TagNode this[int index] {
+            get { return _items[index]; }
+            set {
                 if (value.GetTagType() != _type) {
                     throw new ArgumentException("The tag type of the assigned subnode is invalid for this node");
                 }
@@ -230,8 +206,7 @@ namespace Substrate.Nbt
         /// </summary>
         /// <param name="item">The subnode to add.</param>
         /// <exception cref="ArgumentException">Thrown when a subnode being added has the wrong tag type.</exception>
-        public void Add (TagNode item)
-        {
+        public void Add (TagNode item) {
             if (item.GetTagType() != _type) {
                 throw new ArgumentException("The tag type of item is invalid for this node");
             }
@@ -242,8 +217,7 @@ namespace Substrate.Nbt
         /// <summary>
         /// Removes all subnode's from the node's list.
         /// </summary>
-        public void Clear ()
-        {
+        public void Clear () {
             _items.Clear();
         }
 
@@ -252,8 +226,7 @@ namespace Substrate.Nbt
         /// </summary>
         /// <param name="item">The subnode to check for existance.</param>
         /// <returns>Status indicating if the subnode exists in the node's list.</returns>
-        public bool Contains (TagNode item)
-        {
+        public bool Contains (TagNode item) {
             return _items.Contains(item);
         }
 
@@ -262,16 +235,14 @@ namespace Substrate.Nbt
         /// </summary>
         /// <param name="array">The one-dimensional <see cref="Array"/> that is the destination of the subnodes copied. The Array must have zero-based indexing.</param>
         /// <param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins.</param>
-        public void CopyTo (TagNode[] array, int arrayIndex)
-        {
+        public void CopyTo (TagNode[] array, int arrayIndex) {
             _items.CopyTo(array, arrayIndex);
         }
 
         /// <summary>
         /// Gets a value indicating whether the node is readonly.
         /// </summary>
-        public bool IsReadOnly
-        {
+        public bool IsReadOnly {
             get { return false; }
         }
 
@@ -280,8 +251,7 @@ namespace Substrate.Nbt
         /// </summary>
         /// <param name="item">The subnode to remove.</param>
         /// <returns>Status indicating whether a subnode was removed.</returns>
-        public bool Remove (TagNode item)
-        {
+        public bool Remove (TagNode item) {
             return _items.Remove(item);
         }
 
@@ -293,8 +263,7 @@ namespace Substrate.Nbt
         /// Returns an enumerator that iterates through all of the subnodes in the node's list.
         /// </summary>
         /// <returns>An enumerator for this node.</returns>
-        public IEnumerator<TagNode> GetEnumerator ()
-        {
+        public IEnumerator<TagNode> GetEnumerator () {
             return _items.GetEnumerator();
         }
 
@@ -306,8 +275,7 @@ namespace Substrate.Nbt
         /// Returns an enumerator that iterates through all of the subnodes in the node's list.
         /// </summary>
         /// <returns>An enumerator for this node.</returns>
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
-        {
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator () {
             return _items.GetEnumerator();
         }
 

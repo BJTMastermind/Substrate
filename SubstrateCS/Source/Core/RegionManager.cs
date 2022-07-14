@@ -5,13 +5,11 @@ using System.IO;
 using Substrate.Core;
 using System.Text.RegularExpressions;
 
-namespace Substrate.Core
-{
+namespace Substrate.Core {
     /// <summary>
     /// Manages the regions of a Beta-compatible world.
     /// </summary>
-    public abstract class RegionManager : IRegionManager
-    {
+    public abstract class RegionManager : IRegionManager {
         protected string _regionPath;
 
         protected Dictionary<RegionKey, IRegion> _cache;
@@ -32,16 +30,14 @@ namespace Substrate.Core
         /// </summary>
         /// <param name="regionDir">The path to a directory containing region files.</param>
         /// <param name="cache">The shared chunk cache to hold chunk data in.</param>
-        public RegionManager (string regionDir, ChunkCache cache)
-        {
+        public RegionManager (string regionDir, ChunkCache cache) {
             _regionPath = regionDir;
             _chunkCache = cache;
             _cache = new Dictionary<RegionKey, IRegion>();
         }
 
         /// <inherits />
-        public IRegion GetRegion (int rx, int rz)
-        {
+        public IRegion GetRegion (int rx, int rz) {
             RegionKey k = new RegionKey(rx, rz);
             IRegion r;
 
@@ -51,23 +47,20 @@ namespace Substrate.Core
                     _cache.Add(k, r);
                 }
                 return r;
-            }
-            catch (FileNotFoundException) {
+            } catch (FileNotFoundException) {
                 _cache.Add(k, null);
                 return null;
             }
         }
 
         /// <inherits />
-        public bool RegionExists (int rx, int rz)
-        {
+        public bool RegionExists (int rx, int rz) {
             IRegion r = GetRegion(rx, rz);
             return r != null;
         }
 
         /// <inherits />
-        public IRegion CreateRegion (int rx, int rz)
-        {
+        public IRegion CreateRegion (int rx, int rz) {
             IRegion r = GetRegion(rx, rz);
             if (r == null) {
                 string fp = "r." + rx + "." + rz + ".mca";
@@ -88,15 +81,13 @@ namespace Substrate.Core
         /// Get the current region directory path.
         /// </summary>
         /// <returns>The path to the region directory.</returns>
-        public string GetRegionPath ()
-        {
+        public string GetRegionPath () {
             return _regionPath;
         }
 
         // XXX: Exceptions
         /// <inherits />
-        public bool DeleteRegion (int rx, int rz)
-        {
+        public bool DeleteRegion (int rx, int rz) {
             IRegion r = GetRegion(rx, rz);
             if (r == null) {
                 return false;
@@ -109,8 +100,7 @@ namespace Substrate.Core
 
             try {
                 File.Delete(r.GetFilePath());
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Console.WriteLine("NOTICE: " + e.Message);
                 return false;
             }
@@ -124,8 +114,7 @@ namespace Substrate.Core
         /// Returns an enumerator that iterates over all of the regions in the underlying dimension.
         /// </summary>
         /// <returns>An enumerator instance.</returns>
-        public IEnumerator<IRegion> GetEnumerator ()
-        {
+        public IEnumerator<IRegion> GetEnumerator () {
             return new Enumerator(this);
         }
 
@@ -137,21 +126,18 @@ namespace Substrate.Core
         /// Returns an enumerator that iterates over all of the regions in the underlying dimension.
         /// </summary>
         /// <returns>An enumerator instance.</returns>
-        IEnumerator IEnumerable.GetEnumerator ()
-        {
+        IEnumerator IEnumerable.GetEnumerator () {
             return new Enumerator(this);
         }
 
         #endregion
 
 
-        private struct Enumerator : IEnumerator<IRegion>
-        {
+        private struct Enumerator : IEnumerator<IRegion> {
             private List<IRegion> _regions;
             private int _pos;
 
-            public Enumerator (RegionManager rm)
-            {
+            public Enumerator (RegionManager rm) {
                 _regions = new List<IRegion>();
                 _pos = -1;
 
@@ -168,57 +154,42 @@ namespace Substrate.Core
                     try {
                         IRegion r = rm.GetRegion(file);
                         _regions.Add(r);
-                    }
-                    catch (ArgumentException) {
+                    } catch (ArgumentException) {
                         continue;
                     }
                 }
             }
 
-            public bool MoveNext ()
-            {
+            public bool MoveNext () {
                 _pos++;
                 return (_pos < _regions.Count);
             }
 
-            public void Reset ()
-            {
+            public void Reset () {
                 _pos = -1;
             }
 
             void IDisposable.Dispose () { }
 
-            object IEnumerator.Current
-            {
-                get
-                {
-                    return Current;
-                }
+            object IEnumerator.Current {
+                get { return Current; }
             }
 
-            IRegion IEnumerator<IRegion>.Current
-            {
-                get
-                {
-                    return Current;
-                }
+            IRegion IEnumerator<IRegion>.Current {
+                get { return Current; }
             }
 
-            public IRegion Current
-            {
-                get
-                {
+            public IRegion Current {
+                get {
                     try {
                         return _regions[_pos];
-                    }
-                    catch (IndexOutOfRangeException) {
+                    } catch (IndexOutOfRangeException) {
                         throw new InvalidOperationException();
                     }
                 }
             }
 
-            private int RegionSort (string A, string B)
-            {
+            private int RegionSort (string A, string B) {
                 Regex R = new Regex(".+r\\.(?<x>-?\\d+)\\.(?<y>-?\\d+)\\.(mca|mcr)", RegexOptions.None);
                 Match MC = R.Match(A);
                 if (!MC.Success)

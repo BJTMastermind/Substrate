@@ -3,13 +3,11 @@ using System.IO;
 using Substrate.Core;
 using Substrate.Nbt;
 
-namespace Substrate
-{
+namespace Substrate {
     /// <summary>
     /// Encompases data to specify game rules.
     /// </summary>
-    public class GameRules : ICopyable<GameRules>
-    {
+    public class GameRules : ICopyable<GameRules> {
         private bool _commandBlockOutput = true;
         private bool _doFireTick = true;
         private bool _doMobLoot = true;
@@ -21,8 +19,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets whether or not actions performed by command blocks are displayed in the chat.
         /// </summary>
-        public bool CommandBlockOutput
-        {
+        public bool CommandBlockOutput {
             get { return _commandBlockOutput; }
             set { _commandBlockOutput = value; }
         }
@@ -30,8 +27,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets whether to spread or remove fire.
         /// </summary>
-        public bool DoFireTick
-        {
+        public bool DoFireTick {
             get { return _doFireTick; }
             set { _doFireTick = value; }
         }
@@ -39,8 +35,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets whether mobs should drop loot when killed.
         /// </summary>
-        public bool DoMobLoot
-        {
+        public bool DoMobLoot {
             get { return _doMobLoot; }
             set { _doMobLoot = value; }
         }
@@ -48,8 +43,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets whether mobs should spawn naturally.
         /// </summary>
-        public bool DoMobSpawning
-        {
+        public bool DoMobSpawning {
             get { return _doMobSpawning; }
             set { _doMobSpawning = value; }
         }
@@ -57,8 +51,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets whether breaking blocks should drop the block's item drop.
         /// </summary>
-        public bool DoTileDrops
-        {
+        public bool DoTileDrops {
             get { return _doTileDrops; }
             set { _doTileDrops = value; }
         }
@@ -66,8 +59,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets whether players keep their inventory after they die.
         /// </summary>
-        public bool KeepInventory
-        {
+        public bool KeepInventory {
             get { return _keepInventory; }
             set { _keepInventory = value; }
         }
@@ -75,8 +67,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets whether mobs can destroy blocks (creeper explosions, zombies breaking doors, etc.).
         /// </summary>
-        public bool MobGriefing
-        {
+        public bool MobGriefing {
             get { return _mobGriefing; }
             set { _mobGriefing = value; }
         }
@@ -84,8 +75,7 @@ namespace Substrate
         #region ICopyable<GameRules> Members
 
         /// <inheritdoc />
-        public GameRules Copy ()
-        {
+        public GameRules Copy () {
             GameRules gr = new GameRules();
             gr._commandBlockOutput = _commandBlockOutput;
             gr._doFireTick = _doFireTick;
@@ -104,8 +94,7 @@ namespace Substrate
     /// <summary>
     /// Specifies the type of gameplay associated with a world.
     /// </summary>
-    public enum GameType
-    {
+    public enum GameType {
         /// <summary>
         /// The world will be played in Survival mode.
         /// </summary>
@@ -117,8 +106,7 @@ namespace Substrate
         CREATIVE = 1,
     }
 
-    public enum TimeOfDay
-    {
+    public enum TimeOfDay {
         Daytime = 0,
         Noon = 6000,
         Sunset = 12000,
@@ -130,12 +118,9 @@ namespace Substrate
     /// <summary>
     /// Represents general data and metadata of a single world.
     /// </summary>
-    public class Level : INbtObject<Level>, ICopyable<Level>
-    {
-        private static SchemaNodeCompound _schema = new SchemaNodeCompound()
-        {
-            new SchemaNodeCompound("Data")
-            {
+    public class Level : INbtObject<Level>, ICopyable<Level> {
+        private static SchemaNodeCompound _schema = new SchemaNodeCompound() {
+            new SchemaNodeCompound("Data") {
                 new SchemaNodeScaler("Time", TagType.TAG_LONG),
                 new SchemaNodeScaler("LastPlayed", TagType.TAG_LONG, SchemaOptions.CREATE_ON_MISSING),
                 new SchemaNodeCompound("Player", Player.Schema, SchemaOptions.OPTIONAL),
@@ -211,8 +196,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the creation time of the world as a long timestamp.
         /// </summary>
-        public long Time
-        {
+        public long Time {
             get { return _time; }
             set { _time = value; }
         }
@@ -220,8 +204,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the time that the world was last played as a long timestamp.
         /// </summary>
-        public long LastPlayed
-        {
+        public long LastPlayed {
             get { return _lastPlayed; }
             set { _lastPlayed = value; }
         }
@@ -229,11 +212,9 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the player for single-player worlds.
         /// </summary>
-        public Player Player
-        {
+        public Player Player {
             get { return _player; }
-            set
-            {
+            set {
                 _player = value;
                 _player.World = _name;
             }
@@ -242,11 +223,9 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the world's spawn point.
         /// </summary>
-        public SpawnPoint Spawn
-        {
+        public SpawnPoint Spawn {
             get { return new SpawnPoint(_spawnX, _spawnY, _spawnZ); }
-            set
-            {
+            set {
                 _spawnX = value.X;
                 _spawnY = value.Y;
                 _spawnZ = value.Z;
@@ -256,16 +235,14 @@ namespace Substrate
         /// <summary>
         /// Gets the estimated size of the world in bytes.
         /// </summary>
-        public long SizeOnDisk
-        {
+        public long SizeOnDisk {
             get { return _sizeOnDisk; }
         }
 
         /// <summary>
         /// Gets or sets the world's random seed.
         /// </summary>
-        public long RandomSeed
-        {
+        public long RandomSeed {
             get { return _randomSeed; }
             set { _randomSeed = value; }
         }
@@ -273,8 +250,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the world's version number.
         /// </summary>
-        public int Version
-        {
+        public int Version {
             get { return _version ?? 0; }
             set { _version = value; }
         }
@@ -284,11 +260,9 @@ namespace Substrate
         /// </summary>
         /// <remarks>If there is a <see cref="Player"/> object attached to this world, the player's world field 
         /// will also be updated.</remarks>
-        public string LevelName
-        {
+        public string LevelName {
             get { return _name; }
-            set
-            {
+            set {
                 _name = value;
                 if (_player != null) {
                     _player.World = value;
@@ -300,8 +274,7 @@ namespace Substrate
         /// Gets or sets the name of the world generator.
         /// </summary>
         /// <remarks>This should be 'default', 'flat', or 'largeBiomes'.</remarks>
-        public string GeneratorName
-        {
+        public string GeneratorName {
             get { return _generator; }
             set { _generator = value; }
         }
@@ -309,8 +282,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets a value indicating that it is raining in the world.
         /// </summary>
-        public bool IsRaining
-        {
+        public bool IsRaining {
             get { return (_raining ?? 0) == 1; }
             set { _raining = value ? (byte)1 : (byte)0; }
         }
@@ -318,8 +290,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets a value indicating that it is thunderstorming in the world.
         /// </summary>
-        public bool IsThundering
-        {
+        public bool IsThundering {
             get { return (_thundering ?? 0) == 1; }
             set { _thundering = value ? (byte)1 : (byte)0; }
         }
@@ -327,8 +298,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the timer value for controlling rain.
         /// </summary>
-        public int RainTime
-        {
+        public int RainTime {
             get { return _rainTime ?? 0; }
             set { _rainTime = value; }
         }
@@ -336,8 +306,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the timer value for controlling thunderstorms.
         /// </summary>
-        public int ThunderTime
-        {
+        public int ThunderTime {
             get { return _thunderTime ?? 0; }
             set { _thunderTime = value; }
         }
@@ -345,8 +314,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the game type associated with this world.
         /// </summary>
-        public GameType GameType
-        {
+        public GameType GameType {
             get { return (GameType)(_gameType ?? 0); }
             set { _gameType = (int)value; }
         }
@@ -354,8 +322,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets a value indicating that structures (dungeons, villages, ...) will be generated.
         /// </summary>
-        public bool UseMapFeatures
-        {
+        public bool UseMapFeatures {
             get { return (_mapFeatures ?? 0) == 1; }
             set { _mapFeatures = value ? (byte)1 : (byte)0; }
         }
@@ -363,8 +330,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets a value indicating whether the map is hardcore mode
         /// </summary>
-        public bool Hardcore
-        {
+        public bool Hardcore {
             get { return (_hardcore ?? 0) == 1; }
             set { _hardcore = value ? (byte)1 : (byte)0; }
         }
@@ -372,8 +338,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets a value indicating the version of the level generator
         /// </summary>
-        public int GeneratorVersion
-        {
+        public int GeneratorVersion {
             get { return _generatorVersion ?? 0; }
             set { _generatorVersion = value; }
         }
@@ -385,8 +350,7 @@ namespace Substrate
         /// optionally be preceded by the number of layers and an x. 
         /// Damage values are not supported.
         /// </summary>
-        public string GeneratorOptions
-        {
+        public string GeneratorOptions {
             get { return _generatorOptions ?? ""; }
             set { _generatorOptions = value; }
         }
@@ -396,8 +360,7 @@ namespace Substrate
         /// initialized properly after creation. If the initial simulation was canceled 
         /// somehow, this can be false and the world will be re-initialized on next load.
         /// </summary>
-        public bool Initialized
-        {
+        public bool Initialized {
             get { return (_initialized ?? 0) == 1; }
             set { _initialized = value ? (byte)1 : (byte)0; }
         }
@@ -405,8 +368,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets a value indicating if cheats are enabled.
         /// </summary>
-        public bool AllowCommands
-        {
+        public bool AllowCommands {
             get { return (_allowCommands ?? 0) == 1; }
             set { _allowCommands = value ? (byte)1 : (byte)0; }
         }
@@ -417,8 +379,7 @@ namespace Substrate
         /// 18000 is midnight, 24000 is the next day's 0. 
         /// This value keeps counting past 24000 and does not reset to 0
         /// </summary>
-        public long DayTime
-        {
+        public long DayTime {
             get { return _DayTime ?? 0; }
             set { _DayTime = value; }
         }
@@ -426,24 +387,21 @@ namespace Substrate
         /// <summary>
         /// Gets the level's game rules.
         /// </summary>
-        public GameRules GameRules
-        {
+        public GameRules GameRules {
             get { return _gameRules; }
         }
 
         /// <summary>
         /// Gets the source <see cref="TagNodeCompound"/> used to create this <see cref="Level"/> if it exists.
         /// </summary>
-        public TagNodeCompound Source
-        {
+        public TagNodeCompound Source {
             get { return _source; }
         }
 
         /// <summary>
         /// Gets a <see cref="SchemaNode"/> representing the schema of a level.
         /// </summary>
-        public static SchemaNodeCompound Schema
-        {
+        public static SchemaNodeCompound Schema {
             get { return _schema; }
         }
 
@@ -451,8 +409,7 @@ namespace Substrate
         /// Creates a new <see cref="Level"/> object with reasonable defaults tied to the given world.
         /// </summary>
         /// <param name="world">The world that the <see cref="Level"/> should be tied to.</param>
-        public Level (NbtWorld world)
-        {
+        public Level (NbtWorld world) {
             _world = world;
 
             // Sane defaults
@@ -486,8 +443,7 @@ namespace Substrate
         /// Creates a copy of an existing <see cref="Level"/> object.
         /// </summary>
         /// <param name="p">The <see cref="Level"/> object to copy.</param>
-        protected Level (Level p)
-        {
+        protected Level (Level p) {
             _world = p._world;
 
             _time = p._time;
@@ -529,8 +485,7 @@ namespace Substrate
         /// <summary>
         /// Creates a default player entry for this world.
         /// </summary>
-        public void SetDefaultPlayer ()
-        {
+        public void SetDefaultPlayer () {
             _player = new Player();
             _player.World = _name;
 
@@ -544,18 +499,15 @@ namespace Substrate
         /// </summary>
         /// <returns>True if the level was saved; false otherwise.</returns>
         /// <exception cref="LevelIOException">Thrown when an error is encountered writing out the level.</exception>
-        public bool Save ()
-        {
+        public bool Save () {
             if (_world == null) {
                 return false;
             }
 
             try {
                 NBTFile nf = new NBTFile(Path.Combine(_world.Path, "level.dat"));
-                using (Stream zipstr = nf.GetDataOutputStream())
-                {
-                    if (zipstr == null)
-                    {
+                using (Stream zipstr = nf.GetDataOutputStream()) {
+                    if (zipstr == null) {
                         NbtIOException nex = new NbtIOException("Failed to initialize compressed NBT stream for output");
                         nex.Data["Level"] = this;
                         throw nex;
@@ -565,8 +517,7 @@ namespace Substrate
                 }
 
                 return true;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 LevelIOException lex = new LevelIOException("Could not save level file.", ex);
                 lex.Data["Level"] = this;
                 throw lex;
@@ -581,8 +532,7 @@ namespace Substrate
         /// </summary>
         /// <param name="tree">The root node of a Level subtree.</param>
         /// <returns>The <see cref="Level"/> returns itself on success, or null if the tree was unparsable.</returns>
-        public virtual Level LoadTree (TagNode tree)
-        {
+        public virtual Level LoadTree (TagNode tree) {
             TagNodeCompound dtree = tree as TagNodeCompound;
             if (dtree == null) {
                 return null;
@@ -666,8 +616,7 @@ namespace Substrate
             if (ctree.ContainsKey("DayTime")) {
                 _DayTime = ctree["DayTime"].ToTagLong();
             }
-            if (ctree.ContainsKey("GameRules"))
-            {
+            if (ctree.ContainsKey("GameRules")) {
                 TagNodeCompound gr = ctree["GameRules"].ToTagCompound();
 
                 _gameRules = new GameRules();
@@ -690,8 +639,7 @@ namespace Substrate
         /// </summary>
         /// <param name="tree">The root node of a Level subtree.</param>
         /// <returns>The <see cref="Level"/> returns itself on success, or null if the tree failed validation.</returns>
-        public virtual Level LoadTreeSafe (TagNode tree)
-        {
+        public virtual Level LoadTreeSafe (TagNode tree) {
             if (!ValidateTree(tree)) {
                 return null;
             }
@@ -703,8 +651,7 @@ namespace Substrate
         /// Builds a Level subtree from the current data.
         /// </summary>
         /// <returns>The root node of a Level subtree representing the current data.</returns>
-        public virtual TagNode BuildTree ()
-        {
+        public virtual TagNode BuildTree () {
             TagNodeCompound data = new TagNodeCompound();
             data["Time"] = new TagNodeLong(_time);
             data["LastPlayed"] = new TagNodeLong(_lastPlayed);
@@ -794,8 +741,7 @@ namespace Substrate
         /// </summary>
         /// <param name="tree">The root node of a Level subtree.</param>
         /// <returns>Status indicating whether the tree was valid against the internal schema.</returns>
-        public virtual bool ValidateTree (TagNode tree)
-        {
+        public virtual bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, _schema).Verify();
         }
 
@@ -808,8 +754,7 @@ namespace Substrate
         /// Creates a deep-copy of the <see cref="Level"/>.
         /// </summary>
         /// <returns>A deep-copy of the <see cref="Level"/>, including a copy of the <see cref="Player"/>, if one is attached.</returns>
-        public virtual Level Copy ()
-        {
+        public virtual Level Copy () {
             return new Level(this);
         }
 

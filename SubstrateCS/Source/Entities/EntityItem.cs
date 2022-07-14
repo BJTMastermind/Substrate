@@ -2,22 +2,18 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.Entities
-{
+namespace Substrate.Entities {
     using Substrate.Nbt;
 
-    public class EntityItem : TypedEntity
-    {
-        public static readonly SchemaNodeCompound ItemSchema = TypedEntity.Schema.MergeInto(new SchemaNodeCompound("")
-        {
+    public class EntityItem : TypedEntity {
+        public static readonly SchemaNodeCompound ItemSchema = TypedEntity.Schema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeString("id", TypeId),
             new SchemaNodeScaler("Health", TagType.TAG_SHORT),
             new SchemaNodeScaler("Age", TagType.TAG_SHORT),
             new SchemaNodeCompound("Item", Item.Schema),
         });
 
-        public static string TypeId
-        {
+        public static string TypeId {
             get { return "Item"; }
         }
 
@@ -26,37 +22,31 @@ namespace Substrate.Entities
 
         private Item _item;
 
-        public int Health
-        {
+        public int Health {
             get { return _health; }
             set { _health = (short)value; }
         }
 
-        public int Age
-        {
+        public int Age {
             get { return _age; }
             set { _age = (short)value; }
         }
 
-        public Item Item 
-        {
+        public Item Item {
             get { return _item; }
             set { _item = value; }
         }
 
         protected EntityItem (string id)
-            : base(id)
-        {
+            : base(id) {
         }
 
         public EntityItem ()
-            : this(TypeId)
-        {
+            : this(TypeId) {
         }
 
         public EntityItem (TypedEntity e)
-            : base(e)
-        {
+            : base(e) {
             EntityItem e2 = e as EntityItem;
             if (e2 != null) {
                 _health = e2._health;
@@ -68,8 +58,7 @@ namespace Substrate.Entities
 
         #region INBTObject<Entity> Members
 
-        public override TypedEntity LoadTree (TagNode tree)
-        {
+        public override TypedEntity LoadTree (TagNode tree) {
             TagNodeCompound ctree = tree as TagNodeCompound;
             if (ctree == null || base.LoadTree(tree) == null) {
                 return null;
@@ -83,8 +72,7 @@ namespace Substrate.Entities
             return this;
         }
 
-        public override TagNode BuildTree ()
-        {
+        public override TagNode BuildTree () {
             TagNodeCompound tree = base.BuildTree() as TagNodeCompound;
             tree["Health"] = new TagNodeShort(_health);
             tree["Age"] = new TagNodeShort(_age);
@@ -93,8 +81,7 @@ namespace Substrate.Entities
             return tree;
         }
 
-        public override bool ValidateTree (TagNode tree)
-        {
+        public override bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, ItemSchema).Verify();
         }
 
@@ -103,8 +90,7 @@ namespace Substrate.Entities
 
         #region ICopyable<Entity> Members
 
-        public override TypedEntity Copy ()
-        {
+        public override TypedEntity Copy () {
             return new EntityItem(this);
         }
 

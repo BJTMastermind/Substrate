@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using Substrate;
 
-namespace Maze
-{
-    class Program
-    {
-        static void Main (string[] args)
-        {
+namespace Maze {
+    class Program {
+        static void Main (string[] args) {
             if (args.Length < 1) {
                 Console.WriteLine("You must specify a target directory");
                 return;
@@ -62,8 +59,7 @@ namespace Maze
 
     }
 
-    class Grid
-    {
+    class Grid {
         int originx;
         int originy;
         int originz;
@@ -79,8 +75,7 @@ namespace Maze
         int wallywidth;
         int wallzwidth;
 
-        public Grid ()
-        {
+        public Grid () {
             originx = 0;
             originy = 27;
             originz = 0;
@@ -97,8 +92,7 @@ namespace Maze
             wallzwidth = 2;
         }
 
-        public void BuildInit (BlockManager bm)
-        {
+        public void BuildInit (BlockManager bm) {
             for (int xi = 0; xi < xlen; xi++) {
                 for (int yi = 0; yi < ylen; yi++) {
                     for (int zi = 0; zi < zlen; zi++) {
@@ -108,8 +102,7 @@ namespace Maze
             }
         }
 
-        public void BuildRoom (BlockManager bm, int x, int y, int z)
-        {
+        public void BuildRoom (BlockManager bm, int x, int y, int z) {
             int ox = originx + (cellxlen + wallxwidth) * x;
             int oy = originy + (cellylen + wallywidth) * y;
             int oz = originz + (cellzlen + wallzwidth) * z;
@@ -165,8 +158,7 @@ namespace Maze
             bm.SetID(ox + wallxwidth + cellxlen - 2, oy + wallywidth + 2, oz + wallzwidth + cellzlen - 1, (int)BlockType.TORCH);
         }
 
-        public void LinkRooms (BlockManager bm, int x1, int y1, int z1, int x2, int y2, int z2)
-        {
+        public void LinkRooms (BlockManager bm, int x1, int y1, int z1, int x2, int y2, int z2) {
             int xx = originx + (cellxlen + wallxwidth) * x1;
             int yy = originy + (cellylen + wallywidth) * y1;
             int zz = originz + (cellzlen + wallzwidth) * z1;
@@ -184,8 +176,7 @@ namespace Maze
                     bm.SetID(xx + xi, yb + 1, zc + 1, (int)BlockType.AIR);
                     bm.SetID(xx + xi, yb + 2, zc, (int)BlockType.AIR);
                 }
-            }
-            else if (z1 != z2) {
+            } else if (z1 != z2) {
                 zz = originz + (cellzlen + wallzwidth) * Math.Max(z1, z2);
                 for (int zi = 0; zi < wallxwidth; zi++) {
                     int xc = xx + wallxwidth + (cellxlen / 2);
@@ -198,8 +189,7 @@ namespace Maze
                     bm.SetID(xc + 1, yb + 1, zz + zi, (int)BlockType.AIR);
                     bm.SetID(xc, yb + 2, zz + zi, (int)BlockType.AIR);
                 }
-            }
-            else if (y1 != y2) {
+            } else if (y1 != y2) {
                 yy = originy + (cellylen + wallywidth) * Math.Max(y1, y2);
                 for (int yi = 0 - cellylen + 1; yi < wallywidth + 1; yi++) {
                     int xc = xx + wallxwidth + (cellxlen / 2);
@@ -218,8 +208,7 @@ namespace Maze
             }
         }
 
-        public void AddPrize (BlockManager bm, int x, int y, int z)
-        {
+        public void AddPrize (BlockManager bm, int x, int y, int z) {
             int ox = originx + (cellxlen + wallxwidth) * x + wallxwidth;
             int oy = originy + (cellylen + wallywidth) * y + wallywidth;
             int oz = originz + (cellzlen + wallzwidth) * z + wallzwidth;
@@ -235,15 +224,12 @@ namespace Maze
         }
     }
 
-    class Generator
-    {
-        public struct Edge
-        {
+    class Generator {
+        public struct Edge {
             public int node1;
             public int node2;
 
-            public Edge (int n1, int n2)
-            {
+            public Edge (int n1, int n2) {
                 node1 = n1;
                 node2 = n2;
             }
@@ -256,8 +242,7 @@ namespace Maze
         List<Edge> _edges;
         int[] _cells;
 
-        public Generator ()
-        {
+        public Generator () {
             xlen = 5;
             ylen = 5;
             zlen = 5;
@@ -305,8 +290,7 @@ namespace Maze
             }
         }
 
-        public List<Edge> Generate ()
-        {
+        public List<Edge> Generate () {
             Random rand = new Random();
 
             List<Edge> passages = new List<Edge>();
@@ -322,7 +306,7 @@ namespace Maze
 
             while (redges.Count > 0) {
                 Edge e = redges.Dequeue();
-                
+
                 if (_cells[e.node1] == _cells[e.node2]) {
                     continue;
                 }
@@ -341,13 +325,11 @@ namespace Maze
             return passages;
         }
 
-        public int Index (int x, int y, int z)
-        {
+        public int Index (int x, int y, int z) {
             return (x * zlen + z) * ylen + y;
         }
 
-        public void UnIndex (int index, out int x, out int y, out int z)
-        {
+        public void UnIndex (int index, out int x, out int y, out int z) {
             x = index / (zlen * ylen);
             int xstr = index - (x * zlen * ylen);
             z = xstr / ylen;

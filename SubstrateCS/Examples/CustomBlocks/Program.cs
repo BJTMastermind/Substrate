@@ -12,12 +12,9 @@ using Substrate.Core;
 // innate properties such as state of matter, opacity, and luminance.  This data
 // lets the Substrate lighting and fluid calculations behave as expected.
 
-namespace CustomBlocks
-{
-    class Program
-    {
-        static void Main (string[] args)
-        {
+namespace CustomBlocks {
+    class Program {
+        static void Main (string[] args) {
             if (args.Length != 1) {
                 Console.WriteLine("Usage: CustomBlock <world>");
                 return;
@@ -60,18 +57,15 @@ namespace CustomBlocks
     }
 
     // Convenience class -- like the BlockType class, it's not required that you define this
-    static class BlockTypeM
-    {
+    static class BlockTypeM {
         public static int LIGHT_SENSOR = 131;
     }
 
     // A place to store a global instance of a LightSensor block, for our convenience.
-    static class BlockInfoM
-    {
+    static class BlockInfoM {
         public static BlockInfo LightSensor;
 
-        static BlockInfoM ()
-        {
+        static BlockInfoM () {
             // Creating a BlockInfo (or BlockInfoEx) will also automatically register the
             // block ID, lighting, and opacity data with internal tables in the BlockInfo
             // static class, making them available to GetInfo() calls.

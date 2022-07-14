@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.TileEntities
-{
+namespace Substrate.TileEntities {
     using Substrate.Nbt;
 
-    public class TileEntityMobSpawner : TileEntity
-    {
-        public static readonly SchemaNodeCompound MobSpawnerSchema = TileEntity.Schema.MergeInto(new SchemaNodeCompound("")
-        {
+    public class TileEntityMobSpawner : TileEntity {
+        public static readonly SchemaNodeCompound MobSpawnerSchema = TileEntity.Schema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeString("id", TypeId),
             new SchemaNodeScaler("EntityId", TagType.TAG_STRING),
             new SchemaNodeScaler("Delay", TagType.TAG_SHORT),
@@ -27,8 +24,7 @@ namespace Substrate.TileEntities
             new SchemaNodeCompound("SpawnData", SchemaOptions.OPTIONAL),
         });
 
-        public static string TypeId
-        {
+        public static string TypeId {
             get { return "MobSpawner"; }
         }
 
@@ -47,103 +43,86 @@ namespace Substrate.TileEntities
         private int? _experienceRegenAmount;
         private TagNodeCompound _spawnData;
 
-        public int Delay
-        {
+        public int Delay {
             get { return _delay; }
             set { _delay = (short)value; }
         }
 
-		public TagNodeCompound SpawnData
-		{
+		public TagNodeCompound SpawnData {
 			get { return _spawnData; }
 			set { _spawnData = value; }
 		}
 
-        public string EntityID
-        {
+        public string EntityID {
             get { return _entityID; }
             set { _entityID = value; }
         }
 
-		public short MaxSpawnDelay
-		{
+		public short MaxSpawnDelay {
 			get { return _maxDelay ?? 0; }
 			set { _maxDelay = value; }
 		}
 
-		public short MinSpawnDelay
-		{
+		public short MinSpawnDelay {
 			get { return _minDelay ?? 0; }
 			set { _minDelay = value; }
 		}
 
-		public short SpawnCount
-		{
+		public short SpawnCount {
 			get { return _spawnCount ?? 0; }
 			set { _spawnCount = value; }
 		}
 
-        public short SpawnRange
-        {
+        public short SpawnRange {
             get { return _spawnRange ?? 0; }
             set { _spawnRange = value; }
         }
 
-        public short MaxNearbyEnemies
-        {
+        public short MaxNearbyEnemies {
             get { return _maxNearbyEnemies ?? 0; }
             set { _maxNearbyEnemies = value; }
         }
 
-        public short RequiredPlayerRange
-        {
+        public short RequiredPlayerRange {
             get { return _requiredPlayerRange ?? 0; }
             set { _requiredPlayerRange = value; }
         }
 
-        public int MaxExperience
-        {
+        public int MaxExperience {
             get { return _maxExperience ?? 0; }
             set { _maxExperience = value; }
         }
 
-        public int RemainingExperience
-        {
+        public int RemainingExperience {
             get { return _remainingExperience ?? 0; }
             set { _remainingExperience = value; }
         }
 
-        public int ExperienceRegenTick
-        {
+        public int ExperienceRegenTick {
             get { return _experienceRegenTick ?? 0; }
             set { _experienceRegenTick = value; }
         }
 
-        public int ExperienceRegenRate
-        {
+        public int ExperienceRegenRate {
             get { return _experienceRegenRate ?? 0; }
             set { _experienceRegenRate = value; }
         }
 
-        public int ExperienceRegenAmount
-        {
+        public int ExperienceRegenAmount {
             get { return _experienceRegenAmount ?? 0; }
             set { _experienceRegenAmount = value; }
         }
 
         protected TileEntityMobSpawner (string id)
-            : base(id)
-        {
+            : base(id) {
         }
 
         public TileEntityMobSpawner ()
-            : this(TypeId)
-        {
+            : this(TypeId) {
         }
 
         public TileEntityMobSpawner (TileEntity te)
-            : base(te)
-        {
+            : base(te) {
             TileEntityMobSpawner tes = te as TileEntityMobSpawner;
             if (tes != null) {
                 _delay = tes._delay;
@@ -168,8 +147,7 @@ namespace Substrate.TileEntities
 
         #region ICopyable<TileEntity> Members
 
-        public override TileEntity Copy ()
-        {
+        public override TileEntity Copy () {
             return new TileEntityMobSpawner(this);
         }
 
@@ -178,8 +156,7 @@ namespace Substrate.TileEntities
 
         #region INBTObject<TileEntity> Members
 
-        public override TileEntity LoadTree (TagNode tree)
-        {
+        public override TileEntity LoadTree (TagNode tree) {
             TagNodeCompound ctree = tree as TagNodeCompound;
             if (ctree == null || base.LoadTree(tree) == null) {
                 return null;
@@ -217,8 +194,7 @@ namespace Substrate.TileEntities
             return this;
         }
 
-        public override TagNode BuildTree ()
-        {
+        public override TagNode BuildTree () {
             TagNodeCompound tree = base.BuildTree() as TagNodeCompound;
             tree["EntityId"] = new TagNodeString(_entityID);
             tree["Delay"] = new TagNodeShort(_delay);
@@ -252,8 +228,7 @@ namespace Substrate.TileEntities
             return tree;
         }
 
-        public override bool ValidateTree (TagNode tree)
-        {
+        public override bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, MobSpawnerSchema).Verify();
         }
 

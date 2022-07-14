@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Substrate.Core
-{
+namespace Substrate.Core {
     // Rules:
     // - Water must be calculated in steps breadth-first
     // - If there are any "holes" within 5 steps (manhattan distance) of a water tile, only the edges
@@ -10,8 +9,7 @@ namespace Substrate.Core
     // - Any blocks in the water tile's outflow are added to the queue
     // - A water source's strength is calculated as strongest inflow - 1.
 
-    public class BlockFluid
-    {
+    public class BlockFluid {
         private IBoundedDataBlockCollection _blockset;
 
         private readonly int _xdim;
@@ -24,15 +22,13 @@ namespace Substrate.Core
 
         public event NeighborLookupHandler ResolveNeighbor;
 
-        internal class BlockCoord
-        {
+        internal class BlockCoord {
             internal IBoundedDataBlockCollection chunk;
             internal int lx;
             internal int ly;
             internal int lz;
 
-            internal BlockCoord (IBoundedDataBlockCollection _chunk, int _lx, int _ly, int _lz)
-            {
+            internal BlockCoord (IBoundedDataBlockCollection _chunk, int _lx, int _ly, int _lz) {
                 chunk = _chunk;
                 lx = _lx;
                 ly = _ly;
@@ -40,8 +36,7 @@ namespace Substrate.Core
             }
         }
 
-        public BlockFluid (IBoundedDataBlockCollection blockset)
-        {
+        public BlockFluid (IBoundedDataBlockCollection blockset) {
             _blockset = blockset;
 
             _xdim = _blockset.XDim;
@@ -51,8 +46,7 @@ namespace Substrate.Core
             _chunks = new Dictionary<ChunkKey,IBoundedDataBlockCollection>();
         }
 
-        public BlockFluid (BlockFluid bl)
-        {
+        public BlockFluid (BlockFluid bl) {
             _blockset = bl._blockset;
 
             _xdim = bl._xdim;
@@ -62,46 +56,39 @@ namespace Substrate.Core
             _chunks = new Dictionary<ChunkKey, IBoundedDataBlockCollection>();
         }
 
-        public void ResetWater (IDataArray blocks, IDataArray data)
-        {
+        public void ResetWater (IDataArray blocks, IDataArray data) {
             for (int i = 0; i < blocks.Length; i++) {
                 if ((blocks[i] == BlockInfo.StationaryWater.ID || blocks[i] == BlockInfo.Water.ID) && data[i] != 0) {
                     blocks[i] = (byte)BlockInfo.Air.ID;
                     data[i] = 0;
-                }
-                else if (blocks[i] == BlockInfo.Water.ID) {
+                } else if (blocks[i] == BlockInfo.Water.ID) {
                     blocks[i] = (byte)BlockInfo.StationaryWater.ID;
                 }
             }
         }
 
-        public void ResetLava (IDataArray blocks, IDataArray data)
-        {
+        public void ResetLava (IDataArray blocks, IDataArray data) {
             for (int i = 0; i < blocks.Length; i++) {
                 if ((blocks[i] == BlockInfo.StationaryLava.ID || blocks[i] == BlockInfo.Lava.ID) && data[i] != 0) {
                     blocks[i] = (byte)BlockInfo.Air.ID;
                     data[i] = 0;
-                }
-                else if (blocks[i] == BlockInfo.Lava.ID) {
+                } else if (blocks[i] == BlockInfo.Lava.ID) {
                     blocks[i] = (byte)BlockInfo.StationaryLava.ID;
                 }
             }
         }
 
-        public void UpdateWater (int x, int y, int z)
-        {
+        public void UpdateWater (int x, int y, int z) {
             DoWater(x, y, z);
             _chunks.Clear();
         }
 
-        public void UpdateLava (int x, int y, int z)
-        {
+        public void UpdateLava (int x, int y, int z) {
             DoLava(x, y, z);
             _chunks.Clear();
         }
 
-        public void RebuildWater ()
-        {
+        public void RebuildWater () {
             int xdim = _xdim;
             int ydim = _ydim;
             int zdim = _zdim;
@@ -126,8 +113,7 @@ namespace Substrate.Core
             _chunks.Clear();
         }
 
-        public void RebuildLava ()
-        {
+        public void RebuildLava () {
             int xdim = _xdim;
             int ydim = _ydim;
             int zdim = _zdim;
@@ -152,8 +138,7 @@ namespace Substrate.Core
             _chunks.Clear();
         }
 
-        private BlockCoord TranslateCoord (int x, int y, int z)
-        {
+        private BlockCoord TranslateCoord (int x, int y, int z) {
             IBoundedDataBlockCollection chunk = GetChunk(x, z);
 
             int lx = ((x % _xdim) + _xdim) % _xdim;
@@ -162,8 +147,7 @@ namespace Substrate.Core
             return new BlockCoord(chunk, lx, y, lz);
         }
 
-        private IBoundedDataBlockCollection GetChunk (int x, int z)
-        {
+        private IBoundedDataBlockCollection GetChunk (int x, int z) {
             int cx = x / _xdim + (x >> 31);
             int cz = z / _zdim + (z >> 31);
 
@@ -178,8 +162,7 @@ namespace Substrate.Core
             return chunk;
         }
 
-        private IBoundedDataBlockCollection OnResolveNeighbor (int relX, int relY, int relZ)
-        {
+        private IBoundedDataBlockCollection OnResolveNeighbor (int relX, int relY, int relZ) {
             if (ResolveNeighbor != null) {
                 IBoundedDataBlockCollection n = ResolveNeighbor(relX, relY, relZ);
 
@@ -201,8 +184,7 @@ namespace Substrate.Core
 
         // -----
 
-        private List<BlockKey> TileOutflow (BlockKey key, int reach = 5)
-        {
+        private List<BlockKey> TileOutflow (BlockKey key, int reach = 5) {
             Queue<BlockKey> searchQueue = new Queue<BlockKey>();
             Queue<KeyValuePair<BlockKey, int>> traceQueue = new Queue<KeyValuePair<BlockKey, int>>();
             Dictionary<BlockKey, int> markTable = new Dictionary<BlockKey,int>();
@@ -330,8 +312,7 @@ namespace Substrate.Core
             return outflow;
         }
 
-        private int TileInflow (BlockKey key)
-        {
+        private int TileInflow (BlockKey key) {
             // Check if water is falling on us
             if (key.y < _ydim - 1) {
                 BlockCoord up = TranslateCoord(key.x, key.y + 1, key.z);
@@ -387,8 +368,7 @@ namespace Substrate.Core
             return minFlow;
         }
 
-        private void DoWater (int x, int y, int z)
-        {
+        private void DoWater (int x, int y, int z) {
             Queue<BlockKey> flowQueue = new Queue<BlockKey>();
 
             BlockKey prikey = new BlockKey(x, y, z);
@@ -409,8 +389,7 @@ namespace Substrate.Core
                 BlockInfo tileInfo = tile.chunk.GetInfo(tile.lx, tile.ly, tile.lz);
                 if (tileInfo.ID == BlockInfo.StationaryWater.ID || tileInfo.ID == BlockInfo.Water.ID) {
                     curflow = tile.chunk.GetData(tile.lx, tile.ly, tile.lz);
-                }
-                else if (tileInfo.BlocksFluid) {
+                } else if (tileInfo.BlocksFluid) {
                     continue;
                 }
 
@@ -427,11 +406,9 @@ namespace Substrate.Core
                 // Update from inflow if necessary
                 if (inFall) {
                     newflow = inflow;
-                }
-                else if (inflow >= 7) {
+                } else if (inflow >= 7) {
                     newflow = 16;
-                }
-                else {
+                } else {
                     newflow = inflow + 1;
                 }
 
@@ -448,8 +425,7 @@ namespace Substrate.Core
                             int odata = tile.chunk.GetData(tile.lx, tile.ly, tile.lz);
                             if (odata == 0) {
                                 tile.chunk.SetID(tile.lx, tile.ly, tile.lz, BlockInfo.Obsidian.ID);
-                            }
-                            else {
+                            } else {
                                 tile.chunk.SetID(tile.lx, tile.ly, tile.lz, BlockInfo.Cobblestone.ID);
                             }
                             tile.chunk.SetData(tile.lx, tile.ly, tile.lz, 0);
@@ -460,12 +436,10 @@ namespace Substrate.Core
                     // Otherwise replace the tile with our water flow
                     tile.chunk.SetID(tile.lx, tile.ly, tile.lz, BlockInfo.StationaryWater.ID);
                     tile.chunk.SetData(tile.lx, tile.ly, tile.lz, newflow);
-                }
-                else if (newflow == 16) {
+                } else if (newflow == 16) {
                     tile.chunk.SetID(tile.lx, tile.ly, tile.lz, BlockInfo.Air.ID);
                     tile.chunk.SetData(tile.lx, tile.ly, tile.lz, 0);
-                }
-                else {
+                } else {
                     tile.chunk.SetData(tile.lx, tile.ly, tile.lz, newflow);
                 }
 
@@ -478,8 +452,7 @@ namespace Substrate.Core
             }
         }
 
-        private void DoLava (int x, int y, int z)
-        {
+        private void DoLava (int x, int y, int z) {
             Queue<BlockKey> flowQueue = new Queue<BlockKey>();
 
             BlockKey prikey = new BlockKey(x, y, z);
@@ -500,8 +473,7 @@ namespace Substrate.Core
                 BlockInfo tileInfo = tile.chunk.GetInfo(tile.lx, tile.ly, tile.lz);
                 if (tileInfo.ID == BlockInfo.StationaryLava.ID || tileInfo.ID == BlockInfo.Lava.ID) {
                     curflow = tile.chunk.GetData(tile.lx, tile.ly, tile.lz);
-                }
-                else if (tileInfo.BlocksFluid) {
+                } else if (tileInfo.BlocksFluid) {
                     continue;
                 }
 
@@ -518,11 +490,9 @@ namespace Substrate.Core
                 // Update from inflow if necessary
                 if (inFall) {
                     newflow = inflow;
-                }
-                else if (inflow >= 6) {
+                } else if (inflow >= 6) {
                     newflow = 16;
-                }
-                else {
+                } else {
                     newflow = inflow + 2;
                 }
 
@@ -544,12 +514,10 @@ namespace Substrate.Core
 
                     tile.chunk.SetID(tile.lx, tile.ly, tile.lz, BlockInfo.StationaryLava.ID);
                     tile.chunk.SetData(tile.lx, tile.ly, tile.lz, newflow);
-                }
-                else if (newflow == 16) {
+                } else if (newflow == 16) {
                     tile.chunk.SetID(tile.lx, tile.ly, tile.lz, BlockInfo.Air.ID);
                     tile.chunk.SetData(tile.lx, tile.ly, tile.lz, 0);
-                }
-                else {
+                } else {
                     tile.chunk.SetData(tile.lx, tile.ly, tile.lz, newflow);
                 }
 

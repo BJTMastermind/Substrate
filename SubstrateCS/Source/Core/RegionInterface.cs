@@ -2,10 +2,8 @@
 using System.IO;
 using Substrate.Nbt;
 
-namespace Substrate.Core
-{
-    public interface IRegion : IChunkContainer
-    {
+namespace Substrate.Core {
+    public interface IRegion : IChunkContainer {
         /// <summary>
         /// Gets the global X-coordinate of the region.
         /// </summary>
@@ -116,8 +114,7 @@ namespace Substrate.Core
         void SetChunkTimestamp (int lcx, int lcz, int timestamp);
     }
 
-    public interface IRegionContainer
-    {
+    public interface IRegionContainer {
         /// <summary>
         /// Determines if a region exists at the given coordinates.
         /// </summary>
@@ -150,8 +147,7 @@ namespace Substrate.Core
         bool DeleteRegion (int rx, int rz);
     }
 
-    public interface IRegionManager : IRegionContainer, IEnumerable<IRegion>
-    {
+    public interface IRegionManager : IRegionContainer, IEnumerable<IRegion> {
 
     }
 }

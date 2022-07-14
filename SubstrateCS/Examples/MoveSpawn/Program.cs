@@ -4,12 +4,9 @@ using Substrate;
 // MoveSpawn changes the location of the world spawn location
 // (which is separate from individual player spawn locations)
 
-namespace MoveSpawn
-{
-    class Program
-    {
-        static void Main (string[] args)
-        {
+namespace MoveSpawn {
+    class Program {
+        static void Main (string[] args) {
             if (args.Length != 4) {
                 Console.WriteLine("Usage: MoveSpawn <world> <x> <y> <z>");
                 return;

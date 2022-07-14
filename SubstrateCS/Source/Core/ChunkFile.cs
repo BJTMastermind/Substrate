@@ -4,26 +4,21 @@ using System.Text;
 using System.IO;
 using Ionic.Zlib;
 
-namespace Substrate.Core
-{
-    public class ChunkFile : NBTFile
-    {
+namespace Substrate.Core {
+    public class ChunkFile : NBTFile {
         public ChunkFile (string path)
-            : base(path)
-        {
+            : base(path) {
         }
 
         public ChunkFile (string path, int cx, int cz)
-            : base("")
-        {
+            : base("") {
             string cx64 = Base36.Encode(cx);
             string cz64 = Base36.Encode(cz);
             string file = "c." + cx64 + "." + cz64 + ".dat";
 
             while (cx < 0) {
                 cx += (64 * 64);
-            }
-            while (cz < 0) {
+            } while (cz < 0) {
                 cz += (64 * 64);
             }
 

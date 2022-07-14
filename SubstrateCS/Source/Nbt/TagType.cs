@@ -1,12 +1,10 @@
 ﻿using System;
 
-namespace Substrate.Nbt
-{
+namespace Substrate.Nbt {
     /// <summary>
     /// Defines the type of an NBT tag.
     /// </summary>
-    public enum TagType
-    {
+    public enum TagType {
         /// <summary>
         /// A null tag, used to terminate lists.
         /// </summary>

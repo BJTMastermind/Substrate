@@ -10,8 +10,7 @@ using namespace Substrate::Core;
 
 // For a more advanced Block Replace example, see replace.cs in NBToolkit.
 
-int main (array<System::String^>^ args)
-{
+int main (array<System::String^>^ args) {
     if (args->Length != 3) {
         System::Console::WriteLine("Usage: BlockReplace <world> <before-id> <after-id>");
         return 0;
@@ -57,6 +56,5 @@ int main (array<System::String^>^ args)
 
         System::Console::WriteLine("Processed Chunk {0},{1}", chunk->X, chunk->Z);
     }
-
     return 0;
 }

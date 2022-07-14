@@ -5,17 +5,13 @@ using Substrate.Core;
 using Substrate.Nbt;
 using System.IO;
 
-namespace Substrate.Data
-{
+namespace Substrate.Data {
     /// <summary>
     /// Represents the complete data of a Map item.
     /// </summary>
-    public class Map : INbtObject<Map>, ICopyable<Map>
-    {
-        private static SchemaNodeCompound _schema = new SchemaNodeCompound()
-        {
-            new SchemaNodeCompound("data")
-            {
+    public class Map : INbtObject<Map>, ICopyable<Map> {
+        private static SchemaNodeCompound _schema = new SchemaNodeCompound() {
+            new SchemaNodeCompound("data") {
                 new SchemaNodeScaler("scale", TagType.TAG_BYTE),
                 new SchemaNodeScaler("dimension", TagType.TAG_BYTE),
                 new SchemaNodeScaler("height", TagType.TAG_SHORT),
@@ -43,8 +39,7 @@ namespace Substrate.Data
         /// <summary>
         /// Creates a new default <see cref="Map"/> object.
         /// </summary>
-        public Map ()
-        {
+        public Map () {
             _scale = 3;
             _dimension = 0;
             _height = 128;
@@ -57,8 +52,7 @@ namespace Substrate.Data
         /// Creates a new <see cref="Map"/> object with copied data.
         /// </summary>
         /// <param name="p">A <see cref="Map"/> to copy data from.</param>
-        protected Map (Map p)
-        {
+        protected Map (Map p) {
             _world = p._world;
             _id = p._id;
 
@@ -78,11 +72,9 @@ namespace Substrate.Data
         /// <summary>
         /// Gets or sets the id value associated with this map.
         /// </summary>
-        public int Id
-        {
+        public int Id {
             get { return _id; }
-            set
-            {
+            set {
                 if (_id < 0 || _id >= 65536) {
                     throw new ArgumentOutOfRangeException("value", value, "Map Ids must be in the range [0, 65535].");
                 }
@@ -93,8 +85,7 @@ namespace Substrate.Data
         /// <summary>
         /// Gets or sets the scale of the map.  Acceptable values are 0 (1:1) to 4 (1:16).
         /// </summary>
-        public int Scale
-        {
+        public int Scale {
             get { return _scale; }
             set { _scale = (byte)value; }
         }
@@ -102,8 +93,7 @@ namespace Substrate.Data
         /// <summary>
         /// Gets or sets the (World) Dimension of the map.
         /// </summary>
-        public int Dimension
-        {
+        public int Dimension {
             get { return _dimension; }
             set { _dimension = (byte)value; }
         }
@@ -113,11 +103,9 @@ namespace Substrate.Data
         /// </summary>
         /// <remarks>If the new height dimension is different, the map's color data will be reset.</remarks>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if the new height value is zero or negative.</exception>
-        public int Height
-        {
+        public int Height {
             get { return _height; }
-            set
-            {
+            set {
                 if (value <= 0) {
                     throw new ArgumentOutOfRangeException("value", "Height must be a positive number");
                 }
@@ -133,11 +121,9 @@ namespace Substrate.Data
         /// </summary>
         /// <remarks>If the new width dimension is different, the map's color data will be reset.</remarks>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if the new width value is zero or negative.</exception>
-        public int Width
-        {
+        public int Width {
             get { return _width; }
-            set
-            {
+            set {
                 if (value <= 0) {
                     throw new ArgumentOutOfRangeException("value", "Width must be a positive number");
                 }
@@ -151,8 +137,7 @@ namespace Substrate.Data
         /// <summary>
         /// Gets or sets the global X-coordinate that this map is centered on, in blocks.
         /// </summary>
-        public int X
-        {
+        public int X {
             get { return _x; }
             set { _x = value; }
         }
@@ -160,8 +145,7 @@ namespace Substrate.Data
         /// <summary>
         /// Gets or sets the global Z-coordinate that this map is centered on, in blocks.
         /// </summary>
-        public int Z
-        {
+        public int Z {
             get { return _z; }
             set { _z = value; }
         }
@@ -169,8 +153,7 @@ namespace Substrate.Data
         /// <summary>
         /// Gets the raw byte array of the map's color index values.
         /// </summary>
-        public byte[] Colors
-        {
+        public byte[] Colors {
             get { return _colors; }
         }
 
@@ -180,18 +163,15 @@ namespace Substrate.Data
         /// <param name="x">The X-coordinate to get or set.</param>
         /// <param name="z">The Z-coordinate to get or set.</param>
         /// <exception cref="IndexOutOfRangeException">Thrown when the X- or Z-coordinates exceed the map dimensions.</exception>
-        public byte this[int x, int z]
-        {
-            get
-            {
+        public byte this[int x, int z] {
+            get {
                 if (x < 0 || x >= _width || z < 0 || z >= _height) {
                     throw new IndexOutOfRangeException();
                 }
                 return _colors[x + _width * z];
             }
 
-            set
-            {
+            set {
                 if (x < 0 || x >= _width || z < 0 || z >= _height) {
                     throw new IndexOutOfRangeException();
                 }
@@ -205,8 +185,7 @@ namespace Substrate.Data
         /// </summary>
         /// <returns>True if the map was saved; false otherwise.</returns>
         /// <exception cref="Exception">Thrown when an error is encountered writing out the level.</exception>
-        public bool Save ()
-        {
+        public bool Save () {
             if (_world == null) {
                 return false;
             }
@@ -215,10 +194,8 @@ namespace Substrate.Data
                 string path = Path.Combine(_world.Path, _world.DataDirectory);
                 NBTFile nf = new NBTFile(Path.Combine(path, "map_" + _id + ".dat"));
 
-                using (Stream zipstr = nf.GetDataOutputStream())
-                {
-                    if (zipstr == null)
-                    {
+                using (Stream zipstr = nf.GetDataOutputStream()) {
+                    if (zipstr == null) {
                         NbtIOException nex = new NbtIOException("Failed to initialize compressed NBT stream for output");
                         nex.Data["Map"] = this;
                         throw nex;
@@ -228,8 +205,7 @@ namespace Substrate.Data
                 }
 
                 return true;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Exception mex = new Exception("Could not save map file.", ex); // TODO: Exception Type
                 mex.Data["Map"] = this;
                 throw mex;
@@ -244,8 +220,7 @@ namespace Substrate.Data
         /// </summary>
         /// <param name="tree">The root node of a Map subtree.</param>
         /// <returns>The <see cref="Map"/> returns itself on success, or null if the tree was unparsable.</returns>
-        public virtual Map LoadTree (TagNode tree)
-        {
+        public virtual Map LoadTree (TagNode tree) {
             TagNodeCompound dtree = tree as TagNodeCompound;
             if (dtree == null) {
                 return null;
@@ -272,8 +247,7 @@ namespace Substrate.Data
         /// </summary>
         /// <param name="tree">The root node of a Map subtree.</param>
         /// <returns>The <see cref="Map"/> returns itself on success, or null if the tree failed validation.</returns>
-        public virtual Map LoadTreeSafe (TagNode tree)
-        {
+        public virtual Map LoadTreeSafe (TagNode tree) {
             if (!ValidateTree(tree)) {
                 return null;
             }
@@ -293,8 +267,7 @@ namespace Substrate.Data
         /// Builds a Map subtree from the current data.
         /// </summary>
         /// <returns>The root node of a Map subtree representing the current data.</returns>
-        public virtual TagNode BuildTree ()
-        {
+        public virtual TagNode BuildTree () {
             TagNodeCompound data = new TagNodeCompound();
             data["scale"] = new TagNodeByte(_scale);
             data["dimension"] = new TagNodeByte(_dimension);
@@ -320,8 +293,7 @@ namespace Substrate.Data
         /// </summary>
         /// <param name="tree">The root node of a Map subtree.</param>
         /// <returns>Status indicating whether the tree was valid against the internal schema.</returns>
-        public virtual bool ValidateTree (TagNode tree)
-        {
+        public virtual bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, _schema).Verify();
         }
 
@@ -334,8 +306,7 @@ namespace Substrate.Data
         /// Creates a deep-copy of the <see cref="Map"/>.
         /// </summary>
         /// <returns>A deep-copy of the <see cref="Map"/>.</returns>
-        public virtual Map Copy ()
-        {
+        public virtual Map Copy () {
             return new Map(this);
         }
 

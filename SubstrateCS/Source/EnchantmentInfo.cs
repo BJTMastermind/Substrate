@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections;
 
-namespace Substrate
-{
+namespace Substrate {
     /// <summary>
     /// Provides named id values for known enchantment types.
     /// </summary>
     /// <remarks>See <see cref="BlockType"/> for additional information.</remarks>
-    public class EnchantmentType
-    {
+    public class EnchantmentType {
         public const int PROTECTION = 0;
         public const int FIRE_PROTECTION = 1;
         public const int FEATHER_FALLING = 2;
@@ -42,18 +40,14 @@ namespace Substrate
     /// is up to date with the current MC version.
     /// New enchantment types may be created and used at runtime, and will automatically populate various static lookup tables
     /// in the <see cref="EnchantmentInfo"/> class.</remarks>
-    public class EnchantmentInfo
-    {
+    public class EnchantmentInfo {
         private static Random _rand = new Random();
 
-        private class CacheTableDict<T> : ICacheTable<T>
-        {
+        private class CacheTableDict<T> : ICacheTable<T> {
             private Dictionary<int, T> _cache;
 
-            public T this[int index]
-            {
-                get
-                {
+            public T this[int index] {
+                get {
                     T val;
                     if (_cache.TryGetValue(index, out val)) {
                         return val;
@@ -62,19 +56,16 @@ namespace Substrate
                 }
             }
 
-            public CacheTableDict (Dictionary<int, T> cache)
-            {
+            public CacheTableDict (Dictionary<int, T> cache) {
                 _cache = cache;
             }
 
-            public IEnumerator<T> GetEnumerator ()
-            {
+            public IEnumerator<T> GetEnumerator () {
                 foreach (T val in _cache.Values)
                     yield return val;
             }
 
-            IEnumerator IEnumerable.GetEnumerator ()
-            {
+            IEnumerator IEnumerable.GetEnumerator () {
                 return GetEnumerator();
             }
         }
@@ -90,32 +81,28 @@ namespace Substrate
         /// <summary>
         /// Gets the lookup table for id-to-info values.
         /// </summary>
-        public static ICacheTable<EnchantmentInfo> EnchantmentTable
-        {
+        public static ICacheTable<EnchantmentInfo> EnchantmentTable {
             get { return _enchTableCache; }
         }
 
         /// <summary>
         /// Gets the id of the enchantment type.
         /// </summary>
-        public int ID
-        {
+        public int ID {
             get { return _id; }
         }
 
         /// <summary>
         /// Gets the name of the enchantment type.
         /// </summary>
-        public string Name
-        {
+        public string Name {
             get { return _name; }
         }
 
         /// <summary>
         /// Gets the maximum level allowed for this enchantment type.
         /// </summary>
-        public int MaxLevel
-        {
+        public int MaxLevel {
             get { return _maxLevel; }
         }
 
@@ -123,8 +110,7 @@ namespace Substrate
         /// Constructs a new <see cref="EnchantmentInfo"/> record for the given enchantment id.
         /// </summary>
         /// <param name="id">The id of an item type.</param>
-        public EnchantmentInfo (int id)
-        {
+        public EnchantmentInfo (int id) {
             _id = id;
             _enchTable[_id] = this;
         }
@@ -134,8 +120,7 @@ namespace Substrate
         /// </summary>
         /// <param name="id">The id of an item type.</param>
         /// <param name="name">The name of an item type.</param>
-        public EnchantmentInfo (int id, string name)
-        {
+        public EnchantmentInfo (int id, string name) {
             _id = id;
             _name = name;
             _enchTable[_id] = this;
@@ -146,8 +131,7 @@ namespace Substrate
         /// </summary>
         /// <param name="level">The maximum allowed level.</param>
         /// <returns>The object instance used to invoke this method.</returns>
-        public EnchantmentInfo SetMaxLevel (int level)
-        {
+        public EnchantmentInfo SetMaxLevel (int level) {
             _maxLevel = level;
             return this;
         }
@@ -156,8 +140,7 @@ namespace Substrate
         /// Chooses a registered enchantment type at random and returns it.
         /// </summary>
         /// <returns></returns>
-        public static EnchantmentInfo GetRandomEnchantment ()
-        {
+        public static EnchantmentInfo GetRandomEnchantment () {
             List<EnchantmentInfo> list = new List<EnchantmentInfo>(_enchTable.Values);
             return list[_rand.Next(list.Count)];
         }
@@ -185,8 +168,7 @@ namespace Substrate
         public static EnchantmentInfo Flame;
         public static EnchantmentInfo Infinity;
 
-        static EnchantmentInfo ()
-        {
+        static EnchantmentInfo () {
             _enchTable = new Dictionary<int, EnchantmentInfo>();
             _enchTableCache = new CacheTableDict<EnchantmentInfo>(_enchTable);
 

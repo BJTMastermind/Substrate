@@ -7,13 +7,11 @@ using System.IO;
 using Substrate.Core;
 using Substrate.Nbt;
 
-namespace Substrate
-{
+namespace Substrate {
     /// <summary>
     /// Represents an Alpha-compatible interface for globally managing chunks.
     /// </summary>
-    public class AlphaChunkManager : IChunkManager, IEnumerable<ChunkRef>
-    {
+    public class AlphaChunkManager : IChunkManager, IEnumerable<ChunkRef> {
         private string _mapPath;
 
         //protected Dictionary<ChunkKey, WeakReference> _cache;
@@ -23,8 +21,7 @@ namespace Substrate
         /// <summary>
         /// Gets the path to the base directory containing the chunk directory structure.
         /// </summary>
-        public string ChunkPath
-        {
+        public string ChunkPath {
             get { return _mapPath; }
         }
 
@@ -32,25 +29,20 @@ namespace Substrate
         /// Creates a new <see cref="AlphaChunkManager"/> instance for the give chunk base directory.
         /// </summary>
         /// <param name="mapDir">The path to the chunk base directory.</param>
-        public AlphaChunkManager (string mapDir)
-        {
+        public AlphaChunkManager (string mapDir) {
             _mapPath = mapDir;
             _cache = new LRUCache<ChunkKey, ChunkRef>(256);
             _dirty = new Dictionary<ChunkKey, ChunkRef>();
         }
 
-        private ChunkFile GetChunkFile (int cx, int cz)
-        {
+        private ChunkFile GetChunkFile (int cx, int cz) {
             return new ChunkFile(_mapPath, cx, cz);
         }
 
-        private NbtTree GetChunkTree (int cx, int cz)
-        {
+        private NbtTree GetChunkTree (int cx, int cz) {
             ChunkFile cf = GetChunkFile(cx, cz);
-            using (Stream nbtstr = cf.GetDataInputStream())
-            {
-                if (nbtstr == null)
-                {
+            using (Stream nbtstr = cf.GetDataInputStream()) {
+                if (nbtstr == null) {
                     return null;
                 }
 
@@ -58,13 +50,10 @@ namespace Substrate
             }
         }
 
-        private bool SaveChunkTree (int cx, int cz, NbtTree tree)
-        {
+        private bool SaveChunkTree (int cx, int cz, NbtTree tree) {
             ChunkFile cf = GetChunkFile(cx, cz);
-            using (Stream zipstr = cf.GetDataOutputStream())
-            {
-                if (zipstr == null)
-                {
+            using (Stream zipstr = cf.GetDataOutputStream()) {
+                if (zipstr == null) {
                     return false;
                 }
 
@@ -74,40 +63,34 @@ namespace Substrate
             return true;
         }
 
-        private Stream GetChunkOutStream (int cx, int cz)
-        {
+        private Stream GetChunkOutStream (int cx, int cz) {
             return new ChunkFile(_mapPath, cx, cz).GetDataOutputStream();
         }
 
         #region IChunkContainer Members
 
         /// <inheritdoc/>
-        public int ChunkGlobalX (int cx)
-        {
+        public int ChunkGlobalX (int cx) {
             return cx;
         }
 
         /// <inheritdoc/>
-        public int ChunkGlobalZ (int cz)
-        {
+        public int ChunkGlobalZ (int cz) {
             return cz;
         }
 
         /// <inheritdoc/>
-        public int ChunkLocalX (int cx)
-        {
+        public int ChunkLocalX (int cx) {
             return cx;
         }
 
         /// <inheritdoc/>
-        public int ChunkLocalZ (int cz)
-        {
+        public int ChunkLocalZ (int cz) {
             return cz;
         }
 
         /// <inheritdoc/>
-        public IChunk GetChunk (int cx, int cz)
-        {
+        public IChunk GetChunk (int cx, int cz) {
             if (!ChunkExists(cx, cz)) {
                 return null;
             }
@@ -116,8 +99,7 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public ChunkRef GetChunkRef (int cx, int cz)
-        {
+        public ChunkRef GetChunkRef (int cx, int cz) {
             ChunkKey k = new ChunkKey(cx, cz);
 
             ChunkRef c = null;
@@ -136,13 +118,11 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public ChunkRef CreateChunk (int cx, int cz)
-        {
+        public ChunkRef CreateChunk (int cx, int cz) {
             DeleteChunk(cx, cz);
             AlphaChunk chunk = AlphaChunk.Create(cx, cz);
             
-            using (Stream chunkOutStream = GetChunkOutStream(cx, cz))
-            {
+            using (Stream chunkOutStream = GetChunkOutStream(cx, cz)) {
                 chunk.Save(chunkOutStream);
             }
 
@@ -154,14 +134,12 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public bool ChunkExists (int cx, int cz)
-        {
+        public bool ChunkExists (int cx, int cz) {
             return new ChunkFile(_mapPath, cx, cz).Exists();
         }
 
         /// <inheritdoc/>
-        public bool DeleteChunk (int cx, int cz)
-        {
+        public bool DeleteChunk (int cx, int cz) {
             new ChunkFile(_mapPath, cx, cz).Delete();
 
             ChunkKey k = new ChunkKey(cx, cz);
@@ -172,12 +150,10 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public ChunkRef SetChunk (int cx, int cz, IChunk chunk)
-        {
+        public ChunkRef SetChunk (int cx, int cz, IChunk chunk) {
             DeleteChunk(cx, cz);
             chunk.SetLocation(cx, cz);
-            using (Stream chunkOutStream = GetChunkOutStream(cx, cz))
-            {
+            using (Stream chunkOutStream = GetChunkOutStream(cx, cz)) {
                 chunk.Save(chunkOutStream);
             }
 
@@ -189,8 +165,7 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public int Save ()
-        {
+        public int Save () {
             foreach (KeyValuePair<ChunkKey, ChunkRef> e in _cache) {
                 if (e.Value.IsDirty) {
                     _dirty[e.Key] = e.Value;
@@ -202,10 +177,8 @@ namespace Substrate
                 int cx = ChunkGlobalX(chunkRef.X);
                 int cz = ChunkGlobalZ(chunkRef.Z);
 
-                using (Stream chunkOutStream = GetChunkOutStream(cx, cz))
-                {
-                    if (chunkRef.Save(chunkOutStream))
-                    {
+                using (Stream chunkOutStream = GetChunkOutStream(cx, cz)) {
+                    if (chunkRef.Save(chunkOutStream)) {
                         saved++;
                     }
                 }                
@@ -216,12 +189,9 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public bool SaveChunk (IChunk chunk)
-        {
-            using (Stream chunkOutStream = GetChunkOutStream(ChunkGlobalX(chunk.X), ChunkGlobalZ(chunk.Z)))
-            {
-                if (chunk.Save(chunkOutStream))
-                {
+        public bool SaveChunk (IChunk chunk) {
+            using (Stream chunkOutStream = GetChunkOutStream(ChunkGlobalX(chunk.X), ChunkGlobalZ(chunk.Z))) {
+                if (chunk.Save(chunkOutStream)) {
                     _dirty.Remove(new ChunkKey(chunk.X, chunk.Z));
                     return true;
                 }
@@ -231,8 +201,7 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public bool CanDelegateCoordinates
-        {
+        public bool CanDelegateCoordinates {
             get { return true; }
         }
 
@@ -244,8 +213,7 @@ namespace Substrate
         /// <param name="cx">The global X-coordinate of a chunk.</param>
         /// <param name="cz">The global Z-coordinate of a chunk.</param>
         /// <returns>The last modified timestamp of the underlying chunk file.</returns>
-        public int GetChunkTimestamp (int cx, int cz)
-        {
+        public int GetChunkTimestamp (int cx, int cz) {
             ChunkFile cf = GetChunkFile(cx, cz);
             if (cf == null) {
                 return 0;
@@ -260,8 +228,7 @@ namespace Substrate
         /// Gets an enumerator that iterates through all the chunks in the world.
         /// </summary>
         /// <returns>An enumerator for this manager.</returns>
-        public IEnumerator<ChunkRef> GetEnumerator ()
-        {
+        public IEnumerator<ChunkRef> GetEnumerator () {
             return new Enumerator(this);
         }
 
@@ -269,16 +236,14 @@ namespace Substrate
 
         #region IEnumerable Members
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
-        {
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator () {
             return new Enumerator(this);
         }
 
         #endregion
 
 
-        private class Enumerator : IEnumerator<ChunkRef>
-        {
+        private class Enumerator : IEnumerator<ChunkRef> {
             protected AlphaChunkManager _cm;
             protected Queue<string> _tld;
             protected Queue<string> _sld;
@@ -288,8 +253,7 @@ namespace Substrate
             private string _cursld;
             private ChunkRef _curchunk;
 
-            public Enumerator (AlphaChunkManager cfm)
-            {
+            public Enumerator (AlphaChunkManager cfm) {
                 _cm = cfm;
 
                 if (!Directory.Exists(_cm.ChunkPath)) {
@@ -299,8 +263,7 @@ namespace Substrate
                 Reset();
             }
 
-            private bool MoveNextTLD ()
-            {
+            private bool MoveNextTLD () {
                 if (_tld.Count == 0) {
                     return false;
                 }
@@ -317,8 +280,7 @@ namespace Substrate
                 return true;
             }
 
-            public bool MoveNextSLD ()
-            {
+            public bool MoveNextSLD () {
                 while (_sld.Count == 0) {
                     if (MoveNextTLD() == false) {
                         return false;
@@ -350,8 +312,7 @@ namespace Substrate
                 return true;
             }
 
-            public bool MoveNext ()
-            {
+            public bool MoveNext () {
                 while (_chunks.Count == 0) {
                     if (MoveNextSLD() == false) {
                         return false;
@@ -362,8 +323,7 @@ namespace Substrate
                 return true;
             }
 
-            public void Reset ()
-            {
+            public void Reset () {
                 _curchunk = null;
 
                 _tld = new Queue<string>();
@@ -378,26 +338,16 @@ namespace Substrate
 
             void IDisposable.Dispose () { }
 
-            object IEnumerator.Current
-            {
-                get
-                {
-                    return Current;
-                }
+            object IEnumerator.Current {
+                get { return Current; }
             }
 
-            ChunkRef IEnumerator<ChunkRef>.Current
-            {
-                get
-                {
-                    return Current;
-                }
+            ChunkRef IEnumerator<ChunkRef>.Current {
+                get { return Current; }
             }
 
-            public ChunkRef Current
-            {
-                get
-                {
+            public ChunkRef Current {
+                get {
                     if (_curchunk == null) {
                         throw new InvalidOperationException();
                     }
@@ -405,8 +355,7 @@ namespace Substrate
                 }
             }
 
-            private bool ParseFileName (string filename, out int x, out int z)
-            {
+            private bool ParseFileName (string filename, out int x, out int z) {
                 x = 0;
                 z = 0;
 

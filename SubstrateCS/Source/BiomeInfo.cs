@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate
-{
-    public class BiomeType
-    {
+namespace Substrate {
+    public class BiomeType {
         public const int Ocean = 0;
         public const int Plains = 1;
         public const int Desert = 2;

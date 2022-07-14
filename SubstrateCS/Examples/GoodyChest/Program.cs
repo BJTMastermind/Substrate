@@ -12,14 +12,11 @@ using Substrate.Core;
 // itself is up to date).  If a chest gets filled with some of these
 // latest items and gets opened in an older MC client, MC will crash.
 
-namespace GoodyChest
-{
-    class Program
-    {
+namespace GoodyChest {
+    class Program {
         static Random rand;
 
-        static void Main (string[] args)
-        {
+        static void Main (string[] args) {
             if (args.Length != 2) {
                 Console.WriteLine("Usage: GoodyChest <world> <prob>");
                 return;
@@ -61,15 +58,13 @@ namespace GoodyChest
                     added++;
                 }
             }
-
             // And we're done
             Console.WriteLine("Added {0} goody chests to world", added);
         }
 
         // This function will create a new Block object of type 'Chest', fills it
         // with random items, and returns it
-        static AlphaBlock BuildChest ()
-        {
+        static AlphaBlock BuildChest () {
             // A default, appropriate TileEntity entry is created
             AlphaBlock block = new AlphaBlock(BlockType.CHEST);
             TileEntityChest ent = block.GetTileEntity() as TileEntityChest;
@@ -95,7 +90,6 @@ namespace GoodyChest
                     ent.Items[i] = item;
                 }
             }
-
             // That's all, we've got a loaded chest block ready to be
             // inserted into a chunk
             return block;

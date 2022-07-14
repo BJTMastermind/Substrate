@@ -5,15 +5,13 @@ using System.IO;
 using Substrate.Core;
 using Substrate.Nbt;
 
-namespace Substrate
-{
+namespace Substrate {
     using IO = System.IO;
 
     /// <summary>
     /// Represents an Alpha-compatible (up to Beta 1.2) Minecraft world.
     /// </summary>
-    public class AlphaWorld : NbtWorld
-    {
+    public class AlphaWorld : NbtWorld {
         private const string _PLAYER_DIR = "players";
         private string _levelFile = "level.dat";
 
@@ -24,8 +22,7 @@ namespace Substrate
 
         private PlayerManager _playerMan;
 
-        private AlphaWorld ()
-        {
+        private AlphaWorld () {
             _chunkMgrs = new Dictionary<string, AlphaChunkManager>();
             _blockMgrs = new Dictionary<string, BlockManager>();
         }
@@ -33,8 +30,7 @@ namespace Substrate
         /// <summary>
         /// Gets a reference to this world's <see cref="Level"/> object.
         /// </summary>
-        public override Level Level
-        {
+        public override Level Level {
             get { return _level; }
         }
 
@@ -45,8 +41,7 @@ namespace Substrate
         /// <remarks>Get a <see cref="BlockManager"/> if you need to manage blocks as a global, unbounded matrix.  This abstracts away
         /// any higher-level organizational divisions.  If your task is going to be heavily performance-bound, consider getting a
         /// <see cref="RegionChunkManager"/> instead and working with blocks on a chunk-local level.</remarks>
-        public new BlockManager GetBlockManager ()
-        {
+        public new BlockManager GetBlockManager () {
             return GetBlockManagerVirt(Dimension.DEFAULT) as BlockManager;
         }
 
@@ -58,8 +53,7 @@ namespace Substrate
         /// <remarks>Get a <see cref="BlockManager"/> if you need to manage blocks as a global, unbounded matrix.  This abstracts away
         /// any higher-level organizational divisions.  If your task is going to be heavily performance-bound, consider getting a
         /// <see cref="RegionChunkManager"/> instead and working with blocks on a chunk-local level.</remarks>
-        public new BlockManager GetBlockManager (int dim)
-        {
+        public new BlockManager GetBlockManager (int dim) {
             return GetBlockManagerVirt(dim) as BlockManager;
         }
 
@@ -68,8 +62,7 @@ namespace Substrate
         /// </summary>
         /// <returns>A <see cref="RegionChunkManager"/> tied to the default dimension in this world.</returns>
         /// <remarks>Get a <see cref="RegionChunkManager"/> if you you need to work with easily-digestible, bounded chunks of blocks.</remarks>
-        public new AlphaChunkManager GetChunkManager ()
-        {
+        public new AlphaChunkManager GetChunkManager () {
             return GetChunkManagerVirt(Dimension.DEFAULT) as AlphaChunkManager;
         }
 
@@ -79,8 +72,7 @@ namespace Substrate
         /// <param name="dim">The id of the dimension to look up.</param>
         /// <returns>A <see cref="RegionChunkManager"/> tied to the given dimension in this world.</returns>
         /// <remarks>Get a <see cref="RegionChunkManager"/> if you you need to work with easily-digestible, bounded chunks of blocks.</remarks>
-        public new AlphaChunkManager GetChunkManager (int dim)
-        {
+        public new AlphaChunkManager GetChunkManager (int dim) {
             return GetChunkManagerVirt(dim) as AlphaChunkManager;
         }
 
@@ -89,14 +81,12 @@ namespace Substrate
         /// </summary>
         /// <returns>A <see cref="PlayerManager"/> for this world.</returns>
         /// <remarks>To manage the player of a single-player world, get a <see cref="Level"/> object for the world instead.</remarks>
-        public new PlayerManager GetPlayerManager ()
-        {
+        public new PlayerManager GetPlayerManager () {
             return GetPlayerManagerVirt() as PlayerManager;
         }
 
         /// <inherits />
-        public override void Save ()
-        {
+        public override void Save () {
             _level.Save();
 
             foreach (KeyValuePair<string, AlphaChunkManager> cm in _chunkMgrs) {
@@ -109,8 +99,7 @@ namespace Substrate
         /// </summary>
         /// <param name="path">The path to the directory containing the world's level.dat, or the path to level.dat itself.</param>
         /// <returns>A new <see cref="AlphaWorld"/> object representing an existing world on disk.</returns>
-        public static new AlphaWorld Open (string path)
-        {
+        public static new AlphaWorld Open (string path) {
             return new AlphaWorld().OpenWorld(path) as AlphaWorld;
         }
 
@@ -121,19 +110,16 @@ namespace Substrate
         /// <returns>A new <see cref="AlphaWorld"/> object representing a new world.</returns>
         /// <remarks>This method will attempt to create the specified directory immediately if it does not exist, but will not
         /// write out any world data unless it is explicitly saved at a later time.</remarks>
-        public static AlphaWorld Create (string path)
-        {
+        public static AlphaWorld Create (string path) {
             return new AlphaWorld().CreateWorld(path) as AlphaWorld;
         }
 
         /// <exclude/>
-        protected override IBlockManager GetBlockManagerVirt (int dim)
-        {
+        protected override IBlockManager GetBlockManagerVirt (int dim) {
             return GetBlockManagerVirt(DimensionFromInt(dim));
         }
 
-        protected override IBlockManager GetBlockManagerVirt (string dim)
-        {
+        protected override IBlockManager GetBlockManagerVirt (string dim) {
             BlockManager rm;
             if (_blockMgrs.TryGetValue(dim, out rm)) {
                 return rm;
@@ -144,13 +130,11 @@ namespace Substrate
         }
 
         /// <exclude/>
-        protected override IChunkManager GetChunkManagerVirt (int dim)
-        {
+        protected override IChunkManager GetChunkManagerVirt (int dim) {
             return GetChunkManagerVirt(DimensionFromInt(dim));
         }
 
-        protected override IChunkManager GetChunkManagerVirt (string dim)
-        {
+        protected override IChunkManager GetChunkManagerVirt (string dim) {
             AlphaChunkManager rm;
             if (_chunkMgrs.TryGetValue(dim, out rm)) {
                 return rm;
@@ -161,8 +145,7 @@ namespace Substrate
         }
 
         /// <exclude/>
-        protected override IPlayerManager GetPlayerManagerVirt ()
-        {
+        protected override IPlayerManager GetPlayerManagerVirt () {
             if (_playerMan != null) {
                 return _playerMan;
             }
@@ -173,16 +156,15 @@ namespace Substrate
             return _playerMan;
         }
 
-        private string DimensionFromInt (int dim)
-        {
-            if (dim == Dimension.DEFAULT)
+        private string DimensionFromInt (int dim) {
+            if (dim == Dimension.DEFAULT) {
                 return "";
-            else
+            } else {
                 return "DIM" + dim;
+            }
         }
 
-        private void OpenDimension (string dim)
-        {
+        private void OpenDimension (string dim) {
             string path = Path;
             if (!String.IsNullOrEmpty(dim)) {
                 path = IO.Path.Combine(path, dim);
@@ -199,14 +181,12 @@ namespace Substrate
             _blockMgrs[dim] = bm;
         }
 
-        private AlphaWorld OpenWorld (string path)
-        {
+        private AlphaWorld OpenWorld (string path) {
             if (!Directory.Exists(path)) {
                 if (File.Exists(path)) {
                     _levelFile = IO.Path.GetFileName(path);
                     path = IO.Path.GetDirectoryName(path);
-                }
-                else {
+                } else {
                     throw new DirectoryNotFoundException("Directory '" + path + "' not found");
                 }
             }
@@ -225,8 +205,7 @@ namespace Substrate
             return this;
         }
 
-        private AlphaWorld CreateWorld (string path)
-        {
+        private AlphaWorld CreateWorld (string path) {
             if (!Directory.Exists(path)) {
                 throw new DirectoryNotFoundException("Directory '" + path + "' not found");
             }
@@ -238,15 +217,12 @@ namespace Substrate
             return this;
         }
 
-        private bool LoadLevel ()
-        {
+        private bool LoadLevel () {
             NBTFile nf = new NBTFile(IO.Path.Combine(Path, _levelFile));
             NbtTree tree;
 
-            using (Stream nbtstr = nf.GetDataInputStream())
-            {
-                if (nbtstr == null)
-                {
+            using (Stream nbtstr = nf.GetDataInputStream()) {
+                if (nbtstr == null) {
                     return false;
                 }
 
@@ -260,8 +236,7 @@ namespace Substrate
         }
 
 
-        internal static void OnResolveOpen (object sender, OpenWorldEventArgs e)
-        {
+        internal static void OnResolveOpen (object sender, OpenWorldEventArgs e) {
             try {
                 AlphaWorld world = new AlphaWorld().OpenWorld(e.Path);
                 if (world == null) {
@@ -273,8 +248,7 @@ namespace Substrate
                 }
 
                 e.AddHandler(Open);
-            }
-            catch (Exception) {
+            } catch (Exception) {
                 return;
             }
         }

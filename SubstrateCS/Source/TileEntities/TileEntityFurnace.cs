@@ -3,20 +3,16 @@ using System.Collections.Generic;
 using Substrate.Core;
 using Substrate.Nbt;
 
-namespace Substrate.TileEntities
-{
-    public class TileEntityFurnace : TileEntity, IItemContainer
-    {
-        public static readonly SchemaNodeCompound FurnaceSchema = TileEntity.Schema.MergeInto(new SchemaNodeCompound("")
-        {
+namespace Substrate.TileEntities {
+    public class TileEntityFurnace : TileEntity, IItemContainer {
+        public static readonly SchemaNodeCompound FurnaceSchema = TileEntity.Schema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeString("id", TypeId),
             new SchemaNodeScaler("BurnTime", TagType.TAG_SHORT),
             new SchemaNodeScaler("CookTime", TagType.TAG_SHORT),
             new SchemaNodeList("Items", TagType.TAG_COMPOUND, ItemCollection.Schema),
         });
 
-        public static string TypeId
-        {
+        public static string TypeId {
             get { return "Furnace"; }
         }
 
@@ -27,39 +23,33 @@ namespace Substrate.TileEntities
 
         private ItemCollection _items;
 
-        public int BurnTime
-        {
+        public int BurnTime {
             get { return _burnTime; }
             set { _burnTime = (short)value; }
         }
 
-        public int CookTime
-        {
+        public int CookTime {
             get { return _cookTime; }
             set { _cookTime = (short)value; }
         }
 
         protected TileEntityFurnace (string id)
-            : base(id)
-        {
+            : base(id) {
             _items = new ItemCollection(_CAPACITY);
         }
 
         public TileEntityFurnace ()
-            : this(TypeId)
-        {
+            : this(TypeId) {
         }
 
         public TileEntityFurnace (TileEntity te)
-            : base(te)
-        {
+            : base(te) {
             TileEntityFurnace tec = te as TileEntityFurnace;
             if (tec != null) {
                 _cookTime = tec._cookTime;
                 _burnTime = tec._burnTime;
                 _items = tec._items.Copy();
-            }
-            else {
+            } else {
                 _items = new ItemCollection(_CAPACITY);
             }
         }
@@ -67,8 +57,7 @@ namespace Substrate.TileEntities
 
         #region ICopyable<TileEntity> Members
 
-        public override TileEntity Copy ()
-        {
+        public override TileEntity Copy () {
             return new TileEntityFurnace(this);
         }
 
@@ -77,8 +66,7 @@ namespace Substrate.TileEntities
 
         #region IItemContainer Members
 
-        public ItemCollection Items
-        {
+        public ItemCollection Items {
             get { return _items; }
         }
 
@@ -87,8 +75,7 @@ namespace Substrate.TileEntities
 
         #region INBTObject<TileEntity> Members
 
-        public override TileEntity LoadTree (TagNode tree)
-        {
+        public override TileEntity LoadTree (TagNode tree) {
             TagNodeCompound ctree = tree as TagNodeCompound;
             if (ctree == null || base.LoadTree(tree) == null) {
                 return null;
@@ -103,8 +90,7 @@ namespace Substrate.TileEntities
             return this;
         }
 
-        public override TagNode BuildTree ()
-        {
+        public override TagNode BuildTree () {
             TagNodeCompound tree = base.BuildTree() as TagNodeCompound;
             tree["BurnTime"] = new TagNodeShort(_burnTime);
             tree["CookTime"] = new TagNodeShort(_cookTime);
@@ -113,8 +99,7 @@ namespace Substrate.TileEntities
             return tree;
         }
 
-        public override bool ValidateTree (TagNode tree)
-        {
+        public override bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, FurnaceSchema).Verify();
         }
 

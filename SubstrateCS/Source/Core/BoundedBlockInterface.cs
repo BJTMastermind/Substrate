@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.Core
-{
+namespace Substrate.Core {
     /// <summary>
     /// A container of blocks with set dimensions.
     /// </summary>
-    public interface IBoundedBlockCollection
-    {
+    public interface IBoundedBlockCollection {
         /// <summary>
         /// Gets the length of the X-dimension of the container.
         /// </summary>
@@ -90,8 +88,7 @@ namespace Substrate.Core
     /// A bounded container of blocks supporting data fields.
     /// </summary>
     /// <seealso cref="IDataBlockCollection"/>
-    public interface IBoundedDataBlockCollection : IBoundedBlockCollection
-    {
+    public interface IBoundedDataBlockCollection : IBoundedBlockCollection {
         /// <summary>
         /// Gets a block with data field from a bounded block container.
         /// </summary>
@@ -150,8 +147,7 @@ namespace Substrate.Core
     /// A bounded container of blocks supporting dual-source lighting.
     /// </summary>
     /// <seealso cref="ILitBlockCollection"/>
-    public interface IBoundedLitBlockCollection : IBoundedBlockCollection
-    {
+    public interface IBoundedLitBlockCollection : IBoundedBlockCollection {
         /// <summary>
         /// Gets a block with lighting information from a bounded block container.
         /// </summary>
@@ -347,8 +343,7 @@ namespace Substrate.Core
     /// A bounded container for blocks supporting additional properties.
     /// </summary>
     /// <seealso cref="IPropertyBlockCollection"/>
-    public interface IBoundedPropertyBlockCollection : IBoundedBlockCollection
-    {
+    public interface IBoundedPropertyBlockCollection : IBoundedBlockCollection {
         /// <summary>
         /// Gets a block supporting extra properties from a bounded block container.
         /// </summary>
@@ -419,8 +414,7 @@ namespace Substrate.Core
     /// A bounded container for blocks supporting active processing properties.
     /// </summary>
     /// <seealso cref="IBoundedActiveBlockCollection"/>
-    public interface IBoundedActiveBlockCollection : IBoundedBlockCollection
-    {
+    public interface IBoundedActiveBlockCollection : IBoundedBlockCollection {
         /// <summary>
         /// Gets a block supporting active processing properties from a bounded block container.
         /// </summary>
@@ -505,8 +499,7 @@ namespace Substrate.Core
     /// A bounded container of blocks supporting data, lighting, and properties.
     /// </summary>
     /// <seealso cref="IAlphaBlockCollection"/>
-    public interface IBoundedAlphaBlockCollection : IBoundedDataBlockCollection, IBoundedLitBlockCollection, IBoundedPropertyBlockCollection
-    {
+    public interface IBoundedAlphaBlockCollection : IBoundedDataBlockCollection, IBoundedLitBlockCollection, IBoundedPropertyBlockCollection {
         /// <summary>
         /// Gets a context-sensitive Alpha-compatible block from a bounded block container.
         /// </summary>

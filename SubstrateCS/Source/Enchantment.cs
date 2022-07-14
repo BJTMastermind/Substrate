@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using Substrate.Nbt;
 using Substrate.Core;
 
-namespace Substrate
-{
+namespace Substrate {
     /// <summary>
     /// Represents an enchantment that can be applied to some <see cref="Item"/>s.
     /// </summary>
-    public class Enchantment : INbtObject<Enchantment>, ICopyable<Enchantment>
-    {
-        private static readonly SchemaNodeCompound _schema = new SchemaNodeCompound("")
-        {
+    public class Enchantment : INbtObject<Enchantment>, ICopyable<Enchantment> {
+        private static readonly SchemaNodeCompound _schema = new SchemaNodeCompound("") {
             new SchemaNodeScaler("id", TagType.TAG_SHORT),
             new SchemaNodeScaler("lvl", TagType.TAG_SHORT),
         };
@@ -24,8 +21,7 @@ namespace Substrate
         /// <summary>
         /// Constructs a blank <see cref="Enchantment"/>.
         /// </summary>
-        public Enchantment ()
-        {
+        public Enchantment () {
         }
 
         /// <summary>
@@ -33,8 +29,7 @@ namespace Substrate
         /// </summary>
         /// <param name="id">The id (type) of the enchantment.</param>
         /// <param name="level">The level of the enchantment.</param>
-        public Enchantment (int id, int level)
-        {
+        public Enchantment (int id, int level) {
             _id = (short)id;
             _level = (short)level;
         }
@@ -44,16 +39,14 @@ namespace Substrate
         /// <summary>
         /// Gets an <see cref="EnchantmentInfo"/> entry for this enchantment's type.
         /// </summary>
-        public EnchantmentInfo Info
-        {
+        public EnchantmentInfo Info {
             get { return EnchantmentInfo.EnchantmentTable[_id]; }
         }
 
         /// <summary>
         /// Gets or sets the current type (id) of the enchantment.
         /// </summary>
-        public int Id
-        {
+        public int Id {
             get { return _id; }
             set { _id = (short)value; }
         }
@@ -61,8 +54,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the level of the enchantment.
         /// </summary>
-        public int Level
-        {
+        public int Level {
             get { return _level; }
             set { _level = (short)value; }
         }
@@ -70,8 +62,7 @@ namespace Substrate
         /// <summary>
         /// Gets a <see cref="SchemaNode"/> representing the schema of an enchantment.
         /// </summary>
-        public static SchemaNodeCompound Schema
-        {
+        public static SchemaNodeCompound Schema {
             get { return _schema; }
         }
 
@@ -80,8 +71,7 @@ namespace Substrate
         #region INbtObject<Enchantment> Members
 
         /// <inheritdoc />
-        public Enchantment LoadTree (TagNode tree)
-        {
+        public Enchantment LoadTree (TagNode tree) {
             TagNodeCompound ctree = tree as TagNodeCompound;
             if (ctree == null) {
                 return null;
@@ -96,8 +86,7 @@ namespace Substrate
         }
 
         /// <inheritdoc />
-        public Enchantment LoadTreeSafe (TagNode tree)
-        {
+        public Enchantment LoadTreeSafe (TagNode tree) {
             if (!ValidateTree(tree)) {
                 return null;
             }
@@ -106,8 +95,7 @@ namespace Substrate
         }
 
         /// <inheritdoc />
-        public TagNode BuildTree ()
-        {
+        public TagNode BuildTree () {
             TagNodeCompound tree = new TagNodeCompound();
             tree["id"] = new TagNodeShort(_id);
             tree["lvl"] = new TagNodeShort(_level);
@@ -120,8 +108,7 @@ namespace Substrate
         }
 
         /// <inheritdoc />
-        public bool ValidateTree (TagNode tree)
-        {
+        public bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, _schema).Verify();
         }
 
@@ -130,8 +117,7 @@ namespace Substrate
         #region ICopyable<Enchantment> Members
 
         /// <inheritdoc />
-        public Enchantment Copy ()
-        {
+        public Enchantment Copy () {
             Enchantment ench = new Enchantment(_id, _level);
 
             if (_source != null) {

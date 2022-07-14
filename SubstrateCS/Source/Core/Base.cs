@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.Core
-{
-    internal static class Base36
-    {
+namespace Substrate.Core {
+    internal static class Base36 {
         private const string _alphabet = "0123456789abcdefghijklmnopqrstuvwxyz";
 
-        public static string Encode (long input)
-        {
+        public static string Encode (long input) {
             if (input == 0) {
                 return "0";
             }
@@ -33,8 +30,7 @@ namespace Substrate.Core
             return ret;
         }
 
-        public static long Decode (string input)
-        {
+        public static long Decode (string input) {
             if (input.Length == 0) {
                 throw new ArgumentOutOfRangeException("input", input);
             }
@@ -61,12 +57,10 @@ namespace Substrate.Core
         }
     }
 
-    internal static class Base16
-    {
+    internal static class Base16 {
         private const string _alphabet = "0123456789abcdef";
 
-        public static string Encode (byte[] input, int stride = 0, char strideChar = ' ')
-        {
+        public static string Encode (byte[] input, int stride = 0, char strideChar = ' ') {
             List<char> result = new List<char>();
 
             for (int i = 0; i < input.Length; i++) {

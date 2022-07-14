@@ -2,41 +2,33 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.Entities
-{
+namespace Substrate.Entities {
     using Substrate.Nbt;
 
-    public class EntityCaveSpider : EntitySpider
-    {
-        public static readonly SchemaNodeCompound CaveSpiderSchema = SpiderSchema.MergeInto(new SchemaNodeCompound("")
-        {
+    public class EntityCaveSpider : EntitySpider {
+        public static readonly SchemaNodeCompound CaveSpiderSchema = SpiderSchema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeString("id", TypeId),
         });
 
-        public static new string TypeId
-        {
+        public static new string TypeId {
             get { return "CaveSpider"; }
         }
 
         protected EntityCaveSpider (string id)
-            : base(id)
-        {
+            : base(id) {
         }
 
         public EntityCaveSpider ()
-            : this(TypeId)
-        {
+            : this(TypeId) {
         }
 
         public EntityCaveSpider (TypedEntity e)
-            : base(e)
-        {
+            : base(e) {
         }
 
         #region INBTObject<Entity> Members
 
-        public override bool ValidateTree (TagNode tree)
-        {
+        public override bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, CaveSpiderSchema).Verify();
         }
 
@@ -45,8 +37,7 @@ namespace Substrate.Entities
 
         #region ICopyable<Entity> Members
 
-        public override TypedEntity Copy ()
-        {
+        public override TypedEntity Copy () {
             return new EntityCaveSpider(this);
         }
 

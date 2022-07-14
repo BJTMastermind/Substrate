@@ -13,12 +13,9 @@ using Substrate.Nbt;
 // algorithms work, in order to limit the number of chunks that must
 // be loaded at any given time.
 
-namespace Relight
-{
-    class Program
-    {
-        static void Main (string[] args)
-        {
+namespace Relight {
+    class Program {
+        static void Main (string[] args) {
             if (args.Length < 1) {
                 Console.WriteLine("You must specify a target directory");
                 return;

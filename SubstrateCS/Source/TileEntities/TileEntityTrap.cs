@@ -3,18 +3,14 @@ using System.Collections.Generic;
 using Substrate.Core;
 using Substrate.Nbt;
 
-namespace Substrate.TileEntities
-{
-    public class TileEntityTrap : TileEntity, IItemContainer
-    {
-        public static readonly SchemaNodeCompound TrapSchema = TileEntity.Schema.MergeInto(new SchemaNodeCompound("")
-        {
+namespace Substrate.TileEntities {
+    public class TileEntityTrap : TileEntity, IItemContainer {
+        public static readonly SchemaNodeCompound TrapSchema = TileEntity.Schema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeString("id", TypeId),
             new SchemaNodeList("Items", TagType.TAG_COMPOUND, ItemCollection.Schema),
         });
 
-        public static string TypeId
-        {
+        public static string TypeId {
             get { return "Trap"; }
         }
 
@@ -23,24 +19,20 @@ namespace Substrate.TileEntities
         private ItemCollection _items;
 
         protected TileEntityTrap (string id)
-            : base(id)
-        {
+            : base(id) {
             _items = new ItemCollection(_CAPACITY);
         }
 
         public TileEntityTrap ()
-            : this(TypeId)
-        {
+            : this(TypeId) {
         }
 
         public TileEntityTrap (TileEntity te)
-            : base(te)
-        {
+            : base(te) {
             TileEntityTrap tec = te as TileEntityTrap;
             if (tec != null) {
                 _items = tec._items.Copy();
-            }
-            else {
+            } else {
                 _items = new ItemCollection(_CAPACITY);
             }
         }
@@ -48,8 +40,7 @@ namespace Substrate.TileEntities
 
         #region ICopyable<TileEntity> Members
 
-        public override TileEntity Copy ()
-        {
+        public override TileEntity Copy () {
             return new TileEntityTrap(this);
         }
 
@@ -58,8 +49,7 @@ namespace Substrate.TileEntities
 
         #region IItemContainer Members
 
-        public ItemCollection Items
-        {
+        public ItemCollection Items {
             get { return _items; }
         }
 
@@ -68,8 +58,7 @@ namespace Substrate.TileEntities
 
         #region INBTObject<TileEntity> Members
 
-        public override TileEntity LoadTree (TagNode tree)
-        {
+        public override TileEntity LoadTree (TagNode tree) {
             TagNodeCompound ctree = tree as TagNodeCompound;
             if (ctree == null || base.LoadTree(tree) == null) {
                 return null;
@@ -81,16 +70,14 @@ namespace Substrate.TileEntities
             return this;
         }
 
-        public override TagNode BuildTree ()
-        {
+        public override TagNode BuildTree () {
             TagNodeCompound tree = base.BuildTree() as TagNodeCompound;
             tree["Items"] = _items.BuildTree();
 
             return tree;
         }
 
-        public override bool ValidateTree (TagNode tree)
-        {
+        public override bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, TrapSchema).Verify();
         }
 

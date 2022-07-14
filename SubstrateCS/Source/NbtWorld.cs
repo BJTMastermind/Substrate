@@ -6,8 +6,7 @@ using Substrate.Core;
 using Substrate.Nbt;
 using Substrate.Data;
 
-namespace Substrate
-{
+namespace Substrate {
     /// <summary>
     /// An abstract representation of any conforming chunk-based world.
     /// </summary>
@@ -17,8 +16,7 @@ namespace Substrate
     /// <para>Advanced implementors can support loading other Nbt-compatible world formats by extending <see cref="NbtWorld"/> and registering
     /// an event handler with the <see cref="ResolveOpen"/> event, which will allow the generic <see cref="Open(string)"/> method to
     /// open worlds of the new format.</para></remarks>
-    public abstract class NbtWorld
-    {
+    public abstract class NbtWorld {
         private const string _DATA_DIR = "data";
 
         private string _path;
@@ -34,8 +32,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the path to the directory containing the world.
         /// </summary>
-        public string Path
-        {
+        public string Path {
             get { return _path; }
             set { _path = value; }
         }
@@ -43,8 +40,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the directory containing data resources, rooted in the world directory.
         /// </summary>
-        public string DataDirectory
-        {
+        public string DataDirectory {
             get { return _dataDir; }
             set { _dataDir = value; }
         }
@@ -58,8 +54,7 @@ namespace Substrate
         /// Gets an <see cref="IBlockManager"/> for the default dimension.
         /// </summary>
         /// <returns>An <see cref="IBlockManager"/> tied to the default dimension in this world.</returns>
-        public IBlockManager GetBlockManager ()
-        {
+        public IBlockManager GetBlockManager () {
             return GetBlockManagerVirt(Dimension.DEFAULT);
         }
 
@@ -68,13 +63,11 @@ namespace Substrate
         /// </summary>
         /// <param name="dim">The id of the dimension to look up.</param>
         /// <returns>An <see cref="IBlockManager"/> tied to the given dimension in this world.</returns>
-        public IBlockManager GetBlockManager (int dim)
-        {
+        public IBlockManager GetBlockManager (int dim) {
             return GetBlockManagerVirt(dim);
         }
 
-        public IBlockManager GetBlockManager (string dim)
-        {
+        public IBlockManager GetBlockManager (string dim) {
             return GetBlockManagerVirt(dim);
         }
 
@@ -82,8 +75,7 @@ namespace Substrate
         /// Gets an <see cref="IChunkManager"/> for the default dimension.
         /// </summary>
         /// <returns>An <see cref="IChunkManager"/> tied to the default dimension in this world.</returns>
-        public IChunkManager GetChunkManager ()
-        {
+        public IChunkManager GetChunkManager () {
             return GetChunkManagerVirt(Dimension.DEFAULT);
         }
 
@@ -92,13 +84,11 @@ namespace Substrate
         /// </summary>
         /// <param name="dim">The id of the dimension to look up.</param>
         /// <returns>An <see cref="IChunkManager"/> tied to the given dimension in this world.</returns>
-        public IChunkManager GetChunkManager (int dim)
-        {
+        public IChunkManager GetChunkManager (int dim) {
             return GetChunkManagerVirt(dim);
         }
 
-        public IChunkManager GetChunkManager (string dim)
-        {
+        public IChunkManager GetChunkManager (string dim) {
             return GetChunkManagerVirt(dim);
         }
 
@@ -106,8 +96,7 @@ namespace Substrate
         /// Gets an <see cref="IPlayerManager"/> for maanging players on multiplayer worlds.
         /// </summary>
         /// <returns>An <see cref="IPlayerManager"/> for this world.</returns>
-        public IPlayerManager GetPlayerManager ()
-        {
+        public IPlayerManager GetPlayerManager () {
             return GetPlayerManagerVirt();
         }
 
@@ -115,8 +104,7 @@ namespace Substrate
         /// Gets a <see cref="DataManager"/> for managing data resources, such as maps.
         /// </summary>
         /// <returns>A <see cref="DataManager"/> for this world.</returns>
-        public DataManager GetDataManager ()
-        {
+        public DataManager GetDataManager () {
             return GetDataManagerVirt();
         }
 
@@ -125,8 +113,7 @@ namespace Substrate
         /// </summary>
         /// <param name="path">The path to the directory containing the world.</param>
         /// <returns>A concrete <see cref="NbtWorld"/> type, or null if the world cannot be opened or is ambiguos.</returns>
-        public static NbtWorld Open (string path)
-        {
+        public static NbtWorld Open (string path) {
             if (ResolveOpen == null) {
                 return null;
             }
@@ -172,13 +159,11 @@ namespace Substrate
         /// <returns>An <see cref="IChunkManager"/> for the given dimension in the world.</returns>
         protected abstract IChunkManager GetChunkManagerVirt (int dim);
 
-        protected virtual IBlockManager GetBlockManagerVirt (string dim)
-        {
+        protected virtual IBlockManager GetBlockManagerVirt (string dim) {
             throw new NotImplementedException();
         }
 
-        protected virtual IChunkManager GetChunkManagerVirt (string dim)
-        {
+        protected virtual IChunkManager GetChunkManagerVirt (string dim) {
             throw new NotImplementedException();
         }
 
@@ -192,15 +177,13 @@ namespace Substrate
         /// Virtual implementor of <see cref="GetDataManager"/>
         /// </summary>
         /// <returns>A <see cref="DataManager"/> for the given dimension in the world.</returns>
-        protected virtual DataManager GetDataManagerVirt ()
-        {
+        protected virtual DataManager GetDataManagerVirt () {
             throw new NotImplementedException();
         }
 
         #endregion
 
-        static NbtWorld ()
-        {
+        static NbtWorld () {
             ResolveOpen += AnvilWorld.OnResolveOpen;
             ResolveOpen += BetaWorld.OnResolveOpen;
             ResolveOpen += AlphaWorld.OnResolveOpen;

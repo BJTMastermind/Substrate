@@ -2,44 +2,36 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.Entities
-{
+namespace Substrate.Entities {
     using Substrate.Nbt;
 
-    public class EntitySlime : EntityMob
-    {
-        public static readonly SchemaNodeCompound SlimeSchema = MobSchema.MergeInto(new SchemaNodeCompound("")
-        {
+    public class EntitySlime : EntityMob {
+        public static readonly SchemaNodeCompound SlimeSchema = MobSchema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeString("id", TypeId),
             new SchemaNodeScaler("Size", TagType.TAG_INT),
         });
 
-        public static new string TypeId
-        {
+        public static new string TypeId {
             get { return "Slime"; }
         }
 
         private int _size;
 
-        public int Size
-        {
+        public int Size {
             get { return _size; }
             set { _size = value; }
         }
 
         protected EntitySlime (string id)
-            : base(id)
-        {
+            : base(id) {
         }
 
         public EntitySlime ()
-            : this(TypeId)
-        {
+            : this(TypeId) {
         }
 
         public EntitySlime (TypedEntity e)
-            : base(e)
-        {
+            : base(e) {
             EntitySlime e2 = e as EntitySlime;
             if (e2 != null) {
                 _size = e2._size;
@@ -49,8 +41,7 @@ namespace Substrate.Entities
 
         #region INBTObject<Entity> Members
 
-        public override TypedEntity LoadTree (TagNode tree)
-        {
+        public override TypedEntity LoadTree (TagNode tree) {
             TagNodeCompound ctree = tree as TagNodeCompound;
             if (ctree == null || base.LoadTree(tree) == null) {
                 return null;
@@ -61,16 +52,14 @@ namespace Substrate.Entities
             return this;
         }
 
-        public override TagNode BuildTree ()
-        {
+        public override TagNode BuildTree () {
             TagNodeCompound tree = base.BuildTree() as TagNodeCompound;
             tree["Size"] = new TagNodeInt(_size);
 
             return tree;
         }
 
-        public override bool ValidateTree (TagNode tree)
-        {
+        public override bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, SlimeSchema).Verify();
         }
 
@@ -79,8 +68,7 @@ namespace Substrate.Entities
 
         #region ICopyable<Entity> Members
 
-        public override TypedEntity Copy ()
-        {
+        public override TypedEntity Copy () {
             return new EntitySlime(this);
         }
 

@@ -2,21 +2,17 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.Entities
-{
+namespace Substrate.Entities {
     using Substrate.Nbt;
 
-    public class EntityMinecartFurnace : EntityMinecart
-    {
-        public static readonly SchemaNodeCompound MinecartFurnaceSchema = MinecartSchema.MergeInto(new SchemaNodeCompound("")
-        {
+    public class EntityMinecartFurnace : EntityMinecart {
+        public static readonly SchemaNodeCompound MinecartFurnaceSchema = MinecartSchema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeScaler("PushX", TagType.TAG_DOUBLE),
             new SchemaNodeScaler("PushZ", TagType.TAG_DOUBLE),
             new SchemaNodeScaler("Fuel", TagType.TAG_SHORT),
         });
 
-        public static new string TypeId
-        {
+        public static new string TypeId {
             get { return EntityMinecart.TypeId; }
         }
 
@@ -24,37 +20,31 @@ namespace Substrate.Entities
         private double _pushZ;
         private short _fuel;
 
-        public double PushX
-        {
+        public double PushX {
             get { return _pushX; }
             set { _pushX = value; }
         }
 
-        public double PushZ
-        {
+        public double PushZ {
             get { return _pushZ; }
             set { _pushZ = value; }
         }
 
-        public int Fuel
-        {
+        public int Fuel {
             get { return _fuel; }
             set { _fuel = (short)value; }
         }
 
         protected EntityMinecartFurnace (string id)
-            : base(id)
-        {
+            : base(id) {
         }
 
         public EntityMinecartFurnace ()
-            : base()
-        {
+            : base() {
         }
 
         public EntityMinecartFurnace (TypedEntity e)
-            : base(e)
-        {
+            : base(e) {
             EntityMinecartFurnace e2 = e as EntityMinecartFurnace;
             if (e2 != null) {
                 _pushX = e2._pushX;
@@ -66,8 +56,7 @@ namespace Substrate.Entities
 
         #region INBTObject<Entity> Members
 
-        public override TypedEntity LoadTree (TagNode tree)
-        {
+        public override TypedEntity LoadTree (TagNode tree) {
             TagNodeCompound ctree = tree as TagNodeCompound;
             if (ctree == null || base.LoadTree(tree) == null) {
                 return null;
@@ -80,8 +69,7 @@ namespace Substrate.Entities
             return this;
         }
 
-        public override TagNode BuildTree ()
-        {
+        public override TagNode BuildTree () {
             TagNodeCompound tree = base.BuildTree() as TagNodeCompound;
             tree["PushX"] = new TagNodeDouble(_pushX);
             tree["PushZ"] = new TagNodeDouble(_pushZ);
@@ -90,8 +78,7 @@ namespace Substrate.Entities
             return tree;
         }
 
-        public override bool ValidateTree (TagNode tree)
-        {
+        public override bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, MinecartFurnaceSchema).Verify();
         }
 
@@ -100,8 +87,7 @@ namespace Substrate.Entities
 
         #region ICopyable<Entity> Members
 
-        public override TypedEntity Copy ()
-        {
+        public override TypedEntity Copy () {
             return new EntityMinecartFurnace(this);
         }
 

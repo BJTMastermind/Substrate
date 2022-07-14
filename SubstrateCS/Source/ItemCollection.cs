@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using Substrate.Nbt;
 using Substrate.Core;
 
-namespace Substrate
-{
+namespace Substrate {
     /// <summary>
     /// Represents a collection of items, such as a chest or an inventory.
     /// </summary>
     /// <remarks>ItemCollections have a limited number of slots that depends on where they are used.</remarks>
-    public class ItemCollection : INbtObject<ItemCollection>, ICopyable<ItemCollection>
-    {
-        private static readonly SchemaNodeCompound _schema = Item.Schema.MergeInto(new SchemaNodeCompound("")
-        {
+    public class ItemCollection : INbtObject<ItemCollection>, ICopyable<ItemCollection> {
+        private static readonly SchemaNodeCompound _schema = Item.Schema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeScaler("Slot", TagType.TAG_BYTE),
         });
 
@@ -28,8 +25,7 @@ namespace Substrate
         /// <remarks>The <paramref name="capacity"/> parameter does not necessarily indicate the true capacity of an item collection.
         /// The player object, for example, contains a conventional inventory, a range of invalid slots, and then equipment.  Capacity in
         /// this case would refer to the highest equipment slot.</remarks>
-        public ItemCollection (int capacity)
-        {
+        public ItemCollection (int capacity) {
             _capacity = capacity;
             _items = new Dictionary<int, Item>();
         }
@@ -39,16 +35,14 @@ namespace Substrate
         /// <summary>
         /// Gets the capacity of the item collection.
         /// </summary>
-        public int Capacity
-        {
+        public int Capacity {
             get { return _capacity; }
         }
 
         /// <summary>
         /// Gets the current number of item slots actually used in the collection.
         /// </summary>
-        public int Count
-        {
+        public int Count {
             get { return _items.Count; }
         }
 
@@ -56,17 +50,14 @@ namespace Substrate
         /// Gets or sets an item in a given item slot.
         /// </summary>
         /// <param name="slot">The item slot to query or insert an item or item stack into.</param>
-        public Item this[int slot]
-        {
-            get
-            {
+        public Item this[int slot] {
+            get {
                 Item item;
                 _items.TryGetValue(slot, out item);
                 return item;
             }
 
-            set
-            {
+            set {
                 if (slot < 0 || slot >= _capacity) {
                     return;
                 }
@@ -77,8 +68,7 @@ namespace Substrate
         /// <summary>
         /// Gets a <see cref="SchemaNode"/> representing the schema of an item collection.
         /// </summary>
-        public static SchemaNodeCompound Schema
-        {
+        public static SchemaNodeCompound Schema {
             get { return _schema; }
         }
 
@@ -89,8 +79,7 @@ namespace Substrate
         /// </summary>
         /// <param name="slot">The item slot to check.</param>
         /// <returns>True if an item or stack of items exists in the given slot.</returns>
-        public bool ItemExists (int slot)
-        {
+        public bool ItemExists (int slot) {
             return _items.ContainsKey(slot);
         }
 
@@ -99,24 +88,21 @@ namespace Substrate
         /// </summary>
         /// <param name="slot">The item slot to clear.</param>
         /// <returns>True if an item was removed; false otherwise.</returns>
-        public bool Clear (int slot)
-        {
+        public bool Clear (int slot) {
             return _items.Remove(slot);
         }
 
         /// <summary>
         /// Removes all items from the item collection.
         /// </summary>
-        public void ClearAllItems ()
-        {
+        public void ClearAllItems () {
             _items.Clear();
         }
 
         #region ICopyable<ItemCollection> Members
 
         /// <inheritdoc/>
-        public ItemCollection Copy ()
-        {
+        public ItemCollection Copy () {
             ItemCollection ic = new ItemCollection(_capacity);
             foreach (KeyValuePair<int, Item> item in _items) {
                 ic[item.Key] = item.Value.Copy();
@@ -129,8 +115,7 @@ namespace Substrate
         #region INBTObject<ItemCollection> Members
 
         /// <inheritdoc/>
-        public ItemCollection LoadTree (TagNode tree)
-        {
+        public ItemCollection LoadTree (TagNode tree) {
             TagNodeList ltree = tree as TagNodeList;
             if (ltree == null) {
                 return null;
@@ -145,8 +130,7 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public ItemCollection LoadTreeSafe (TagNode tree)
-        {
+        public ItemCollection LoadTreeSafe (TagNode tree) {
             if (!ValidateTree(tree)) {
                 return null;
             }
@@ -155,8 +139,7 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public TagNode BuildTree ()
-        {
+        public TagNode BuildTree () {
             TagNodeList list = new TagNodeList(TagType.TAG_COMPOUND);
 
             foreach (KeyValuePair<int, Item> item in _items) {
@@ -169,8 +152,7 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public bool ValidateTree (TagNode tree)
-        {
+        public bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, _listSchema).Verify();
         }
 

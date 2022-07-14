@@ -6,15 +6,13 @@ using System.IO;
 using Substrate.Nbt;
 using Substrate.Core;
 
-namespace Substrate.Core
-{
+namespace Substrate.Core {
     
 
     /// <summary>
     /// Represents a single region containing 32x32 chunks.
     /// </summary>
-    public abstract class Region : IDisposable, IRegion
-    {
+    public abstract class Region : IDisposable, IRegion {
         protected const int XDIM = 32;
         protected const int ZDIM = 32;
         protected const int XMASK = XDIM - 1;
@@ -41,30 +39,26 @@ namespace Substrate.Core
         protected abstract bool ParseFileNameCore (string filename, out int x, out int z);
 
         /// <inherit />
-        public int X
-        {
+        public int X {
             get { return _rx; }
         }
 
         /// <inherit />
-        public int Z
-        {
+        public int Z {
             get { return _rz; }
         }
 
         /// <summary>
         /// Gets the length of the X-dimension of the region in chunks.
         /// </summary>
-        public int XDim
-        {
+        public int XDim {
             get { return XDIM; }
         }
 
         /// <summary>
         /// Gets the length of the Z-dimension of the region in chunks.
         /// </summary>
-        public int ZDim
-        {
+        public int ZDim {
             get { return ZDIM; }
         }
 
@@ -84,8 +78,7 @@ namespace Substrate.Core
         /// r.x.z.mcr, given x and z are integers representing the region's coordinates.</para>
         /// <para>Regions require a <see cref="ChunkCache"/> to be provided because they do not actually store any chunks or references
         /// to chunks on their own.  This allows regions to easily pass off requests outside of their bounds, if necessary.</para></remarks>
-        public Region (RegionManager rm, ChunkCache cache, int rx, int rz)
-        {
+        public Region (RegionManager rm, ChunkCache cache, int rx, int rz) {
             _regionMan = rm;
             _cache = cache;
             _regionFile = new WeakReference(null);
@@ -108,8 +101,7 @@ namespace Substrate.Core
         /// representing the region's coordinates.</para>
         /// <para>Regions require a <see cref="ChunkCache"/> to be provided because they do not actually store any chunks or references
         /// to chunks on their own.  This allows regions to easily pass off requests outside of their bounds, if necessary.</para></remarks>
-        public Region (RegionManager rm, ChunkCache cache, string filename)
-        {
+        public Region (RegionManager rm, ChunkCache cache, string filename) {
             _regionMan = rm;
             _cache = cache;
             _regionFile = new WeakReference(null);
@@ -124,16 +116,14 @@ namespace Substrate.Core
         /// <summary>
         /// Region finalizer that ensures any resources are cleaned up
         /// </summary>
-        ~Region ()
-        {
+        ~Region () {
             Dispose(false);
         }
 
         /// <summary>
         /// Disposes any managed and unmanaged resources held by the region.
         /// </summary>
-        public void Dispose ()
-        {
+        public void Dispose () {
             Dispose(true);
             System.GC.SuppressFinalize(this);
         }
@@ -142,8 +132,7 @@ namespace Substrate.Core
         /// Conditionally dispose managed or unmanaged resources.
         /// </summary>
         /// <param name="disposing">True if the call to Dispose was explicit.</param>
-        protected virtual void Dispose (bool disposing)
-        {
+        protected virtual void Dispose (bool disposing) {
             if (!_disposed) {
                 if (disposing) {
                     // Cleanup managed resources
@@ -159,8 +148,7 @@ namespace Substrate.Core
             _disposed = true;
         }
 
-        private RegionFile GetRegionFile ()
-        {
+        private RegionFile GetRegionFile () {
             RegionFile rf = _regionFile.Target as RegionFile;
             if (rf == null) {
                 rf = new RegionFile(GetFilePath());
@@ -171,8 +159,7 @@ namespace Substrate.Core
         }
 
         /// <inherits />
-        public NbtTree GetChunkTree (int lcx, int lcz)
-        {
+        public NbtTree GetChunkTree (int lcx, int lcz) {
             if (!LocalBoundsCheck(lcx, lcz)) {
                 IRegion alt = GetForeignRegion(lcx, lcz);
                 return (alt == null) ? null : alt.GetChunkTree(ForeignX(lcx), ForeignZ(lcz));
@@ -181,10 +168,8 @@ namespace Substrate.Core
             RegionFile rf = GetRegionFile();
             NbtTree tree;
 
-            using (Stream nbtstr = rf.GetChunkDataInputStream(lcx, lcz))
-            {
-                if (nbtstr == null)
-                {
+            using (Stream nbtstr = rf.GetChunkDataInputStream(lcx, lcz)) {
+                if (nbtstr == null) {
                     return null;
                 }
 
@@ -196,19 +181,16 @@ namespace Substrate.Core
 
         // XXX: Exceptions
         /// <inherits />
-        public bool SaveChunkTree (int lcx, int lcz, NbtTree tree)
-        {
+        public bool SaveChunkTree (int lcx, int lcz, NbtTree tree) {
             return SaveChunkTree(lcx, lcz, tree, null);
         }
 
         /// <inherits />
-        public bool SaveChunkTree (int lcx, int lcz, NbtTree tree, int timestamp)
-        {
+        public bool SaveChunkTree (int lcx, int lcz, NbtTree tree, int timestamp) {
             return SaveChunkTree(lcx, lcz, tree, timestamp);
         }
 
-        private bool SaveChunkTree (int lcx, int lcz, NbtTree tree, int? timestamp)
-        {
+        private bool SaveChunkTree (int lcx, int lcz, NbtTree tree, int? timestamp) {
             if (!LocalBoundsCheck(lcx, lcz)) {
                 IRegion alt = GetForeignRegion(lcx, lcz);
                 return (alt == null) ? false : alt.SaveChunkTree(ForeignX(lcx), ForeignZ(lcz), tree);
@@ -217,10 +199,8 @@ namespace Substrate.Core
             RegionFile rf = GetRegionFile();
             using (Stream zipstr = (timestamp == null)
                 ? rf.GetChunkDataOutputStream(lcx, lcz)
-                : rf.GetChunkDataOutputStream(lcx, lcz, (int)timestamp))
-            {
-                if (zipstr == null)
-                {
+                : rf.GetChunkDataOutputStream(lcx, lcz, (int)timestamp)) {
+                if (zipstr == null) {
                     return false;
                 }
 
@@ -231,8 +211,7 @@ namespace Substrate.Core
         }
 
         /// <inherits />
-        public Stream GetChunkOutStream (int lcx, int lcz)
-        {
+        public Stream GetChunkOutStream (int lcx, int lcz) {
             if (!LocalBoundsCheck(lcx, lcz)) {
                 IRegion alt = GetForeignRegion(lcx, lcz);
                 return (alt == null) ? null : alt.GetChunkOutStream(ForeignX(lcx), ForeignZ(lcz));
@@ -243,8 +222,7 @@ namespace Substrate.Core
         }
 
         /// <inherits />
-        public int ChunkCount ()
-        {
+        public int ChunkCount () {
             RegionFile rf = GetRegionFile();
 
             int count = 0;
@@ -261,8 +239,7 @@ namespace Substrate.Core
 
         // XXX: Consider revising foreign lookup support
         /// <inherits />
-        public ChunkRef GetChunkRef (int lcx, int lcz)
-        {
+        public ChunkRef GetChunkRef (int lcx, int lcz) {
             if (!LocalBoundsCheck(lcx, lcz)) {
                 IRegion alt = GetForeignRegion(lcx, lcz);
                 return (alt == null) ? null : alt.GetChunkRef(ForeignX(lcx), ForeignZ(lcz));
@@ -286,8 +263,7 @@ namespace Substrate.Core
         }
 
         /// <inherits />
-        public ChunkRef CreateChunk (int lcx, int lcz)
-        {
+        public ChunkRef CreateChunk (int lcx, int lcz) {
             if (!LocalBoundsCheck(lcx, lcz)) {
                 IRegion alt = GetForeignRegion(lcx, lcz);
                 return (alt == null) ? null : alt.CreateChunk(ForeignX(lcx), ForeignZ(lcz));
@@ -299,8 +275,7 @@ namespace Substrate.Core
             int cz = lcz + _rz * ZDIM;
 
             IChunk c = CreateChunkCore(cx, cz);
-            using (Stream chunkOutStream = GetChunkOutStream(lcx, lcz))
-            {
+            using (Stream chunkOutStream = GetChunkOutStream(lcx, lcz)) {
                 c.Save(chunkOutStream);
             }
 
@@ -319,8 +294,7 @@ namespace Substrate.Core
         /// </summary>
         /// <param name="cx">An internal X-coordinate given to a <see cref="ChunkRef"/> by any instance of a <see cref="Region"/> container.</param>
         /// <returns>The global X-coordinate of the corresponding chunk.</returns>
-        public int ChunkGlobalX (int cx)
-        {
+        public int ChunkGlobalX (int cx) {
             return _rx * XDIM + cx;
         }
 
@@ -329,8 +303,7 @@ namespace Substrate.Core
         /// </summary>
         /// <param name="cz">An internal Z-coordinate given to a <see cref="ChunkRef"/> by any instance of a <see cref="Region"/> container.</param>
         /// <returns>The global Z-coordinate of the corresponding chunk.</returns>
-        public int ChunkGlobalZ (int cz)
-        {
+        public int ChunkGlobalZ (int cz) {
             return _rz * ZDIM + cz;
         }
 
@@ -339,8 +312,7 @@ namespace Substrate.Core
         /// </summary>
         /// <param name="cx">An internal X-coordinate given to a <see cref="ChunkRef"/> by any instance of a <see cref="Region"/> container.</param>
         /// <returns>The region-local X-coordinate of the corresponding chunk.</returns>
-        public int ChunkLocalX (int cx)
-        {
+        public int ChunkLocalX (int cx) {
             return cx;
         }
 
@@ -349,8 +321,7 @@ namespace Substrate.Core
         /// </summary>
         /// <param name="cz">An internal Z-coordinate given to a <see cref="ChunkRef"/> by any instance of a <see cref="Region"/> container.</param>
         /// <returns>The region-local Z-coordinate of the corresponding chunk.</returns>
-        public int ChunkLocalZ (int cz)
-        {
+        public int ChunkLocalZ (int cz) {
             return cz;
         }
 
@@ -362,8 +333,7 @@ namespace Substrate.Core
         /// <returns>A <see cref="IChunk"/> object for the given coordinates, or null if the chunk does not exist.</returns>
         /// <remarks>If the local coordinates are out of bounds for this region, the action will be forwarded to the correct region
         /// transparently.  The returned <see cref="IChunk"/> object may either come from cache, or be regenerated from disk.</remarks>
-        public IChunk GetChunk (int lcx, int lcz)
-        {
+        public IChunk GetChunk (int lcx, int lcz) {
             if (!LocalBoundsCheck(lcx, lcz)) {
                 IRegion alt = GetForeignRegion(lcx, lcz);
                 return (alt == null) ? null : alt.GetChunk(ForeignX(lcx), ForeignZ(lcz));
@@ -384,8 +354,7 @@ namespace Substrate.Core
         /// <returns>True if there is a chunk at the given coordinates; false otherwise.</returns>
         /// <remarks>If the local coordinates are out of bounds for this region, the action will be forwarded to the correct region
         /// transparently.</remarks>
-        public bool ChunkExists (int lcx, int lcz)
-        {
+        public bool ChunkExists (int lcx, int lcz) {
             if (!LocalBoundsCheck(lcx, lcz)) {
                 IRegion alt = GetForeignRegion(lcx, lcz);
                 return (alt == null) ? false : alt.ChunkExists(ForeignX(lcx), ForeignZ(lcz));
@@ -403,8 +372,7 @@ namespace Substrate.Core
         /// <returns>True if there is a chunk was deleted; false otherwise.</returns>
         /// <remarks>If the local coordinates are out of bounds for this region, the action will be forwarded to the correct region
         /// transparently.</remarks>
-        public bool DeleteChunk (int lcx, int lcz)
-        {
+        public bool DeleteChunk (int lcx, int lcz) {
             if (!LocalBoundsCheck(lcx, lcz)) {
                 IRegion alt = GetForeignRegion(lcx, lcz);
                 return (alt == null) ? false : alt.DeleteChunk(ForeignX(lcx), ForeignZ(lcz));
@@ -437,8 +405,7 @@ namespace Substrate.Core
         /// <returns>A <see cref="ChunkRef"/> represneting the <see cref="IChunk"/> at its new location.</returns>
         /// <remarks>If the local coordinates are out of bounds for this region, the action will be forwarded to the correct region
         /// transparently.  The <see cref="IChunk"/>'s internal global coordinates will be updated to reflect the new location.</remarks>
-        public ChunkRef SetChunk (int lcx, int lcz, IChunk chunk)
-        {
+        public ChunkRef SetChunk (int lcx, int lcz, IChunk chunk) {
             if (!LocalBoundsCheck(lcx, lcz)) {
                 IRegion alt = GetForeignRegion(lcx, lcz);
                 return (alt == null) ? null : alt.CreateChunk(ForeignX(lcx), ForeignZ(lcz));
@@ -450,8 +417,7 @@ namespace Substrate.Core
             int cz = lcz + _rz * ZDIM;
 
             chunk.SetLocation(cx, cz);
-            using (Stream chunkOutStream = GetChunkOutStream(lcx, lcz))
-            {
+            using (Stream chunkOutStream = GetChunkOutStream(lcx, lcz)) {
                 chunk.Save(chunkOutStream);
             }
 
@@ -465,8 +431,7 @@ namespace Substrate.Core
         /// Saves all chunks within this region that have been marked as dirty.
         /// </summary>
         /// <returns>The number of chunks that were saved.</returns>
-        public int Save ()
-        {
+        public int Save () {
             _cache.SyncDirty();
 
             int saved = 0;
@@ -477,10 +442,8 @@ namespace Substrate.Core
                 if (!ChunkExists(chunk.LocalX, chunk.LocalZ)) {
                     throw new MissingChunkException();
                 }
-                using (Stream chunkOutStream = GetChunkOutStream(chunk.LocalX, chunk.LocalZ))
-                {
-                    if (chunk.Save(chunkOutStream))
-                    {
+                using (Stream chunkOutStream = GetChunkOutStream(chunk.LocalX, chunk.LocalZ)) {
+                    if (chunk.Save(chunkOutStream)) {
                         saved++;
                     }
                 }
@@ -492,10 +455,8 @@ namespace Substrate.Core
 
         // XXX: Allows a chunk not part of this region to be saved to it
         /// <exclude/>
-        public bool SaveChunk (IChunk chunk)
-        {
-            using (Stream chunkOutStream = GetChunkOutStream(ForeignX(chunk.X), ForeignZ(chunk.Z)))
-            {
+        public bool SaveChunk (IChunk chunk) {
+            using (Stream chunkOutStream = GetChunkOutStream(ForeignX(chunk.X), ForeignZ(chunk.Z))) {
                 //Console.WriteLine("Region[{0}, {1}].Save({2}, {3})", _rx, _rz, ForeignX(chunk.X),ForeignZ(chunk.Z));
                 return chunk.Save(chunkOutStream);
             }
@@ -504,14 +465,12 @@ namespace Substrate.Core
         /// <summary>
         /// Checks if this container supports delegating an action on out-of-bounds coordinates to another container. 
         /// </summary>
-        public bool CanDelegateCoordinates
-        {
+        public bool CanDelegateCoordinates {
             get { return true; }
         }
 
         /// <inherits />
-        public int GetChunkTimestamp (int lcx, int lcz)
-        {
+        public int GetChunkTimestamp (int lcx, int lcz) {
             if (!LocalBoundsCheck(lcx, lcz)) {
                 IRegion alt = GetForeignRegion(lcx, lcz);
                 return (alt == null) ? 0 : alt.GetChunkTimestamp(ForeignX(lcx), ForeignZ(lcz));
@@ -522,8 +481,7 @@ namespace Substrate.Core
         }
 
         /// <inherits />
-        public void SetChunkTimestamp (int lcx, int lcz, int timestamp)
-        {
+        public void SetChunkTimestamp (int lcx, int lcz, int timestamp) {
             if (!LocalBoundsCheck(lcx, lcz)) {
                 IRegion alt = GetForeignRegion(lcx, lcz);
                 if (alt != null) 
@@ -536,23 +494,19 @@ namespace Substrate.Core
 
         #endregion
 
-        protected bool LocalBoundsCheck (int lcx, int lcz)
-        {
+        protected bool LocalBoundsCheck (int lcx, int lcz) {
             return (lcx >= 0 && lcx < XDIM && lcz >= 0 && lcz < ZDIM);
         }
 
-        protected IRegion GetForeignRegion (int lcx, int lcz)
-        {
+        protected IRegion GetForeignRegion (int lcx, int lcz) {
             return _regionMan.GetRegion(_rx + (lcx >> XLOG), _rz + (lcz >> ZLOG));
         }
 
-        protected int ForeignX (int lcx)
-        {
+        protected int ForeignX (int lcx) {
             return (lcx + XDIM * 10000) & XMASK;
         }
 
-        protected int ForeignZ (int lcz)
-        {
+        protected int ForeignZ (int lcz) {
             return (lcz + ZDIM * 10000) & ZMASK;
         }
     }

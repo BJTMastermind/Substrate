@@ -2,42 +2,34 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.Entities
-{
+namespace Substrate.Entities {
     using Substrate.Nbt;
 
-    public class EntitySquid : EntityMob
-    {
-        public static readonly SchemaNodeCompound SquidSchema = MobSchema.MergeInto(new SchemaNodeCompound("")
-        {
+    public class EntitySquid : EntityMob {
+        public static readonly SchemaNodeCompound SquidSchema = MobSchema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeString("id", TypeId),
         });
 
-        public static new string TypeId
-        {
+        public static new string TypeId {
             get { return "Squid"; }
         }
 
         protected EntitySquid (string id)
-            : base(id)
-        {
+            : base(id) {
         }
 
         public EntitySquid ()
-            : this(TypeId)
-        {
+            : this(TypeId) {
         }
 
         public EntitySquid (TypedEntity e)
-            : base(e)
-        {
+            : base(e) {
         }
 
 
         #region INBTObject<Entity> Members
 
-        public override bool ValidateTree (TagNode tree)
-        {
+        public override bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, SquidSchema).Verify();
         }
 
@@ -46,8 +38,7 @@ namespace Substrate.Entities
 
         #region ICopyable<Entity> Members
 
-        public override TypedEntity Copy ()
-        {
+        public override TypedEntity Copy () {
             return new EntitySquid(this);
         }
 

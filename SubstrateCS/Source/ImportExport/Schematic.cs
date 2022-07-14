@@ -4,15 +4,12 @@ using System.IO;
 using Substrate.Core;
 using Substrate.Nbt;
 
-namespace Substrate.ImportExport
-{
+namespace Substrate.ImportExport {
     /// <summary>
     /// Provides import and export support for the 3rd party schematic file format.
     /// </summary>
-    public class Schematic
-    {
-        private static SchemaNodeCompound _schema = new SchemaNodeCompound()
-        {
+    public class Schematic {
+        private static SchemaNodeCompound _schema = new SchemaNodeCompound() {
             new SchemaNodeScaler("Width", TagType.TAG_SHORT),
             new SchemaNodeScaler("Length", TagType.TAG_SHORT),
             new SchemaNodeScaler("Height", TagType.TAG_SHORT),
@@ -35,8 +32,7 @@ namespace Substrate.ImportExport
         private AlphaBlockCollection _blockset;
         private EntityCollection _entityset;
 
-        private Schematic ()
-        {
+        private Schematic () {
         }
 
         /// <summary>
@@ -44,8 +40,7 @@ namespace Substrate.ImportExport
         /// </summary>
         /// <param name="blocks">An existing <see cref="AlphaBlockCollection"/>.</param>
         /// <param name="entities">An existing <see cref="EntityCollection"/>.</param>
-        public Schematic (AlphaBlockCollection blocks, EntityCollection entities)
-        {
+        public Schematic (AlphaBlockCollection blocks, EntityCollection entities) {
             _blockset = blocks;
             _entityset = entities;
         }
@@ -56,8 +51,7 @@ namespace Substrate.ImportExport
         /// <param name="xdim">The length of the X-dimension in blocks.</param>
         /// <param name="ydim">The length of the Y-dimension in blocks.</param>
         /// <param name="zdim">The length of the Z-dimension in blocks.</param>
-        public Schematic (int xdim, int ydim, int zdim)
-        {
+        public Schematic (int xdim, int ydim, int zdim) {
             _blocks = new XZYByteArray(xdim, ydim, zdim);
             _data = new XZYNibbleArray(xdim, ydim, zdim);
             _blockLight = new XZYNibbleArray(xdim, ydim, zdim);
@@ -76,8 +70,7 @@ namespace Substrate.ImportExport
         /// <summary>
         /// Gets or sets the underlying block collection.
         /// </summary>
-        public AlphaBlockCollection Blocks
-        {
+        public AlphaBlockCollection Blocks {
             get { return _blockset; }
             set { _blockset = value; }
         }
@@ -85,8 +78,7 @@ namespace Substrate.ImportExport
         /// <summary>
         /// Gets or sets the underlying entity collection.
         /// </summary>
-        public EntityCollection Entities
-        {
+        public EntityCollection Entities {
             get { return _entityset; }
             set { _entityset = value; }
         }
@@ -98,18 +90,15 @@ namespace Substrate.ImportExport
         /// </summary>
         /// <param name="path">The path to the schematic file.</param>
         /// <returns>A <see cref="Schematic"/> object containing the decoded schematic file data.</returns>
-        public static Schematic Import (string path)
-        {
+        public static Schematic Import (string path) {
             NBTFile schematicFile = new NBTFile(path);
             if (!schematicFile.Exists()) {
                 return null;
             }
             NbtTree tree;
 
-            using (Stream nbtStream = schematicFile.GetDataInputStream())
-            {
-                if (nbtStream == null)
-                {
+            using (Stream nbtStream = schematicFile.GetDataInputStream()) {
+                if (nbtStream == null) {
                     return null;
                 }
 
@@ -161,8 +150,7 @@ namespace Substrate.ImportExport
         /// Exports the <see cref="Schematic"/> object to a schematic file.
         /// </summary>
         /// <param name="path">The path to write out the schematic file to.</param>
-        public void Export (string path)
-        {
+        public void Export (string path) {
             int xdim = _blockset.XDim;
             int ydim = _blockset.YDim;
             int zdim = _blockset.ZDim;
@@ -214,10 +202,8 @@ namespace Substrate.ImportExport
 
             NBTFile schematicFile = new NBTFile(path);
 
-            using (Stream nbtStream = schematicFile.GetDataOutputStream())
-            {
-                if (nbtStream == null)
-                {
+            using (Stream nbtStream = schematicFile.GetDataOutputStream()) {
+                if (nbtStream == null) {
                     return;
                 }
 

@@ -7,32 +7,26 @@ using System.IO;
 using Substrate.Nbt;
 using Substrate.Core;
 
-namespace Substrate.Tests
-{
+namespace Substrate.Tests {
     [TestClass]
-    public class LevelTests
-    {
-        NbtTree LoadLevelTree(string path)
-        {
+    public class LevelTests {
+
+        NbtTree LoadLevelTree(string path) {
             NBTFile nf = new NBTFile(path);
             NbtTree tree = null;
 
-            using (Stream nbtstr = nf.GetDataInputStream())
-            {
-                if (nbtstr == null)
-                {
+            using (Stream nbtstr = nf.GetDataInputStream()) {
+                if (nbtstr == null) {
                     return null;
                 }
 
                 tree = new NbtTree(nbtstr);
             }
-
             return tree;
         }
 
         [TestMethod]
-        public void LoadTreeTest_1_6_4_survival()
-        {
+        public void LoadTreeTest_1_6_4_survival() {
             NbtTree levelTree = LoadLevelTree(@"..\..\Data\1_6_4-survival\level.dat");
 
             Level level = new Level(null);
@@ -41,8 +35,7 @@ namespace Substrate.Tests
         }
 
         [TestMethod]
-        public void LoadTreeTest_1_7_2_survival()
-        {
+        public void LoadTreeTest_1_7_2_survival() {
             NbtTree levelTree = LoadLevelTree(@"..\..\Data\1_7_2-survival\level.dat");
 
             Level level = new Level(null);
@@ -51,8 +44,7 @@ namespace Substrate.Tests
         }
 
         [TestMethod]
-        public void LoadTreeTest_1_7_10_survival()
-        {
+        public void LoadTreeTest_1_7_10_survival() {
             NbtTree levelTree = LoadLevelTree(@"..\..\Data\1_7_10-survival\level.dat");
 
             Level level = new Level(null);
@@ -61,8 +53,7 @@ namespace Substrate.Tests
         }
 
         [TestMethod]
-        public void LoadTreeTest_1_8_3_survival()
-        {
+        public void LoadTreeTest_1_8_3_survival() {
             NbtTree levelTree = LoadLevelTree(@"..\..\Data\1_8_3-survival\level.dat");
 
             Level level = new Level(null);

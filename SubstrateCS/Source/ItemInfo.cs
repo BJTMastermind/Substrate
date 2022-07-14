@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using Substrate.Nbt;
 using System.Collections;
 
-namespace Substrate
-{
+namespace Substrate {
     /// <summary>
     /// Provides named id values for known item types.
     /// </summary>
     /// <remarks>See <see cref="BlockType"/> for additional information.</remarks>
-    public static class ItemType
-    {
+    public static class ItemType {
         public const int IRON_SHOVEL = 256;
         public const int IRON_PICKAXE = 257;
         public const int IRON_AXE = 258;
@@ -189,18 +187,14 @@ namespace Substrate
     /// is up to date with the current MC version.
     /// New item types may be created and used at runtime, and will automatically populate various static lookup tables
     /// in the <see cref="ItemInfo"/> class.</remarks>
-    public class ItemInfo
-    {
+    public class ItemInfo {
         private static Random _rand = new Random();
 
-        private class CacheTableDict<T> : ICacheTable<T>
-        {
+        private class CacheTableDict<T> : ICacheTable<T> {
             private Dictionary<int, T> _cache;
 
-            public T this[int index]
-            {
-                get 
-                {
+            public T this[int index] {
+                get {
                     T val;
                     if (_cache.TryGetValue(index, out val)) {
                         return val;
@@ -209,19 +203,16 @@ namespace Substrate
                 }
             }
 
-            public CacheTableDict (Dictionary<int, T> cache)
-            {
+            public CacheTableDict (Dictionary<int, T> cache) {
                 _cache = cache;
             }
 
-            public IEnumerator<T> GetEnumerator ()
-            {
+            public IEnumerator<T> GetEnumerator () {
                 foreach (T val in _cache.Values)
                     yield return val;
             }
 
-            IEnumerator IEnumerable.GetEnumerator ()
-            {
+            IEnumerator IEnumerable.GetEnumerator () {
                 return GetEnumerator();
             }
         }
@@ -237,32 +228,28 @@ namespace Substrate
         /// <summary>
         /// Gets the lookup table for id-to-info values.
         /// </summary>
-        public static ICacheTable<ItemInfo> ItemTable
-        {
+        public static ICacheTable<ItemInfo> ItemTable {
             get { return _itemTableCache; }
         }
 
         /// <summary>
         /// Gets the id of the item type.
         /// </summary>
-        public int ID
-        {
+        public int ID {
             get { return _id; }
         }
 
         /// <summary>
         /// Gets the name of the item type.
         /// </summary>
-        public string Name
-        {
+        public string Name {
             get { return _name; }
         }
 
         /// <summary>
         /// Gets the maximum stack size allowed for this item type.
         /// </summary>
-        public int StackSize
-        {
+        public int StackSize {
             get { return _stack; }
         }
 
@@ -270,8 +257,7 @@ namespace Substrate
         /// Constructs a new <see cref="ItemInfo"/> record for the given item id.
         /// </summary>
         /// <param name="id">The id of an item type.</param>
-        public ItemInfo (int id)
-        {
+        public ItemInfo (int id) {
             _id = id;
             _itemTable[_id] = this;
         }
@@ -281,8 +267,7 @@ namespace Substrate
         /// </summary>
         /// <param name="id">The id of an item type.</param>
         /// <param name="name">The name of an item type.</param>
-        public ItemInfo (int id, string name)
-        {
+        public ItemInfo (int id, string name) {
             _id = id;
             _name = name;
             _itemTable[_id] = this;
@@ -293,8 +278,7 @@ namespace Substrate
         /// </summary>
         /// <param name="stack">A stack size between 1 and 64, inclusive.</param>
         /// <returns>The object instance used to invoke this method.</returns>
-        public ItemInfo SetStackSize (int stack)
-        {
+        public ItemInfo SetStackSize (int stack) {
             _stack = stack;
             return this;
         }
@@ -303,8 +287,7 @@ namespace Substrate
         /// Chooses a registered item type at random and returns it.
         /// </summary>
         /// <returns></returns>
-        public static ItemInfo GetRandomItem ()
-        {
+        public static ItemInfo GetRandomItem () {
             List<ItemInfo> list = new List<ItemInfo>(_itemTable.Values);
             return list[_rand.Next(list.Count)];
         }
@@ -479,8 +462,7 @@ namespace Substrate
         public static ItemInfo MusicDiscWard;
         public static ItemInfo MusicDisc11;
 
-        static ItemInfo ()
-        {
+        static ItemInfo () {
             _itemTable = new Dictionary<int, ItemInfo>();
             _itemTableCache = new CacheTableDict<ItemInfo>(_itemTable);
 

@@ -9,12 +9,9 @@ using Substrate.Core;
 
 // For a more advanced Block Replace example, see replace.cs in NBToolkit.
 
-namespace BlockReplace
-{
-    class Program
-    {
-        static void Main (string[] args)
-        {
+namespace BlockReplace {
+    class Program {
+        static void Main (string[] args) {
             if (args.Length != 3) {
                 Console.WriteLine("Usage: BlockReplace <world> <before-id> <after-id>");
                 return;

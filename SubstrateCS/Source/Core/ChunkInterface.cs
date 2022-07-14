@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Substrate.Core
-{
+namespace Substrate.Core {
 
     /// <summary>
     /// Provides a common interface for accessing Alpha-compatible chunk data.
     /// </summary>
-    public interface IChunk
-    {
+    public interface IChunk {
         /// <summary>
         /// Gets the global X-coordinate of a chunk.
         /// </summary>
@@ -54,8 +52,7 @@ namespace Substrate.Core
     /// <summary>
     /// Provides a common interface to any object that acts as a physical or abstract chunk container.
     /// </summary>
-    public interface IChunkContainer
-    {
+    public interface IChunkContainer {
         /// <summary>
         /// Returns a global chunk X-coordinate, given a container-defined X-coordinate.
         /// </summary>
@@ -179,8 +176,7 @@ namespace Substrate.Core
     /// <summary>
     /// Provides a common interface for chunk containers that provide global management.
     /// </summary>
-    public interface IChunkManager : IChunkContainer, IEnumerable<ChunkRef>
-    {
+    public interface IChunkManager : IChunkContainer, IEnumerable<ChunkRef> {
 
     }
 }

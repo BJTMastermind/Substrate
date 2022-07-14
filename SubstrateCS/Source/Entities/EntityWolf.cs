@@ -2,22 +2,18 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.Entities
-{
+namespace Substrate.Entities {
     using Substrate.Nbt;
 
-    public class EntityWolf : EntityAnimal
-    {
-        public static readonly SchemaNodeCompound WolfSchema = AnimalSchema.MergeInto(new SchemaNodeCompound("")
-        {
+    public class EntityWolf : EntityAnimal {
+        public static readonly SchemaNodeCompound WolfSchema = AnimalSchema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeString("id", TypeId),
             new SchemaNodeScaler("Owner", TagType.TAG_STRING),
             new SchemaNodeScaler("Sitting", TagType.TAG_BYTE),
             new SchemaNodeScaler("Angry", TagType.TAG_BYTE),
         });
 
-        public static new string TypeId
-        {
+        public static new string TypeId {
             get { return "Wolf"; }
         }
 
@@ -25,37 +21,31 @@ namespace Substrate.Entities
         private bool _sitting;
         private bool _angry;
 
-        public string Owner
-        {
+        public string Owner {
             get { return _owner; }
             set { _owner = value; }
         }
 
-        public bool IsSitting
-        {
+        public bool IsSitting {
             get { return _sitting; }
             set { _sitting = value; }
         }
 
-        public bool IsAngry
-        {
+        public bool IsAngry {
             get { return _angry; }
             set { _angry = value; }
         }
 
         protected EntityWolf (string id)
-            : base(id)
-        {
+            : base(id) {
         }
 
         public EntityWolf ()
-            : this(TypeId)
-        {
+            : this(TypeId) {
         }
 
         public EntityWolf (TypedEntity e)
-            : base(e)
-        {
+            : base(e) {
             EntityWolf e2 = e as EntityWolf;
             if (e2 != null) {
                 _owner = e2._owner;
@@ -67,8 +57,7 @@ namespace Substrate.Entities
 
         #region INBTObject<Entity> Members
 
-        public override TypedEntity LoadTree (TagNode tree)
-        {
+        public override TypedEntity LoadTree (TagNode tree) {
             TagNodeCompound ctree = tree as TagNodeCompound;
             if (ctree == null || base.LoadTree(tree) == null) {
                 return null;
@@ -81,8 +70,7 @@ namespace Substrate.Entities
             return this;
         }
 
-        public override TagNode BuildTree ()
-        {
+        public override TagNode BuildTree () {
             TagNodeCompound tree = base.BuildTree() as TagNodeCompound;
             tree["Owner"] = new TagNodeString(_owner);
             tree["Sitting"] = new TagNodeByte((byte)(_sitting ? 1 : 0));
@@ -91,8 +79,7 @@ namespace Substrate.Entities
             return tree;
         }
 
-        public override bool ValidateTree (TagNode tree)
-        {
+        public override bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, WolfSchema).Verify();
         }
 
@@ -101,8 +88,7 @@ namespace Substrate.Entities
 
         #region ICopyable<Entity> Members
 
-        public override TypedEntity Copy ()
-        {
+        public override TypedEntity Copy () {
             return new EntityWolf(this);
         }
 

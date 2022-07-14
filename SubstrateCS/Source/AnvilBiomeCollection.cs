@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using Substrate.Core;
 using Substrate.Nbt;
 
-namespace Substrate
-{
-    public class AnvilBiomeCollection
-    {
+namespace Substrate {
+    public class AnvilBiomeCollection {
         public const int OCEAN = 0;
         public const int PLAINS = 1;
         public const int DESERT = 2;
@@ -36,21 +34,18 @@ namespace Substrate
 
         private IDataArray2 _biomeMap;
 
-        public AnvilBiomeCollection(IDataArray2 biomeMap)
-        {
+        public AnvilBiomeCollection(IDataArray2 biomeMap) {
             _biomeMap = biomeMap;
 
             _xdim = _biomeMap.XDim;
             _zdim = _biomeMap.ZDim;
         }
 
-        public int GetBiome(int x, int z)
-        {
+        public int GetBiome(int x, int z) {
             return _biomeMap[x, z];
         }
 
-        public void SetBiome(int x, int z, int newBiome)
-        {
+        public void SetBiome(int x, int z, int newBiome) {
             _biomeMap[x, z] = newBiome;
         }
 

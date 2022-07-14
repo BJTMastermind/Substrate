@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using Substrate.Core;
 using Substrate.Nbt;
 
-namespace Substrate.Entities
-{
-    public class EntityMinecartChest : EntityMinecart, IItemContainer
-    {
-        public static readonly SchemaNodeCompound MinecartChestSchema = MinecartSchema.MergeInto(new SchemaNodeCompound("")
-        {
+namespace Substrate.Entities {
+    public class EntityMinecartChest : EntityMinecart, IItemContainer {
+        public static readonly SchemaNodeCompound MinecartChestSchema = MinecartSchema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeList("Items", TagType.TAG_COMPOUND, ItemCollection.Schema),
         });
 
-        public static new string TypeId
-        {
+        public static new string TypeId {
             get { return EntityMinecart.TypeId; }
         }
 
@@ -22,20 +18,17 @@ namespace Substrate.Entities
         private ItemCollection _items;
 
         protected EntityMinecartChest (string id)
-            : base(id)
-        {
+            : base(id) {
             _items = new ItemCollection(_CAPACITY);
         }
 
         public EntityMinecartChest ()
-            : base()
-        {
+            : base() {
             _items = new ItemCollection(_CAPACITY);
         }
 
         public EntityMinecartChest (TypedEntity e)
-            : base(e)
-        {
+            : base(e) {
             EntityMinecartChest e2 = e as EntityMinecartChest;
             if (e2 != null) {
                 _items = e2._items.Copy();
@@ -44,8 +37,7 @@ namespace Substrate.Entities
             
         #region IItemContainer Members
 
-        public ItemCollection  Items
-        {
+        public ItemCollection  Items {
             get { return _items; }
         }
 
@@ -54,8 +46,7 @@ namespace Substrate.Entities
 
         #region INBTObject<Entity> Members
 
-        public override TypedEntity LoadTree (TagNode tree)
-        {
+        public override TypedEntity LoadTree (TagNode tree) {
             TagNodeCompound ctree = tree as TagNodeCompound;
             if (ctree == null || base.LoadTree(tree) == null) {
                 return null;
@@ -67,16 +58,14 @@ namespace Substrate.Entities
             return this;
         }
 
-        public override TagNode BuildTree ()
-        {
+        public override TagNode BuildTree () {
             TagNodeCompound tree = base.BuildTree() as TagNodeCompound;
             tree["Items"] = _items.BuildTree();
 
             return tree;
         }
 
-        public override bool ValidateTree (TagNode tree)
-        {
+        public override bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, MinecartChestSchema).Verify();
         }
 
@@ -85,8 +74,7 @@ namespace Substrate.Entities
 
         #region ICopyable<Entity> Members
 
-        public override TypedEntity Copy ()
-        {
+        public override TypedEntity Copy () {
             return new EntityMinecartChest(this);
         }
 

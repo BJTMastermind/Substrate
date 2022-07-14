@@ -1,12 +1,10 @@
 ﻿using System;
 
-namespace Substrate.Data
-{
+namespace Substrate.Data {
     /// <summary>
     /// An interface of basic manipulations on an abstract data store for map data.
     /// </summary>
-    public interface IMapManager
-    {
+    public interface IMapManager {
         /// <summary>
         /// Gets a <see cref="Map"/> object for the given map id from the underlying data store.
         /// </summary>

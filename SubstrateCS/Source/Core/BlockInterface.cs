@@ -1,12 +1,10 @@
 ﻿using System;
 
-namespace Substrate.Core
-{
+namespace Substrate.Core {
     /// <summary>
     /// Represents the cardinal direction of a block collection's neighboring collection.
     /// </summary>
-    public enum BlockCollectionEdge
-    {
+    public enum BlockCollectionEdge {
         /// <summary>
         /// Refers to a chunk/collection to the east of the current chunk/collection.
         /// </summary>
@@ -31,8 +29,7 @@ namespace Substrate.Core
     /// <summary>
     /// A basic block type.
     /// </summary>
-    public interface IBlock
-    {
+    public interface IBlock {
         /// <summary>
         /// Gets a variety of info and attributes on the block's type.
         /// </summary>
@@ -47,8 +44,7 @@ namespace Substrate.Core
     /// <summary>
     /// A block type supporting a data field.
     /// </summary>
-    public interface IDataBlock : IBlock
-    {
+    public interface IDataBlock : IBlock {
         /// <summary>
         /// Gets or sets a data value on the block.
         /// </summary>
@@ -58,8 +54,7 @@ namespace Substrate.Core
     /// <summary>
     /// A block type supporting dual-source lighting.
     /// </summary>
-    public interface ILitBlock : IBlock
-    {
+    public interface ILitBlock : IBlock {
         /// <summary>
         /// Gets or sets the block-source light value on this block.
         /// </summary>
@@ -74,8 +69,7 @@ namespace Substrate.Core
     /// <summary>
     /// A block type supporting properties.
     /// </summary>
-    public interface IPropertyBlock : IBlock
-    {
+    public interface IPropertyBlock : IBlock {
         /// <summary>
         /// Gets a tile entity attached to this block.
         /// </summary>
@@ -107,8 +101,7 @@ namespace Substrate.Core
     /// <summary>
     /// A block type supporting active tick state.
     /// </summary>
-    public interface IActiveBlock : IBlock
-    {
+    public interface IActiveBlock : IBlock {
         /// <summary>
         /// Gets a <see cref="TileTick"/> entry attached to this block.
         /// </summary>
@@ -142,15 +135,13 @@ namespace Substrate.Core
     /// <summary>
     /// An Alpha-compatible context-free block type supporting data and properties.
     /// </summary>
-    public interface IAlphaBlock : IDataBlock, IPropertyBlock
-    {
+    public interface IAlphaBlock : IDataBlock, IPropertyBlock {
     }
 
     /// <summary>
     /// An Alpha-compatible block reference type supporting data, lighting, and properties.
     /// </summary>
-    public interface IAlphaBlockRef : IDataBlock, ILitBlock, IPropertyBlock
-    {
+    public interface IAlphaBlockRef : IDataBlock, ILitBlock, IPropertyBlock {
         /// <summary>
         /// Checks if the reference and its backing container are currently valid.
         /// </summary>
@@ -160,15 +151,13 @@ namespace Substrate.Core
     /// <summary>
     /// A version-1.0-compatible context-free block type supporting data, properties, and active tick state.
     /// </summary>
-    public interface IVersion10Block : IAlphaBlock, IActiveBlock
-    {
+    public interface IVersion10Block : IAlphaBlock, IActiveBlock {
     }
 
     /// <summary>
     /// A version-1.0-compatible reference type supporting data, lighting, properties, and active tick state.
     /// </summary>
-    public interface IVersion10BlockRef : IAlphaBlockRef, IActiveBlock
-    {
+    public interface IVersion10BlockRef : IAlphaBlockRef, IActiveBlock {
     }
 
     /// <summary>
@@ -181,7 +170,6 @@ namespace Substrate.Core
     /// <summary>
     /// Provides a common interface for block containers that provide global management, extended through Version 1.0 capabilities.
     /// </summary>
-    public interface IVersion10BlockManager : IBlockManager, IActiveBlockCollection
-    {
+    public interface IVersion10BlockManager : IBlockManager, IActiveBlockCollection {
     }
 }

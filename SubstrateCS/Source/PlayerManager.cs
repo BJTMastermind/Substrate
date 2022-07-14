@@ -7,22 +7,19 @@ using Substrate.Nbt;
 using System.Text.RegularExpressions;
 using System.Collections;
 
-namespace Substrate
-{
+namespace Substrate {
     /// <summary>
     /// Functions to manage multiple <see cref="Player"/> entities and files in multiplayer settings.
     /// </summary>
     /// <remarks>This manager is intended for player files stored in standard compressed NBT format.</remarks>
-    public class PlayerManager : IPlayerManager, IEnumerable<Player>
-    {
+    public class PlayerManager : IPlayerManager, IEnumerable<Player> {
         private string _playerPath;
 
         /// <summary>
         /// Create a new <see cref="PlayerManager"/> for a given file path.
         /// </summary>
         /// <param name="playerDir">Path to a directory containing player data files.</param>
-        public PlayerManager (string playerDir)
-        {
+        public PlayerManager (string playerDir) {
             _playerPath = playerDir;
         }
 
@@ -31,8 +28,7 @@ namespace Substrate
         /// </summary>
         /// <param name="name">The name of the player to fetch.</param>
         /// <returns>A <see cref="PlayerFile"/> for the given player.</returns>
-        protected PlayerFile GetPlayerFile (string name)
-        {
+        protected PlayerFile GetPlayerFile (string name) {
             return new PlayerFile(_playerPath, name);
         }
 
@@ -42,13 +38,10 @@ namespace Substrate
         /// <param name="name">The name of the player to fetch.</param>
         /// <returns>An <see cref="NbtTree"/> containing the given player's raw data.</returns>
         /// <exception cref="NbtIOException">Thrown when the manager cannot read in an NBT data stream.</exception>
-        public NbtTree GetPlayerTree (string name)
-        {
+        public NbtTree GetPlayerTree (string name) {
             PlayerFile pf = GetPlayerFile(name);
-            using (Stream nbtstr = pf.GetDataInputStream())
-            {
-                if (nbtstr == null)
-                {
+            using (Stream nbtstr = pf.GetDataInputStream()) {
+                if (nbtstr == null) {
                     throw new NbtIOException("Failed to initialize NBT data stream for input.");
                 }
 
@@ -62,13 +55,10 @@ namespace Substrate
         /// <param name="name">The name of the player to write data to.</param>
         /// <param name="tree">The player's data as an <see cref="NbtTree"/>.</param>
         /// <exception cref="NbtIOException">Thrown when the manager cannot initialize an NBT data stream for output.</exception>
-        public void SetPlayerTree (string name, NbtTree tree)
-        {
+        public void SetPlayerTree (string name, NbtTree tree) {
             PlayerFile pf = GetPlayerFile(name);
-            using (Stream zipstr = pf.GetDataOutputStream())
-            {
-                if (zipstr == null)
-                {
+            using (Stream zipstr = pf.GetDataOutputStream()) {
+                if (zipstr == null) {
                     throw new NbtIOException("Failed to initialize NBT data stream for output.");
                 }
 
@@ -82,8 +72,7 @@ namespace Substrate
         /// <param name="name">The name of the player to fetch.</param>
         /// <returns>A <see cref="Player"/> object for the given player, or null if the player could not be found.</returns>
         /// <exception cref="PlayerIOException">Thrown when the manager cannot read in a player that should exist.</exception>
-        public Player GetPlayer (string name)
-        {
+        public Player GetPlayer (string name) {
             if (!PlayerExists(name)) {
                 return null;
             }
@@ -92,8 +81,7 @@ namespace Substrate
                 Player p = new Player().LoadTreeSafe(GetPlayerTree(name).Root);
                 p.Name = name;
                 return p;
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 PlayerIOException pex = new PlayerIOException("Could not load player", ex);
                 pex.Data["PlayerName"] = name;
                 throw pex;
@@ -106,12 +94,10 @@ namespace Substrate
         /// <param name="name">The name of the player to write back to.</param>
         /// <param name="player">The <see cref="Player"/> object containing data to write back.</param>
         /// <exception cref="PlayerIOException">Thrown when the manager cannot write out the player.</exception>
-        public void SetPlayer (string name, Player player)
-        {
+        public void SetPlayer (string name, Player player) {
             try {
                 SetPlayerTree(name, new NbtTree(player.BuildTree() as TagNodeCompound));
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 PlayerIOException pex = new PlayerIOException("Could not save player", ex);
                 pex.Data["PlayerName"] = name;
                 throw pex;
@@ -123,8 +109,7 @@ namespace Substrate
         /// </summary>
         /// <param name="player">The <see cref="Player"/> object containing the data to write back.</param>
         /// <exception cref="PlayerIOException">Thrown when the manager cannot write out the player.</exception>
-        public void SetPlayer (Player player)
-        {
+        public void SetPlayer (Player player) {
             SetPlayer(player.Name, player);
         }
 
@@ -133,8 +118,7 @@ namespace Substrate
         /// </summary>
         /// <param name="name">The name of the player to look up.</param>
         /// <returns>True if player data was found; false otherwise.</returns>
-        public bool PlayerExists (string name)
-        {
+        public bool PlayerExists (string name) {
             return new PlayerFile(_playerPath, name).Exists();
         }
 
@@ -143,12 +127,10 @@ namespace Substrate
         /// </summary>
         /// <param name="name">The name of the player to delete.</param>
         /// <exception cref="PlayerIOException">Thrown when the manager cannot delete the player.</exception>
-        public void DeletePlayer (string name)
-        {
+        public void DeletePlayer (string name) {
             try {
                 new PlayerFile(_playerPath, name).Delete();
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 PlayerIOException pex = new PlayerIOException("Could not remove player", ex);
                 pex.Data["PlayerName"] = name;
                 throw pex;
@@ -161,8 +143,7 @@ namespace Substrate
         /// Gets an enumerator that iterates through all the players in the world.
         /// </summary>
         /// <returns>An enumerator for this manager.</returns>
-        public IEnumerator<Player> GetEnumerator ()
-        {
+        public IEnumerator<Player> GetEnumerator () {
             return new Enumerator(this);
         }
 
@@ -170,22 +151,19 @@ namespace Substrate
 
         #region IEnumerable Members
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
-        {
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator () {
             return new Enumerator(this);
         }
 
         #endregion
 
-        private class Enumerator : IEnumerator<Player>
-        {
+        private class Enumerator : IEnumerator<Player> {
             protected PlayerManager _pm;
             protected Queue<string> _names;
 
             protected Player _curPlayer;
 
-            public Enumerator (PlayerManager cfm)
-            {
+            public Enumerator (PlayerManager cfm) {
                 _pm = cfm;
                 _names = new Queue<string>();
 
@@ -196,8 +174,7 @@ namespace Substrate
                 Reset();
             }
 
-            public bool MoveNext ()
-            {
+            public bool MoveNext () {
                 if (_names.Count == 0) {
                     return false;
                 }
@@ -209,8 +186,7 @@ namespace Substrate
                 return true;
             }
 
-            public void Reset ()
-            {
+            public void Reset () {
                 _names.Clear();
                 _curPlayer = null;
 
@@ -228,26 +204,16 @@ namespace Substrate
 
             void IDisposable.Dispose () { }
 
-            object IEnumerator.Current
-            {
-                get
-                {
-                    return Current;
-                }
+            object IEnumerator.Current {
+                get { return Current; }
             }
 
-            Player IEnumerator<Player>.Current
-            {
-                get
-                {
-                    return Current;
-                }
+            Player IEnumerator<Player>.Current {
+                get { return Current; }
             }
 
-            public Player Current
-            {
-                get
-                {
+            public Player Current {
+                get {
                     if (_curPlayer == null) {
                         throw new InvalidOperationException();
                     }
@@ -255,8 +221,7 @@ namespace Substrate
                 }
             }
 
-            private bool ParseFileName (string filename)
-            {
+            private bool ParseFileName (string filename) {
                 Match match = _namePattern.Match(filename);
                 if (!match.Success) {
                     return false;

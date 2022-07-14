@@ -5,12 +5,9 @@ using Substrate.Core;
 // This example will insert x amount of an item into a player's
 // inventory in an SMP server (where there is a player directory)
 
-namespace GiveItem
-{
-    class Program
-    {
-        static void Main (string[] args)
-        {
+namespace GiveItem {
+    class Program {
+        static void Main (string[] args) {
             if (args.Length != 4) {
                 Console.WriteLine("Usage: GiveItem <world> <player> <item-id> <cnt>");
                 return;
@@ -33,7 +30,7 @@ namespace GiveItem
 
             // Get player (returned object is independent of the playermanager)
             Player p = pm.GetPlayer(player);
-            
+
             // Find first slot to place item
             for (int i = 0; i < p.Items.Capacity; i++) {
                 if (!p.Items.ItemExists(i)) {
@@ -46,7 +43,6 @@ namespace GiveItem
                     break;
                 }
             }
-
             // Save the player
             pm.SetPlayer(player, p);
         }

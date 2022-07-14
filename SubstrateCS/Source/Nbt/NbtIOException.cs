@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Substrate.Nbt
-{
+namespace Substrate.Nbt {
     /// <summary>
     /// The exception that is thrown when errors occur during Nbt IO operations.
     /// </summary>
     /// <remarks>In most cases, the <see cref="Exception.InnerException"/> property will contain more detailed information on the
     /// error that occurred.</remarks>
     [Serializable]
-    public class NbtIOException : SubstrateException
-    {
+    public class NbtIOException : SubstrateException {
         /// <summary>
         /// Initializes a new instance of the <see cref="NbtIOException"/> class.
         /// </summary>

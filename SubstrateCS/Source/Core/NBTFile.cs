@@ -5,59 +5,47 @@ using System.IO;
 using Ionic.Zlib;
 using Substrate.Nbt;
 
-namespace Substrate.Core
-{
-    public enum CompressionType
-    {
+namespace Substrate.Core {
+    public enum CompressionType {
         None,
         Zlib,
         Deflate,
         GZip,
     }
 
-    public class NBTFile
-    {
+    public class NBTFile {
         private string _filename;
 
-        public NBTFile (string path)
-        {
+        public NBTFile (string path) {
             _filename = path;
         }
 
-        public string FileName
-        {
+        public string FileName {
             get { return _filename; }
             protected set { _filename = value; }
         }
 
-        public bool Exists ()
-        {
+        public bool Exists () {
             return File.Exists(_filename);
         }
 
-        public void Delete ()
-        {
+        public void Delete () {
             File.Delete(_filename);
         }
 
-        public int GetModifiedTime ()
-        {
+        public int GetModifiedTime () {
             return Timestamp(File.GetLastWriteTime(_filename));
         }
 
-        public Stream GetDataInputStream ()
-        {
+        public Stream GetDataInputStream () {
             return GetDataInputStream(CompressionType.GZip);
         }
 
-        public virtual Stream GetDataInputStream (CompressionType compression)
-        {
+        public virtual Stream GetDataInputStream (CompressionType compression) {
             try {
-                switch (compression)
-                {
+                switch (compression) {
                     case CompressionType.None:
-                        using (FileStream fstr = new FileStream(_filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                        {
+                        using (FileStream fstr = new FileStream(_filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
                             long length = fstr.Seek(0, SeekOrigin.End);
                             fstr.Seek(0, SeekOrigin.Begin);
 
@@ -78,19 +66,16 @@ namespace Substrate.Core
                     default:
                         throw new ArgumentException("Invalid CompressionType specified", "compression");
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 throw new NbtIOException("Failed to open compressed NBT data stream for input.", ex);
             }
         }
 
-        public Stream GetDataOutputStream ()
-        {
+        public Stream GetDataOutputStream () {
             return GetDataOutputStream(CompressionType.GZip);
         }
 
-        public virtual Stream GetDataOutputStream (CompressionType compression)
-        {
+        public virtual Stream GetDataOutputStream (CompressionType compression) {
             try {
                 switch (compression) {
                     case CompressionType.None:
@@ -104,51 +89,37 @@ namespace Substrate.Core
                     default:
                         throw new ArgumentException("Invalid CompressionType specified", "compression");
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 throw new NbtIOException("Failed to initialize compressed NBT data stream for output.", ex);
             }
         }
 
-        class NBTBuffer : MemoryStream
-        {
+        class NBTBuffer : MemoryStream {
             private NBTFile file;
 
             public NBTBuffer (NBTFile c)
-                : base(8096)
-            {
+                : base(8096) {
                 this.file = c;
             }
 
-            public override void Close ()
-            {
-                try
-                {
-                    using (Stream fstr = new FileStream(file._filename, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
-                    {
-                        try
-                        {
+            public override void Close () {
+                try {
+                    using (Stream fstr = new FileStream(file._filename, FileMode.Create, FileAccess.Write, FileShare.ReadWrite)) {
+                        try {
                             fstr.Write(this.GetBuffer(), 0, (int)this.Length);
-                        }
-                        catch (Exception ex)
-                        {
+                        } catch (Exception ex) {
                             throw new NbtIOException("Failed to write out NBT data stream.", ex);
                         }
                     }
-                }
-                catch (NbtIOException)
-                {
+                } catch (NbtIOException) {
                     throw;
-                }
-                catch (Exception ex)
-                {
+                } catch (Exception ex) {
                     throw new NbtIOException("Failed to open NBT data stream for output.", ex);
                 }
             }
         }
 
-        private int Timestamp (DateTime time)
-        {
+        private int Timestamp (DateTime time) {
             DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, 0);
             return (int)((time - epoch).Ticks / (10000L * 1000L));
         }

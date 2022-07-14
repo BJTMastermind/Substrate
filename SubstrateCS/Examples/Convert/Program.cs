@@ -8,12 +8,9 @@ using System.IO;
 // This will convert chunks to and from region format, and copy level.dat
 // Other data, like players and other dims, will not be handled.
 
-namespace Convert
-{
-    class Program
-    {
-        static void Main (string[] args)
-        {
+namespace Convert {
+    class Program {
+        static void Main (string[] args) {
             if (args.Length != 3) {
                 Console.WriteLine("Usage: Convert <world> <dest> <alpha|beta|anvil>");
                 return;

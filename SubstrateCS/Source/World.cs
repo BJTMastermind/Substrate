@@ -5,13 +5,11 @@ using System.IO;
 using Substrate.Core;
 using Substrate.Nbt;
 
-namespace Substrate
-{
+namespace Substrate {
     /// <summary>
     /// A collection of constants to specify different Minecraft world dimensions.
     /// </summary>
-    public static class Dimension 
-    {
+    public static class Dimension {
         /// <summary>
         /// Specifies the Nether dimension.
         /// </summary>

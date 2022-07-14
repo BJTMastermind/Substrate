@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Substrate.Data
-{
+namespace Substrate.Data {
     /// <summary>
     /// The exception that is thrown when IO errors occur during high-level data resource management operations.
     /// </summary>
     [Serializable]
-    public class DataIOException : SubstrateException
-    {
+    public class DataIOException : SubstrateException {
         /// <summary>
         /// Initializes a new instance of the <see cref="DataIOException"/> class.
         /// </summary>

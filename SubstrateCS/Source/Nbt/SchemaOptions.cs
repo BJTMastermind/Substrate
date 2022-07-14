@@ -1,13 +1,11 @@
 ﻿using System;
 
-namespace Substrate.Nbt
-{
+namespace Substrate.Nbt {
     /// <summary>
     /// Additional options that modify the processing of a <see cref="SchemaNode"/>.
     /// </summary>
     [Flags]
-    public enum SchemaOptions
-    {
+    public enum SchemaOptions {
         /// <summary>
         /// Any <see cref="SchemaNode"/> with this option will not throw an error if the corresponding <see cref="TagNode"/> is missing.
         /// </summary>

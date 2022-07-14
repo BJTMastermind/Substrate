@@ -2,22 +2,18 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.Entities
-{
+namespace Substrate.Entities {
     using Substrate.Nbt;
 
-    public class EntityPainting : TypedEntity
-    {
-        public enum DirectionType
-        {
+    public class EntityPainting : TypedEntity {
+        public enum DirectionType {
             EAST = 0,
             NORTH = 1,
             WEST = 2,
             SOUTH = 3,
         }
 
-        public static readonly SchemaNodeCompound PaintingSchema = TypedEntity.Schema.MergeInto(new SchemaNodeCompound("")
-        {
+        public static readonly SchemaNodeCompound PaintingSchema = TypedEntity.Schema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeString("id", TypeId),
             new SchemaNodeScaler("Dir", TagType.TAG_BYTE),
             new SchemaNodeScaler("TileX", TagType.TAG_INT),
@@ -26,8 +22,7 @@ namespace Substrate.Entities
             new SchemaNodeScaler("Motive", TagType.TAG_STRING),
         });
 
-        public static string TypeId
-        {
+        public static string TypeId {
             get { return "Painting"; }
         }
 
@@ -37,49 +32,41 @@ namespace Substrate.Entities
         private int _yTile;
         private int _zTile;
 
-        public DirectionType Direction
-        {
+        public DirectionType Direction {
             get { return _dir; }
             set { _dir = value; }
         }
 
-        public string Motive
-        {
+        public string Motive {
             get { return _motive; }
             set { _motive = value; }
         }
 
-        public int TileX
-        {
+        public int TileX {
             get { return _xTile; }
             set { _xTile = value; }
         }
 
-        public int TileY
-        {
+        public int TileY {
             get { return _yTile; }
             set { _yTile = value; }
         }
 
-        public int TileZ
-        {
+        public int TileZ {
             get { return _zTile; }
             set { _zTile = value; }
         }
 
         protected EntityPainting (string id)
-            : base(id)
-        {
+            : base(id) {
         }
 
         public EntityPainting ()
-            : this(TypeId)
-        {
+            : this(TypeId) {
         }
 
         public EntityPainting (TypedEntity e)
-            : base(e)
-        {
+            : base(e) {
             EntityPainting e2 = e as EntityPainting;
             if (e2 != null) {
                 _xTile = e2._xTile;
@@ -90,8 +77,7 @@ namespace Substrate.Entities
             }
         }
 
-        public override void MoveBy (int diffX, int diffY, int diffZ)
-        {
+        public override void MoveBy (int diffX, int diffY, int diffZ) {
             base.MoveBy(diffX, diffY, diffZ);
 
             _xTile += diffX;
@@ -101,8 +87,7 @@ namespace Substrate.Entities
 
         #region INBTObject<Entity> Members
 
-        public override TypedEntity LoadTree (TagNode tree)
-        {
+        public override TypedEntity LoadTree (TagNode tree) {
             TagNodeCompound ctree = tree as TagNodeCompound;
             if (ctree == null || base.LoadTree(tree) == null) {
                 return null;
@@ -117,8 +102,7 @@ namespace Substrate.Entities
             return this;
         }
 
-        public override TagNode BuildTree ()
-        {
+        public override TagNode BuildTree () {
             TagNodeCompound tree = base.BuildTree() as TagNodeCompound;
             tree["Dir"] = new TagNodeByte((byte)_dir);
             tree["Motive"] = new TagNodeString(_motive);
@@ -129,8 +113,7 @@ namespace Substrate.Entities
             return tree;
         }
 
-        public override bool ValidateTree (TagNode tree)
-        {
+        public override bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, PaintingSchema).Verify();
         }
 
@@ -139,8 +122,7 @@ namespace Substrate.Entities
 
         #region ICopyable<Entity> Members
 
-        public override TypedEntity Copy ()
-        {
+        public override TypedEntity Copy () {
             return new EntityPainting(this);
         }
 

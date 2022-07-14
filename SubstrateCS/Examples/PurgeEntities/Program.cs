@@ -7,12 +7,9 @@ using Substrate.Core;
 // on a map.  It optionally can be restricted to boxed region in block coords.
 // Only 10% of the effort is actually spend purging anything.
 
-namespace PurgeEntities
-{
-    class Program
-    {
-        static void Main (string[] args)
-        {
+namespace PurgeEntities {
+    class Program {
+        static void Main (string[] args) {
             // Process arguments
             if (args.Length != 2 && args.Length != 6) {
                 Console.WriteLine("Usage: PurgeEntities <world> <entityID> [<x1> <z1> <x2> <z2>]");

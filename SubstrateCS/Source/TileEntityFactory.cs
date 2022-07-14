@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Substrate
-{
+namespace Substrate {
     using Nbt;
     using TileEntities;
 
@@ -12,8 +11,7 @@ namespace Substrate
     /// <remarks>This factory allows specific <see cref="TileEntity"/> objects to be generated as an NBT tree is parsed.  New types can be
     /// registered with the factory at any time, so that custom <see cref="TileEntity"/> types can be supported.  By default, the standard
     /// Tile Entities of Minecraft are registered with the factory at startup and bound to their respective 'id' fields.</remarks>
-    public class TileEntityFactory
-    {
+    public class TileEntityFactory {
         private static Dictionary<string, Type> _registry = new Dictionary<string, Type>();
 
         /// <summary>
@@ -21,8 +19,7 @@ namespace Substrate
         /// </summary>
         /// <param name="type">The name that a concrete <see cref="TileEntity"/> type was registered with.</param>
         /// <returns>A new instance of a concrete <see cref="TileEntity"/> type, or null if no type was registered with the given name.</returns>
-        public static TileEntity Create (string type)
-        {
+        public static TileEntity Create (string type) {
             Type t;
             if (!_registry.TryGetValue(type, out t)) {
                 return null;
@@ -36,13 +33,11 @@ namespace Substrate
         /// </summary>
         /// <param name="tree">A <see cref="TagNodeCompound"/> representing a single Tile Entity, containing an 'id' field of the Tile Entity's registered name.</param>
         /// <returns>A new instance of a concrete <see cref="TileEntity"/> type, or null if no type was registered with the given name.</returns>
-        public static TileEntity Create(TagNodeCompound tree)
-        {
+        public static TileEntity Create(TagNodeCompound tree) {
             string type = tree["id"].ToTagString();
 
             Type t;
-            if (!_registry.TryGetValue(type, out t))
-            {
+            if (!_registry.TryGetValue(type, out t)) {
                 return null;
             }
 
@@ -56,14 +51,12 @@ namespace Substrate
         /// </summary>
         /// <param name="tree">A <see cref="TagNodeCompound"/> representing a single Tile Entity, containing an 'id' field of the Tile Entity's registered name.</param>
         /// <returns>A new instance of a concrete <see cref="TileEntity"/> type, or null if no type was registered with the given name.</returns>
-        public static TileEntity CreateGeneric(TagNodeCompound tree)
-        {
+        public static TileEntity CreateGeneric(TagNodeCompound tree) {
             string type = tree["id"].ToTagString();
 
             Type t;
 
-            if (!_registry.TryGetValue(type, out t))
-            {
+            if (!_registry.TryGetValue(type, out t)) {
                 t = typeof (TileEntity);
             }
 
@@ -77,8 +70,7 @@ namespace Substrate
         /// </summary>
         /// <param name="type">The name that a concrete <see cref="TileEntity"/> type was registered with.</param>
         /// <returns>The <see cref="Type"/> of a concrete <see cref="TileEntity"/> type, or null if no type was registered with the given name.</returns>
-        public static Type Lookup (string type)
-        {
+        public static Type Lookup (string type) {
             Type t;
             if (!_registry.TryGetValue(type, out t)) {
                 return null;
@@ -92,26 +84,22 @@ namespace Substrate
         /// </summary>
         /// <param name="id">The name to bind to a concrete <see cref="TileEntity"/> type.</param>
         /// <param name="subtype">The <see cref="Type"/> of a concrete <see cref="TileEntity"/> type.</param>
-        public static void Register (string id, Type subtype)
-        {
+        public static void Register (string id, Type subtype) {
             _registry[id] = subtype;
         }
 
         /// <summary>
         /// Gets an enumerator over all registered TileEntities.
         /// </summary>
-        public static IEnumerable<KeyValuePair<string, Type>> RegisteredTileEntities
-        {
-            get
-            {
+        public static IEnumerable<KeyValuePair<string, Type>> RegisteredTileEntities {
+            get {
                 foreach (KeyValuePair<string, Type> kvp in _registry) {
                     yield return kvp;
                 }
             }
         }
 
-        static TileEntityFactory ()
-        {
+        static TileEntityFactory () {
             _registry[TileEntityEndPortal.TypeId] = typeof(TileEntityEndPortal);
             _registry[TileEntityBeacon.TypeId] = typeof(TileEntityBeacon);
             _registry[TileEntityBrewingStand.TypeId] = typeof(TileEntityBrewingStand);
@@ -131,8 +119,7 @@ namespace Substrate
     /// <summary>
     /// An exception that is thrown when unknown TileEntity types are queried.
     /// </summary>
-    public class UnknownTileEntityException : Exception 
-    {
+    public class UnknownTileEntityException : Exception {
         public UnknownTileEntityException (string message)
             : base(message)
         { }

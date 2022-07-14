@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.Core
-{
-    public class CompositeDataArray3 : IDataArray3
-    {
+namespace Substrate.Core {
+    public class CompositeDataArray3 : IDataArray3 {
         private IDataArray3[] _sections;
 
-        public CompositeDataArray3 (IDataArray3[] sections)
-        {
+        public CompositeDataArray3 (IDataArray3[] sections) {
             for (int i = 0; i < sections.Length; i++)
                 if (sections[i] == null)
                     throw new ArgumentException("sections argument cannot have null entries.");
@@ -27,47 +24,39 @@ namespace Substrate.Core
 
         #region IByteArray3 Members
 
-        public int this[int x, int y, int z]
-        {
-            get
-            {
+        public int this[int x, int y, int z] {
+            get {
                 int ydiv = y / _sections[0].YDim;
                 int yrem = y - (ydiv * _sections[0].YDim);
                 return _sections[ydiv][x, yrem, z];
             }
 
-            set
-            {
+            set {
                 int ydiv = y / _sections[0].YDim;
                 int yrem = y - (ydiv * _sections[0].YDim);
                 _sections[ydiv][x, yrem, z] = value;
             }
         }
 
-        public int XDim
-        {
+        public int XDim {
             get { return _sections[0].XDim; }
         }
 
-        public int YDim
-        {
+        public int YDim {
             get { return _sections[0].YDim * _sections.Length; }
         }
 
-        public int ZDim
-        {
+        public int ZDim {
             get { return _sections[0].ZDim; }
         }
 
-        public int GetIndex (int x, int y, int z)
-        {
+        public int GetIndex (int x, int y, int z) {
             int ydiv = y / _sections[0].YDim;
             int yrem = y - (ydiv * _sections[0].YDim);
             return (ydiv * _sections[0].Length) + _sections[ydiv].GetIndex(x, yrem, z);
         }
 
-        public void GetMultiIndex (int index, out int x, out int y, out int z)
-        {
+        public void GetMultiIndex (int index, out int x, out int y, out int z) {
             int idiv = index / _sections[0].Length;
             int irem = index - (idiv * _sections[0].Length);
             _sections[idiv].GetMultiIndex(irem, out x, out y, out z);
@@ -78,34 +67,28 @@ namespace Substrate.Core
 
         #region IByteArray Members
 
-        public int this[int i]
-        {
-            get
-            {
+        public int this[int i] {
+            get {
                 int idiv = i / _sections[0].Length;
                 int irem = i - (idiv * _sections[0].Length);
                 return _sections[idiv][irem];
             }
-            set
-            {
+            set {
                 int idiv = i / _sections[0].Length;
                 int irem = i - (idiv * _sections[0].Length);
                 _sections[idiv][irem] = value;
             }
         }
 
-        public int Length
-        {
+        public int Length {
             get { return _sections[0].Length * _sections.Length; }
         }
 
-        public int DataWidth
-        {
+        public int DataWidth {
             get { return _sections[0].DataWidth; }
         }
 
-        public void Clear ()
-        {
+        public void Clear () {
             for (int i = 0; i < _sections.Length; i++)
                 _sections[i].Clear();
         }

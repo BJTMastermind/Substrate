@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Substrate
-{
+namespace Substrate {
     /// <summary>
     /// The exception that is thrown when IO errors occur during level management operations.
     /// </summary>
     [Serializable]
-    public class LevelIOException : SubstrateException
-    {
+    public class LevelIOException : SubstrateException {
         /// <summary>
         /// Initializes a new instance of the <see cref="LevelIOException"/> class.
         /// </summary>

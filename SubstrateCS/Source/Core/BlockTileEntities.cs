@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using Substrate.Nbt;
 
-namespace Substrate.Core
-{
+namespace Substrate.Core {
     public delegate BlockKey BlockCoordinateHandler (int lx, int ly, int lz);
 
-    public class BlockTileEntities
-    {
+    public class BlockTileEntities {
         private IDataArray3 _blocks;
         private TagNodeList _tileEntities;
 
@@ -15,24 +13,21 @@ namespace Substrate.Core
 
         public event BlockCoordinateHandler TranslateCoordinates;
 
-        public BlockTileEntities (IDataArray3 blocks, TagNodeList tileEntities)
-        {
+        public BlockTileEntities (IDataArray3 blocks, TagNodeList tileEntities) {
             _blocks = blocks;
             _tileEntities = tileEntities;
 
             BuildTileEntityCache();
         }
 
-        public BlockTileEntities (BlockTileEntities bte)
-        {
+        public BlockTileEntities (BlockTileEntities bte) {
             _blocks = bte._blocks;
             _tileEntities = bte._tileEntities;
 
             BuildTileEntityCache();
         }
 
-        public TileEntity GetTileEntity (int x, int y, int z)
-        {
+        public TileEntity GetTileEntity (int x, int y, int z) {
             BlockKey key = (TranslateCoordinates != null)
                 ? TranslateCoordinates(x, y, z)
                 : new BlockKey(x, y, z);
@@ -46,8 +41,7 @@ namespace Substrate.Core
             return TileEntityFactory.CreateGeneric(te);
         }
 
-        public void SetTileEntity (int x, int y, int z, TileEntity te)
-        {
+        public void SetTileEntity (int x, int y, int z, TileEntity te) {
             BlockInfoEx info = BlockInfo.BlockTable[_blocks[x, y, z]] as BlockInfoEx;
             if (info != null) {
                 if (te.GetType() != TileEntityFactory.Lookup(info.TileEntityName))
@@ -74,8 +68,7 @@ namespace Substrate.Core
             _tileEntityTable[key] = tree;
         }
 
-        public void CreateTileEntity (int x, int y, int z)
-        {
+        public void CreateTileEntity (int x, int y, int z) {
             BlockInfoEx info = BlockInfo.BlockTable[_blocks[x, y, z]] as BlockInfoEx;
             if (info == null) {
                 throw new InvalidOperationException("The given block is of a type that does not support TileEntities.");
@@ -106,8 +99,7 @@ namespace Substrate.Core
             _tileEntityTable[key] = tree;
         }
 
-        public void ClearTileEntity (int x, int y, int z)
-        {
+        public void ClearTileEntity (int x, int y, int z) {
             BlockKey key = (TranslateCoordinates != null)
                 ? TranslateCoordinates(x, y, z)
                 : new BlockKey(x, y, z);
@@ -122,8 +114,7 @@ namespace Substrate.Core
             _tileEntityTable.Remove(key);
         }
 
-        private void BuildTileEntityCache ()
-        {
+        private void BuildTileEntityCache () {
             _tileEntityTable = new Dictionary<BlockKey, TagNodeCompound>();
 
             foreach (TagNodeCompound te in _tileEntities) {

@@ -4,14 +4,12 @@ using System.Text;
 using Substrate.Core;
 using Substrate.Nbt;
 
-namespace Substrate
-{
+namespace Substrate {
     /// <summary>
     /// Encompases data to specify player abilities, especially mode-dependent abilities.
     /// </summary>
     /// <remarks>Whether or not any of these values are respected by the game client is dependent upon the active game mode.</remarks>
-    public class PlayerAbilities : ICopyable<PlayerAbilities>
-    {
+    public class PlayerAbilities : ICopyable<PlayerAbilities> {
         private bool _flying = false;
         private bool _instabuild = false;
         private bool _mayfly = false;
@@ -24,8 +22,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets whether the player is currently flying.
         /// </summary>
-        public bool Flying
-        {
+        public bool Flying {
             get { return _flying; }
             set { _flying = value; }
         }
@@ -33,8 +30,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets whether the player can instantly build or mine.
         /// </summary>
-        public bool InstantBuild
-        {
+        public bool InstantBuild {
             get { return _instabuild; }
             set { _instabuild = value; }
         }
@@ -42,8 +38,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets whether the player is allowed to fly.
         /// </summary>
-        public bool MayFly
-        {
+        public bool MayFly {
             get { return _mayfly; }
             set { _mayfly = value; }
         }
@@ -51,8 +46,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets whether the player can take damage.
         /// </summary>
-        public bool Invulnerable
-        {
+        public bool Invulnerable {
             get { return _invulnerable; }
             set { _invulnerable = value; }
         }
@@ -60,8 +54,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets whether the player can create or destroy blocks.
         /// </summary>
-        public bool MayBuild 
-        {
+        public bool MayBuild {
             get { return _maybuild; }
             set { _maybuild = value; }
         }
@@ -69,8 +62,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the player's walking speed.  Always 0.1.
         /// </summary>
-        public float FlySpeed
-        {
+        public float FlySpeed {
             get { return _flySpeed; }
             set { _flySpeed = value; }
         }
@@ -78,8 +70,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the player's flying speed.  Always 0.05.
         /// </summary>
-        public float WalkSpeed
-        {
+        public float WalkSpeed {
             get { return _walkSpeed; }
             set { _walkSpeed = value; }
         }
@@ -87,8 +78,7 @@ namespace Substrate
         #region ICopyable<PlayerAbilities> Members
 
         /// <inheritdoc />
-        public PlayerAbilities Copy ()
-        {
+        public PlayerAbilities Copy () {
             PlayerAbilities pa = new PlayerAbilities();
             pa._flying = _flying;
             pa._instabuild = _instabuild;
@@ -104,8 +94,7 @@ namespace Substrate
         #endregion
     }
 
-    public enum PlayerGameType
-    {
+    public enum PlayerGameType {
         Survival = 0,
         Creative = 1,
         Adventure = 2,
@@ -116,10 +105,8 @@ namespace Substrate
     /// </summary>
     /// <remarks>Unlike <see cref="TypedEntity"/> objects, <see cref="Player"/> objects do not need to be added to chunks.  They
     /// are stored individually or within level data.</remarks>
-    public class Player : Entity, INbtObject<Player>, ICopyable<Player>, IItemContainer
-    {
-        private static readonly SchemaNodeCompound _schema = Entity.Schema.MergeInto(new SchemaNodeCompound("")
-        {
+    public class Player : Entity, INbtObject<Player>, ICopyable<Player>, IItemContainer {
+        private static readonly SchemaNodeCompound _schema = Entity.Schema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeScaler("AttackTime", TagType.TAG_SHORT, SchemaOptions.CREATE_ON_MISSING),
             new SchemaNodeScaler("DeathTime", TagType.TAG_SHORT),
             new SchemaNodeScaler("Health", TagType.TAG_FLOAT),
@@ -190,8 +177,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the number of ticks left in the player's "invincibility shield" after last struck.
         /// </summary>
-        public int AttackTime
-        {
+        public int AttackTime {
             get { return _attackTime; }
             set { _attackTime = (short)value; }
         }
@@ -199,8 +185,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the number of ticks that the player has been dead for.
         /// </summary>
-        public int DeathTime
-        {
+        public int DeathTime {
             get { return _deathTime; }
             set { _deathTime = (short)value; }
         }
@@ -208,8 +193,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the amount of the player's health.
         /// </summary>
-        public float Health
-        {
+        public float Health {
             get { return _health; }
             set { _health = value; }
         }
@@ -217,8 +201,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the player's Hurt Time value.
         /// </summary>
-        public int HurtTime
-        {
+        public int HurtTime {
             get { return _hurtTime; }
             set { _hurtTime = (short)value; }
         }
@@ -226,14 +209,12 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the dimension that the player is currently in.
         /// </summary>
-        public int Dimension
-        {
+        public int Dimension {
             get { return _dimension; }
             set { _dimension = value; }
         }
 
-        public PlayerGameType GameType
-        {
+        public PlayerGameType GameType {
             get { return _gameType ?? PlayerGameType.Survival; }
             set { _gameType = value; }
         }
@@ -241,8 +222,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets a value indicating whether the player is sleeping in a bed.
         /// </summary>
-        public bool IsSleeping
-        {
+        public bool IsSleeping {
             get { return _sleeping == 1; }
             set { _sleeping = (byte)(value ? 1 : 0); }
         }
@@ -250,8 +230,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the player's Sleep Timer value.
         /// </summary>
-        public int SleepTimer
-        {
+        public int SleepTimer {
             get { return _sleepTimer; }
             set { _sleepTimer = (short)value; }
         }
@@ -259,11 +238,9 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the player's personal spawn point, set by sleeping in beds.
         /// </summary>
-        public SpawnPoint Spawn
-        {
+        public SpawnPoint Spawn {
             get { return new SpawnPoint(_spawnX ?? 0, _spawnY ?? 0, _spawnZ ?? 0); }
-            set
-            {
+            set {
                 _spawnX = value.X;
                 _spawnY = value.Y;
                 _spawnZ = value.Z;
@@ -273,16 +250,14 @@ namespace Substrate
         /// <summary>
         /// Tests if the player currently has a personal spawn point.
         /// </summary>
-        public bool HasSpawn
-        {
+        public bool HasSpawn {
             get { return _spawnX != null && _spawnY != null && _spawnZ != null; }
         }
 
         /// <summary>
         /// Gets or sets the name of the world that the player is currently within.
         /// </summary>
-        public string World
-        {
+        public string World {
             get { return _world; }
             set { _world = value; }
         }
@@ -290,8 +265,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the name that is used when the player is read or written from a <see cref="PlayerManager"/>.
         /// </summary>
-        public string Name
-        {
+        public string Name {
             get { return _name; }
             set { _name = value; }
         }
@@ -299,8 +273,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the player's score.
         /// </summary>
-        public int Score
-        {
+        public int Score {
             get { return _score ?? 0; }
             set { _score = value; }
         }
@@ -308,8 +281,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the player's XP Level.
         /// </summary>
-        public int XPLevel
-        {
+        public int XPLevel {
             get { return _xpLevel ?? 0; }
             set { _xpLevel = value; }
         }
@@ -317,8 +289,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the amount of the player's XP points.
         /// </summary>
-        public int XPTotal
-        {
+        public int XPTotal {
             get { return _xpTotal ?? 0; }
             set { _xpTotal = value; }
         }
@@ -326,8 +297,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the hunger level of the player.  Valid values range 0 - 20.
         /// </summary>
-        public int HungerLevel
-        {
+        public int HungerLevel {
             get { return _foodLevel ?? 0; }
             set { _foodLevel = value; }
         }
@@ -335,8 +305,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the player's hunger saturation level, which is reserve food capacity above <see cref="HungerLevel"/>.
         /// </summary>
-        public float HungerSaturationLevel
-        {
+        public float HungerSaturationLevel {
             get { return _foodSaturation ?? 0; }
             set { _foodSaturation = value; }
         }
@@ -344,8 +313,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the counter towards the next hunger point decrement.  Valid values range 0.0 - 4.0.
         /// </summary>
-        public float HungerExhaustionLevel
-        {
+        public float HungerExhaustionLevel {
             get { return _foodExhaustion ?? 0; }
             set { _foodExhaustion = value; }
         }
@@ -353,8 +321,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets the timer used to periodically heal or damage the player based on <see cref="HungerLevel"/>.  Valid values range 0 - 80.
         /// </summary>
-        public int HungerTimer
-        {
+        public int HungerTimer {
             get { return _foodTickTimer ?? 0; }
             set { _foodTickTimer = value; }
         }
@@ -362,8 +329,7 @@ namespace Substrate
         /// <summary>
         /// Gets the state of the player's abilities.
         /// </summary>
-        public PlayerAbilities Abilities
-        {
+        public PlayerAbilities Abilities {
             get { return _abilities; }
         }
 
@@ -371,8 +337,7 @@ namespace Substrate
         /// Creates a new <see cref="Player"/> object with reasonable default values.
         /// </summary>
         public Player ()
-            : base()
-        {
+            : base() {
             _inventory = new ItemCollection(_CAPACITY);
             _enderItems = new ItemCollection(_ENDER_CAPACITY);
             _abilities = new PlayerAbilities();
@@ -392,8 +357,7 @@ namespace Substrate
         /// </summary>
         /// <param name="p">The <see cref="Player"/> to copy fields from.</param>
         protected Player (Player p)
-            : base(p)
-        {
+            : base(p) {
             _attackTime = p._attackTime;
             _deathTime = p._deathTime;
             _health = p._health;
@@ -423,15 +387,13 @@ namespace Substrate
         /// <summary>
         /// Clears the player's personal spawn point.
         /// </summary>
-        public void ClearSpawn ()
-        {
+        public void ClearSpawn () {
             _spawnX = null;
             _spawnY = null;
             _spawnZ = null;
         }
 
-        private bool AbilitiesSet ()
-        {
+        private bool AbilitiesSet () {
             return _abilities.Flying
                 || _abilities.InstantBuild
                 || _abilities.MayFly
@@ -444,8 +406,7 @@ namespace Substrate
         /// <summary>
         /// Gets a <see cref="SchemaNode"/> representing the schema of a Player.
         /// </summary>
-        public static new SchemaNodeCompound Schema
-        {
+        public static new SchemaNodeCompound Schema {
             get { return _schema; }
         }
 
@@ -454,8 +415,7 @@ namespace Substrate
         /// </summary>
         /// <param name="tree">The root node of a Player subtree.</param>
         /// <returns>The <see cref="Player"/> returns itself on success, or null if the tree was unparsable.</returns>
-        public virtual new Player LoadTree (TagNode tree)
-        {
+        public virtual new Player LoadTree (TagNode tree) {
             TagNodeCompound ctree = tree as TagNodeCompound;
             if (ctree == null || base.LoadTree(tree) == null) {
                 return null;
@@ -545,8 +505,7 @@ namespace Substrate
         /// </summary>
         /// <param name="tree">The root node of a Player subtree.</param>
         /// <returns>The <see cref="Player"/> returns itself on success, or null if the tree failed validation.</returns>
-        public virtual new Player LoadTreeSafe (TagNode tree)
-        {
+        public virtual new Player LoadTreeSafe (TagNode tree) {
             if (!ValidateTree(tree)) {
                 return null;
             }
@@ -558,8 +517,7 @@ namespace Substrate
         /// Builds a Player subtree from the current data.
         /// </summary>
         /// <returns>The root node of a Player subtree representing the current data.</returns>
-        public virtual new TagNode BuildTree ()
-        {
+        public virtual new TagNode BuildTree () {
             TagNodeCompound tree = base.BuildTree() as TagNodeCompound;
             tree["AttackTime"] = new TagNodeShort(_attackTime);
             tree["DeathTime"] = new TagNodeShort(_deathTime);
@@ -574,8 +532,7 @@ namespace Substrate
                 tree["SpawnX"] = new TagNodeInt(_spawnX ?? 0);
                 tree["SpawnY"] = new TagNodeInt(_spawnY ?? 0);
                 tree["SpawnZ"] = new TagNodeInt(_spawnZ ?? 0);
-            }
-            else {
+            } else {
                 tree.Remove("SpawnX");
                 tree.Remove("SpawnY");
                 tree.Remove("SpawnZ");
@@ -629,8 +586,7 @@ namespace Substrate
         /// </summary>
         /// <param name="tree">The root node of a Player subtree.</param>
         /// <returns>Status indicating whether the tree was valid against the internal schema.</returns>
-        public virtual new bool ValidateTree (TagNode tree)
-        {
+        public virtual new bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, _schema).Verify();
         }
 
@@ -643,8 +599,7 @@ namespace Substrate
         /// Creates a deep-copy of the <see cref="Player"/>.
         /// </summary>
         /// <returns>A deep-copy of the <see cref="Player"/>.</returns>
-        public virtual new Player Copy ()
-        {
+        public virtual new Player Copy () {
             return new Player(this);
         }
 
@@ -656,15 +611,13 @@ namespace Substrate
         /// <summary>
         /// Gets access to an <see cref="ItemCollection"/> representing the player's equipment and inventory.
         /// </summary>
-        public ItemCollection Items
-        {
+        public ItemCollection Items {
             get { return _inventory; }
         }
 
         #endregion
 
-        public ItemCollection EnderItems
-        {
+        public ItemCollection EnderItems {
             get { return _enderItems; }
         }
     }

@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Substrate
-{
+namespace Substrate {
     /// <summary>
     /// The exception that is thrown when IO errors occur during high-level player management operations.
     /// </summary>
     [Serializable]
-    public class PlayerIOException : SubstrateException
-    {
+    public class PlayerIOException : SubstrateException {
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayerIOException"/> class.
         /// </summary>

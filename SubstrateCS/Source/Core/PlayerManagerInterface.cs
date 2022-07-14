@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.Core
-{
+namespace Substrate.Core {
     /// <summary>
     /// An interface of basic manipulations on an abstract data store for player data.
     /// </summary>
-    public interface IPlayerManager
-    {
+    public interface IPlayerManager {
         /// <summary>
         /// Gets a <see cref="Player"/> object for the given player from the underlying data store.
         /// </summary>

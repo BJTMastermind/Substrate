@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Substrate
-{
+namespace Substrate {
     /// <summary>
     /// A base class for all Substrate-related exception classes.
     /// </summary>
     [Serializable]
-    public class SubstrateException : Exception
-    {
+    public class SubstrateException : Exception {
         /// <summary>
         /// Initializes a new instance of the <see cref="SubstrateException"/> class.
         /// </summary>

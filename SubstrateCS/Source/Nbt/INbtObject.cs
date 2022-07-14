@@ -1,13 +1,11 @@
 ﻿using System;
 
-namespace Substrate.Nbt
-{
+namespace Substrate.Nbt {
     /// <summary>
     /// Defines methods for loading or extracting an NBT tree.
     /// </summary>
     /// <typeparam name="T">Object type that supports this interface.</typeparam>
-    public interface INbtObject<T>
-    {
+    public interface INbtObject<T> {
         /// <summary>
         /// Attempt to load an NBT tree into the object without validation.
         /// </summary>

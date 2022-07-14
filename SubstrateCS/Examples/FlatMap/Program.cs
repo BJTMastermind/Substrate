@@ -9,12 +9,9 @@ using System.IO;
 // and bedrock layers.  On a powerful workstation, creating 400 of these
 // chunks only takes a few seconds.
 
-namespace FlatMap
-{
-    class Program
-    {
-        static void Main (string[] args)
-        {
+namespace FlatMap {
+    class Program {
+        static void Main (string[] args) {
             if (args.Length < 2) {
                 Console.WriteLine("Usage: flatmap <type> <target_dir>");
                 Console.WriteLine("Available Types: alpha, beta, anvil");
@@ -27,16 +24,13 @@ namespace FlatMap
             int zmin = -20;
             int zmaz = 20;
 
-            NbtVerifier.InvalidTagType += (e) =>
-            {
+            NbtVerifier.InvalidTagType += (e) => {
                 throw new Exception("Invalid Tag Type: " + e.TagName + " [" + e.Tag + "]");
             };
-            NbtVerifier.InvalidTagValue += (e) =>
-            {
+            NbtVerifier.InvalidTagValue += (e) => {
                 throw new Exception("Invalid Tag Value: " + e.TagName + " [" + e.Tag + "]");
             };
-            NbtVerifier.MissingTag += (e) =>
-            {
+            NbtVerifier.MissingTag += (e) => {
                 throw new Exception("Missing Tag: " + e.TagName);
             };
 
@@ -99,8 +93,7 @@ namespace FlatMap
             world.Save();
         }
 
-        static void FlatChunk (ChunkRef chunk, int height)
-        {
+        static void FlatChunk (ChunkRef chunk, int height) {
             // Create bedrock
             for (int y = 0; y < 2; y++) {
                 for (int x = 0; x < 16; x++) {

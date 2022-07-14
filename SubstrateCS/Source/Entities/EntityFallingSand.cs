@@ -2,44 +2,36 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.Entities
-{
+namespace Substrate.Entities {
     using Substrate.Nbt;
 
-    public class EntityFallingSand : TypedEntity
-    {
-        public static readonly SchemaNodeCompound FallingSandSchema = TypedEntity.Schema.MergeInto(new SchemaNodeCompound("")
-        {
+    public class EntityFallingSand : TypedEntity {
+        public static readonly SchemaNodeCompound FallingSandSchema = TypedEntity.Schema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeString("id", TypeId),
             new SchemaNodeScaler("Tile", TagType.TAG_BYTE),
         });
 
-        public static string TypeId
-        {
+        public static string TypeId {
             get { return "FallingSand"; }
         }
 
         private byte _tile;
 
-        public int Tile
-        {
+        public int Tile {
             get { return _tile; }
             set { _tile = (byte)value; }
         }
 
         protected EntityFallingSand (string id)
-            : base(id)
-        {
+            : base(id) {
         }
 
         public EntityFallingSand ()
-            : this(TypeId)
-        {
+            : this(TypeId) {
         }
 
         public EntityFallingSand (TypedEntity e)
-            : base(e)
-        {
+            : base(e) {
             EntityFallingSand e2 = e as EntityFallingSand;
             if (e2 != null) {
                 _tile = e2._tile;
@@ -49,8 +41,7 @@ namespace Substrate.Entities
 
         #region INBTObject<Entity> Members
 
-        public override TypedEntity LoadTree (TagNode tree)
-        {
+        public override TypedEntity LoadTree (TagNode tree) {
             TagNodeCompound ctree = tree as TagNodeCompound;
             if (ctree == null || base.LoadTree(tree) == null) {
                 return null;
@@ -61,16 +52,14 @@ namespace Substrate.Entities
             return this;
         }
 
-        public override TagNode BuildTree ()
-        {
+        public override TagNode BuildTree () {
             TagNodeCompound tree = base.BuildTree() as TagNodeCompound;
             tree["Tile"] = new TagNodeByte(_tile);
 
             return tree;
         }
 
-        public override bool ValidateTree (TagNode tree)
-        {
+        public override bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, FallingSandSchema).Verify();
         }
 
@@ -79,8 +68,7 @@ namespace Substrate.Entities
 
         #region ICopyable<Entity> Members
 
-        public override TypedEntity Copy ()
-        {
+        public override TypedEntity Copy () {
             return new EntityFallingSand(this);
         }
 

@@ -3,16 +3,14 @@ using System.Collections.Generic;
 using Substrate.Core;
 using Substrate.Nbt;
 
-namespace Substrate
-{
+namespace Substrate {
     /// <summary>
     /// Functions for reading and modifying a bounded-size collection of Alpha-compatible block data.
     /// </summary>
     /// <remarks>An <see cref="AlphaBlockCollection"/> is a wrapper around existing pieces of data.  Although it
     /// holds references to data, it does not "own" the data in the same way that a <see cref="IChunk"/> does.  An
     /// <see cref="AlphaBlockCollection"/> simply overlays a higher-level interface on top of existing data.</remarks>
-    public class AlphaBlockCollection : IBoundedAlphaBlockCollection, IBoundedActiveBlockCollection
-    {
+    public class AlphaBlockCollection : IBoundedAlphaBlockCollection, IBoundedActiveBlockCollection {
         private readonly int _xdim;
         private readonly int _ydim;
         private readonly int _zdim;
@@ -46,8 +44,7 @@ namespace Substrate
         /// <param name="ydim">The length of the Y-dimension of the collection.</param>
         /// <param name="zdim">The length of the Z-dimension of the collection.</param>
         [Obsolete]
-        public AlphaBlockCollection (int xdim, int ydim, int zdim)
-        {
+        public AlphaBlockCollection (int xdim, int ydim, int zdim) {
             _blocks = new XZYByteArray(xdim, ydim, zdim);
             _data = new XZYNibbleArray(xdim, ydim, zdim);
             _blockLight = new XZYNibbleArray(xdim, ydim, zdim);
@@ -79,8 +76,7 @@ namespace Substrate
             IDataArray3 skyLight,
             IDataArray2 heightMap,
             TagNodeList tileEntities)
-            : this(blocks, data, blockLight, skyLight, heightMap, tileEntities, null)
-        {
+            : this(blocks, data, blockLight, skyLight, heightMap, tileEntities, null) {
         }
 
         /// <summary>
@@ -100,8 +96,7 @@ namespace Substrate
             IDataArray3 skyLight,
             IDataArray2 heightMap,
             TagNodeList tileEntities,
-            TagNodeList tileTicks)
-        {
+            TagNodeList tileTicks) {
             _blocks = blocks;
             _data = data;
             _blockLight = blockLight;
@@ -123,43 +118,36 @@ namespace Substrate
         /// <summary>
         /// Updates internal managers if underlying data, such as TileEntities, have been modified outside of the container.
         /// </summary>
-        public void Refresh ()
-        {
+        public void Refresh () {
             _lightManager = new BlockLight(this);
             _fluidManager = new BlockFluid(this);
             _tileEntityManager = new BlockTileEntities(_blocks, _tileEntities);
             _tileTickManager = new BlockTileTicks(_blocks, _tileTicks);
         }
 
-        internal TagNodeList TileTicks
-        {
+        internal TagNodeList TileTicks {
             get { return _tileTicks; }
         }
 
         #region Events
 
-        public event NeighborLookupHandler ResolveNeighbor
-        {
-            add 
-            {
+        public event NeighborLookupHandler ResolveNeighbor {
+            add {
                 _lightManager.ResolveNeighbor += delegate(int relx, int rely, int relz) { 
                     return value(relx, rely, relz); 
                 };
-                _fluidManager.ResolveNeighbor += delegate(int relx, int rely, int relz)
-                {
+                _fluidManager.ResolveNeighbor += delegate(int relx, int rely, int relz) {
                     return value(relx, rely, relz);
                 };
             }
 
-            remove
-            {
+            remove {
                 _lightManager = new BlockLight(this);
                 _fluidManager = new BlockFluid(this);
             }
         }
 
-        public event BlockCoordinateHandler TranslateCoordinates
-        {
+        public event BlockCoordinateHandler TranslateCoordinates {
             add { _tileEntityManager.TranslateCoordinates += value; }
             remove { _tileEntityManager.TranslateCoordinates -= value; }
         }
@@ -171,8 +159,7 @@ namespace Substrate
         /// </summary>
         /// <remarks>Automatic updates to lighting may spill into neighboring <see cref="AlphaBlockCollection"/> objects, if they can
         /// be resolved.</remarks>
-        public bool AutoLight
-        {
+        public bool AutoLight {
             get { return _autoLight; }
             set { _autoLight = value; }
         }
@@ -182,8 +169,7 @@ namespace Substrate
         /// </summary>
         /// <remarks>Automatic updates to fluid may cascade through neighboring <see cref="AlphaBlockCollection"/> objects and beyond,
         /// if they can be resolved.</remarks>
-        public bool AutoFluid
-        {
+        public bool AutoFluid {
             get { return _autoFluid; }
             set { _autoFluid = value; }
         }
@@ -191,8 +177,7 @@ namespace Substrate
         /// <summary>
         /// Gets or sets a value indicating whether changes to blocks will create tile tick entries.
         /// </summary>
-        public bool AutoTileTick
-        {
+        public bool AutoTileTick {
             get { return _autoTick; }
             set { _autoTick = value; }
         }
@@ -202,8 +187,7 @@ namespace Substrate
         /// </summary>
         /// <remarks>If this <see cref="AlphaBlockCollection"/> is backed by a reference conainer type, set this property to false
         /// to prevent any modifications from being saved.  The next update will set this property true again, however.</remarks>
-        public bool IsDirty
-        {
+        public bool IsDirty {
             get { return _dirty; }
             set { _dirty = value; }
         }
@@ -219,8 +203,7 @@ namespace Substrate
         /// <returns>A new <see cref="AlphaBlock"/> object representing context-independent data of a single block.</returns>
         /// <remarks>Context-independent data excludes data such as lighting.  <see cref="AlphaBlock"/> object actually contain a copy
         /// of the data they represent, so changes to the <see cref="AlphaBlock"/> will not affect this container, and vice-versa.</remarks>
-        public AlphaBlock GetBlock (int x, int y, int z)
-        {
+        public AlphaBlock GetBlock (int x, int y, int z) {
             return new AlphaBlock(this, x, y, z);
         }
 
@@ -234,8 +217,7 @@ namespace Substrate
         /// <remarks>Context-depdendent data includes all data associated with this block.  Since a <see cref="AlphaBlockRef"/> represents
         /// a view of a block within this container, any updates to data in the container will be reflected in the <see cref="AlphaBlockRef"/>,
         /// and vice-versa for updates to the <see cref="AlphaBlockRef"/>.</remarks>
-        public AlphaBlockRef GetBlockRef (int x, int y, int z)
-        {
+        public AlphaBlockRef GetBlockRef (int x, int y, int z) {
             return new AlphaBlockRef(this, _blocks.GetIndex(x, y, z));
         }
 
@@ -246,8 +228,7 @@ namespace Substrate
         /// <param name="y">Local Y-coordinate of a block.</param>
         /// <param name="z">Local Z-coordinate of a block.</param>
         /// <param name="block">A <see cref="AlphaBlock"/> object to copy block data from.</param>
-        public void SetBlock (int x, int y, int z, AlphaBlock block)
-        {
+        public void SetBlock (int x, int y, int z, AlphaBlock block) {
             SetID(x, y, z, block.ID);
             SetData(x, y, z, block.Data);
 
@@ -265,58 +246,48 @@ namespace Substrate
         #region IBoundedBlockCollection Members
 
         /// <inheritdoc/>
-        public int XDim
-        {
+        public int XDim {
             get { return _xdim; }
         }
 
         /// <inheritdoc/>
-        public int YDim
-        {
+        public int YDim {
             get { return _ydim; }
         }
 
         /// <inheritdoc/>
-        public int ZDim
-        {
+        public int ZDim {
             get { return _zdim; }
         }
 
-        IBlock IBoundedBlockCollection.GetBlock (int x, int y, int z)
-        {
+        IBlock IBoundedBlockCollection.GetBlock (int x, int y, int z) {
             return GetBlock(x, y, z);
         }
 
-        IBlock IBoundedBlockCollection.GetBlockRef (int x, int y, int z)
-        {
+        IBlock IBoundedBlockCollection.GetBlockRef (int x, int y, int z) {
             return GetBlockRef(x, y, z);
         }
 
         /// <inheritdoc/>
-        public void SetBlock (int x, int y, int z, IBlock block)
-        {
+        public void SetBlock (int x, int y, int z, IBlock block) {
             SetID(x, y, z, block.ID);
         }
 
         /// <inheritdoc/>
-        public BlockInfo GetInfo (int x, int y, int z)
-        {
+        public BlockInfo GetInfo (int x, int y, int z) {
             return BlockInfo.BlockTable[_blocks[x, y, z]];
         }
 
-        internal BlockInfo GetInfo (int index)
-        {
+        internal BlockInfo GetInfo (int index) {
             return BlockInfo.BlockTable[_blocks[index]];
         }
 
         /// <inheritdoc/>
-        public int GetID (int x, int y, int z)
-        {
+        public int GetID (int x, int y, int z) {
             return _blocks[x, y, z];
         }
 
-        internal int GetID (int index)
-        {
+        internal int GetID (int index) {
             return _blocks[index];
         }
 
@@ -326,8 +297,7 @@ namespace Substrate
         /// for the affected block and possibly many other indirectly-affected blocks in the collection or neighboring
         /// collections.  If many SetID calls are expected to be made, some of this auto-reconciliation behavior should
         /// be disabled, and the data should be rebuilt at the <see cref="AlphaBlockCollection"/>-level at the end.</remarks>
-        public void SetID (int x, int y, int z, int id)
-        {
+        public void SetID (int x, int y, int z, int id) {
             int oldid = _blocks[x, y, z];
             if (oldid == id) {
                 return;
@@ -393,8 +363,7 @@ namespace Substrate
             _dirty = true;
         }
 
-        internal void SetID (int index, int id)
-        {
+        internal void SetID (int index, int id) {
             int x, y, z;
             _blocks.GetMultiIndex(index, out x, out y, out z);
 
@@ -402,8 +371,7 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public int CountByID (int id)
-        {
+        public int CountByID (int id) {
             int c = 0;
             for (int i = 0; i < _blocks.Length; i++) {
                 if (_blocks[i] == id) {
@@ -419,37 +387,31 @@ namespace Substrate
 
         #region IBoundedDataBlockContainer Members
 
-        IDataBlock IBoundedDataBlockCollection.GetBlock (int x, int y, int z)
-        {
+        IDataBlock IBoundedDataBlockCollection.GetBlock (int x, int y, int z) {
             return GetBlock(x, y, z);
         }
 
-        IDataBlock IBoundedDataBlockCollection.GetBlockRef (int x, int y, int z)
-        {
+        IDataBlock IBoundedDataBlockCollection.GetBlockRef (int x, int y, int z) {
             return GetBlockRef(x, y, z);
         }
 
         /// <inheritdoc/>
-        public void SetBlock (int x, int y, int z, IDataBlock block)
-        {
+        public void SetBlock (int x, int y, int z, IDataBlock block) {
             SetID(x, y, z, block.ID);
             SetData(x, y, z, block.Data);
         }
 
         /// <inheritdoc/>
-        public int GetData (int x, int y, int z)
-        {
+        public int GetData (int x, int y, int z) {
             return _data[x, y, z];
         }
 
-        internal int GetData (int index)
-        {
+        internal int GetData (int index) {
             return _data[index];
         }
 
         /// <inheritdoc/>
-        public void SetData (int x, int y, int z, int data)
-        {
+        public void SetData (int x, int y, int z, int data) {
             if (_data[x, y, z] != data) {
                 _data[x, y, z] = (byte)data;
                 _dirty = true;
@@ -462,8 +424,7 @@ namespace Substrate
             }*/
         }
 
-        internal void SetData (int index, int data)
-        {
+        internal void SetData (int index, int data) {
             if (_data[index] != data) {
                 _data[index] = (byte)data;
                 _dirty = true;
@@ -471,8 +432,7 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public int CountByData (int id, int data)
-        {
+        public int CountByData (int id, int data) {
             int c = 0;
             for (int i = 0; i < _blocks.Length; i++) {
                 if (_blocks[i] == id && _data[i] == data) {
@@ -488,57 +448,48 @@ namespace Substrate
 
         #region IBoundedLitBlockCollection Members
 
-        ILitBlock IBoundedLitBlockCollection.GetBlock (int x, int y, int z)
-        {
+        ILitBlock IBoundedLitBlockCollection.GetBlock (int x, int y, int z) {
             throw new NotImplementedException();
         }
 
-        ILitBlock IBoundedLitBlockCollection.GetBlockRef (int x, int y, int z)
-        {
+        ILitBlock IBoundedLitBlockCollection.GetBlockRef (int x, int y, int z) {
             return GetBlockRef(x, y, z);
         }
 
         /// <inheritdoc/>
-        public void SetBlock (int x, int y, int z, ILitBlock block)
-        {
+        public void SetBlock (int x, int y, int z, ILitBlock block) {
             SetID(x, y, z, block.ID);
             SetBlockLight(x, y, z, block.BlockLight);
             SetSkyLight(x, y, z, block.SkyLight);
         }
 
         /// <inheritdoc/>
-        public int GetBlockLight (int x, int y, int z)
-        {
+        public int GetBlockLight (int x, int y, int z) {
             return _blockLight[x, y, z];
         }
 
-        internal int GetBlockLight (int index)
-        {
+        internal int GetBlockLight (int index) {
             return _blockLight[index];
         }
 
         /// <inheritdoc/>
-        public int GetSkyLight (int x, int y, int z)
-        {
+        public int GetSkyLight (int x, int y, int z) {
             return _skyLight[x, y, z];
         }
 
-        internal int GetSkyLight (int index)
-        {
+        internal int GetSkyLight (int index) {
             return _skyLight[index];
         }
 
         /// <inheritdoc/>
-        public void SetBlockLight (int x, int y, int z, int light)
-        {
+        public void SetBlockLight (int x, int y, int z, int light) {
             if (_blockLight[x, y, z] != light) {
                 _blockLight[x, y, z] = (byte)light;
                 _dirty = true;
             }
         }
 
-        internal void SetBlockLight (int index, int light)
-        {
+        internal void SetBlockLight (int index, int light) {
             if (_blockLight[index] != light) {
                 _blockLight[index] = (byte)light;
                 _dirty = true;
@@ -546,16 +497,14 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public void SetSkyLight (int x, int y, int z, int light)
-        {
+        public void SetSkyLight (int x, int y, int z, int light) {
             if (_skyLight[x, y, z] != light) {
                 _skyLight[x, y, z] = (byte)light;
                 _dirty = true;
             }
         }
 
-        internal void SetSkyLight (int index, int light)
-        {
+        internal void SetSkyLight (int index, int light) {
             if (_skyLight[index] != light) {
                 _skyLight[index] = (byte)light;
                 _dirty = true;
@@ -563,90 +512,77 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public int GetHeight (int x, int z)
-        {
+        public int GetHeight (int x, int z) {
             return _heightMap[x, z];
         }
 
         /// <inheritdoc/>
-        public void SetHeight (int x, int z, int height)
-        {
+        public void SetHeight (int x, int z, int height) {
             _heightMap[x, z] = (byte)height;
         }
 
         /// <inheritdoc/>
-        public void UpdateBlockLight (int x, int y, int z)
-        {
+        public void UpdateBlockLight (int x, int y, int z) {
             _lightManager.UpdateBlockLight(x, y, z);
             _dirty = true;
         }
 
         /// <inheritdoc/>
-        public void UpdateSkyLight (int x, int y, int z)
-        {
+        public void UpdateSkyLight (int x, int y, int z) {
             _lightManager.UpdateBlockSkyLight(x, y, z);
             _dirty = true;
         }
 
         /// <inheritdoc/>
-        public void ResetBlockLight ()
-        {
+        public void ResetBlockLight () {
             _blockLight.Clear();
             _dirty = true;
         }
 
         /// <inheritdoc/>
-        public void ResetSkyLight ()
-        {
+        public void ResetSkyLight () {
             _skyLight.Clear();
             _dirty = true;
         }
 
         /// <inheritdoc/>
-        public void RebuildBlockLight ()
-        {
+        public void RebuildBlockLight () {
             _lightManager.RebuildBlockLight();
             _dirty = true;
         }
 
         /// <inheritdoc/>
-        public void RebuildSkyLight ()
-        {
+        public void RebuildSkyLight () {
             _lightManager.RebuildBlockSkyLight();
             _dirty = true;
         }
 
         /// <inheritdoc/>
-        public void RebuildHeightMap ()
-        {
+        public void RebuildHeightMap () {
             _lightManager.RebuildHeightMap();
             _dirty = true;
         }
 
         /// <inheritdoc/>
-        public void StitchBlockLight ()
-        {
+        public void StitchBlockLight () {
             _lightManager.StitchBlockLight();
             _dirty = true;
         }
 
         /// <inheritdoc/>
-        public void StitchSkyLight ()
-        {
+        public void StitchSkyLight () {
             _lightManager.StitchBlockSkyLight();
             _dirty = true;
         }
 
         /// <inheritdoc/>
-        public void StitchBlockLight (IBoundedLitBlockCollection blockset, BlockCollectionEdge edge)
-        {
+        public void StitchBlockLight (IBoundedLitBlockCollection blockset, BlockCollectionEdge edge) {
             _lightManager.StitchBlockLight(blockset, edge);
             _dirty = true;
         }
 
         /// <inheritdoc/>
-        public void StitchSkyLight (IBoundedLitBlockCollection blockset, BlockCollectionEdge edge)
-        {
+        public void StitchSkyLight (IBoundedLitBlockCollection blockset, BlockCollectionEdge edge) {
             _lightManager.StitchBlockSkyLight(blockset, edge);
             _dirty = true;
         }
@@ -656,31 +592,26 @@ namespace Substrate
 
         #region IBoundedPropertyBlockCollection Members
 
-        IPropertyBlock IBoundedPropertyBlockCollection.GetBlock (int x, int y, int z)
-        {
+        IPropertyBlock IBoundedPropertyBlockCollection.GetBlock (int x, int y, int z) {
             return GetBlock(x, y, z);
         }
 
-        IPropertyBlock IBoundedPropertyBlockCollection.GetBlockRef (int x, int y, int z)
-        {
+        IPropertyBlock IBoundedPropertyBlockCollection.GetBlockRef (int x, int y, int z) {
             return GetBlockRef(x, y, z);
         }
 
         /// <inheritdoc/>
-        public void SetBlock (int x, int y, int z, IPropertyBlock block)
-        {
+        public void SetBlock (int x, int y, int z, IPropertyBlock block) {
             SetID(x, y, z, block.ID);
             SetTileEntity(x, y, z, block.GetTileEntity().Copy());
         }
 
         /// <inheritdoc/>
-        public TileEntity GetTileEntity (int x, int y, int z)
-        {
+        public TileEntity GetTileEntity (int x, int y, int z) {
             return _tileEntityManager.GetTileEntity(x, y, z);
         }
 
-        internal TileEntity GetTileEntity (int index)
-        {
+        internal TileEntity GetTileEntity (int index) {
             int x, y, z;
             _blocks.GetMultiIndex(index, out x, out y, out z);
 
@@ -688,14 +619,12 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public void SetTileEntity (int x, int y, int z, TileEntity te)
-        {
+        public void SetTileEntity (int x, int y, int z, TileEntity te) {
             _tileEntityManager.SetTileEntity(x, y, z, te);
             _dirty = true;
         }
 
-        internal void SetTileEntity (int index, TileEntity te)
-        {
+        internal void SetTileEntity (int index, TileEntity te) {
             int x, y, z;
             _blocks.GetMultiIndex(index, out x, out y, out z);
 
@@ -704,14 +633,12 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public void CreateTileEntity (int x, int y, int z)
-        {
+        public void CreateTileEntity (int x, int y, int z) {
             _tileEntityManager.CreateTileEntity(x, y, z);
             _dirty = true;
         }
 
-        internal void CreateTileEntity (int index)
-        {
+        internal void CreateTileEntity (int index) {
             int x, y, z;
             _blocks.GetMultiIndex(index, out x, out y, out z);
 
@@ -720,14 +647,12 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public void ClearTileEntity (int x, int y, int z)
-        {
+        public void ClearTileEntity (int x, int y, int z) {
             _tileEntityManager.ClearTileEntity(x, y, z);
             _dirty = true;
         }
 
-        internal void ClearTileEntity (int index)
-        {
+        internal void ClearTileEntity (int index) {
             int x, y, z;
             _blocks.GetMultiIndex(index, out x, out y, out z);
 
@@ -740,31 +665,26 @@ namespace Substrate
 
         #region IBoundedActiveBlockCollection Members
 
-        IActiveBlock IBoundedActiveBlockCollection.GetBlock (int x, int y, int z)
-        {
+        IActiveBlock IBoundedActiveBlockCollection.GetBlock (int x, int y, int z) {
             return GetBlock(x, y, z);
         }
 
-        IActiveBlock IBoundedActiveBlockCollection.GetBlockRef (int x, int y, int z)
-        {
+        IActiveBlock IBoundedActiveBlockCollection.GetBlockRef (int x, int y, int z) {
             return GetBlockRef(x, y, z);
         }
 
         /// <inheritdoc/>
-        public void SetBlock (int x, int y, int z, IActiveBlock block)
-        {
+        public void SetBlock (int x, int y, int z, IActiveBlock block) {
             SetID(x, y, z, block.ID);
             SetTileTick(x, y, z, block.GetTileTick().Copy());
         }
 
         /// <inheritdoc/>
-        public int GetTileTickValue (int x, int y, int z)
-        {
+        public int GetTileTickValue (int x, int y, int z) {
             return _tileTickManager.GetTileTickValue(x, y, z);
         }
 
-        internal int GetTileTickValue (int index)
-        {
+        internal int GetTileTickValue (int index) {
             int x, y, z;
             _blocks.GetMultiIndex(index, out x, out y, out z);
 
@@ -772,14 +692,12 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public void SetTileTickValue (int x, int y, int z, int tickValue)
-        {
+        public void SetTileTickValue (int x, int y, int z, int tickValue) {
             _tileTickManager.SetTileTickValue(x, y, z, tickValue);
             _dirty = true;
         }
 
-        internal void SetTileTickValue (int index, int tickValue)
-        {
+        internal void SetTileTickValue (int index, int tickValue) {
             int x, y, z;
             _blocks.GetMultiIndex(index, out x, out y, out z);
 
@@ -788,13 +706,11 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public TileTick GetTileTick (int x, int y, int z)
-        {
+        public TileTick GetTileTick (int x, int y, int z) {
             return _tileTickManager.GetTileTick(x, y, z);
         }
 
-        internal TileTick GetTileTick (int index)
-        {
+        internal TileTick GetTileTick (int index) {
             int x, y, z;
             _blocks.GetMultiIndex(index, out x, out y, out z);
 
@@ -802,14 +718,12 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public void SetTileTick (int x, int y, int z, TileTick tt)
-        {
+        public void SetTileTick (int x, int y, int z, TileTick tt) {
             _tileTickManager.SetTileTick(x, y, z, tt);
             _dirty = true;
         }
 
-        internal void SetTileTick (int index, TileTick tt)
-        {
+        internal void SetTileTick (int index, TileTick tt) {
             int x, y, z;
             _blocks.GetMultiIndex(index, out x, out y, out z);
 
@@ -818,14 +732,12 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public void CreateTileTick (int x, int y, int z)
-        {
+        public void CreateTileTick (int x, int y, int z) {
             _tileTickManager.CreateTileTick(x, y, z);
             _dirty = true;
         }
 
-        internal void CreateTileTick (int index)
-        {
+        internal void CreateTileTick (int index) {
             int x, y, z;
             _blocks.GetMultiIndex(index, out x, out y, out z);
 
@@ -834,14 +746,12 @@ namespace Substrate
         }
 
         /// <inheritdoc/>
-        public void ClearTileTick (int x, int y, int z)
-        {
+        public void ClearTileTick (int x, int y, int z) {
             _tileTickManager.ClearTileTick(x, y, z);
             _dirty = true;
         }
 
-        internal void ClearTileTick (int index)
-        {
+        internal void ClearTileTick (int index) {
             int x, y, z;
             _blocks.GetMultiIndex(index, out x, out y, out z);
 
@@ -854,8 +764,7 @@ namespace Substrate
         /// <summary>
         /// Resets all fluid blocks in the collection to their inactive type.
         /// </summary>
-        public void ResetFluid ()
-        {
+        public void ResetFluid () {
             _fluidManager.ResetWater(_blocks, _data);
             _fluidManager.ResetLava(_blocks, _data);
             _dirty = true;
@@ -867,8 +776,7 @@ namespace Substrate
         /// <remarks>Simulation will cause inactive fluid blocks to convert into and spread active fluid blocks according
         /// to the fluid calculation rules in Minecraft.  Fluid calculation may spill into neighboring block collections
         /// (and beyond).</remarks>
-        public void RebuildFluid ()
-        {
+        public void RebuildFluid () {
             _fluidManager.RebuildWater();
             _fluidManager.RebuildLava();
             _dirty = true;
@@ -880,8 +788,7 @@ namespace Substrate
         /// <param name="x">Local X-coordinate of block.</param>
         /// <param name="y">Local Y-coordinate of block.</param>
         /// <param name="z">Local Z-coordiante of block.</param>
-        public void UpdateFluid (int x, int y, int z)
-        {
+        public void UpdateFluid (int x, int y, int z) {
             bool autofluid = _autoFluid;
             _autoFluid = false;
 
@@ -890,8 +797,7 @@ namespace Substrate
             if (blocktype == BlockInfo.Water.ID || blocktype == BlockInfo.StationaryWater.ID) {
                 _fluidManager.UpdateWater(x, y, z);
                 _dirty = true;
-            }
-            else if (blocktype == BlockInfo.Lava.ID || blocktype == BlockInfo.StationaryLava.ID) {
+            } else if (blocktype == BlockInfo.Lava.ID || blocktype == BlockInfo.StationaryLava.ID) {
                 _fluidManager.UpdateLava(x, y, z);
                 _dirty = true;
             }
@@ -901,8 +807,7 @@ namespace Substrate
 
         /*#region IEnumerable<AlphaBlockRef> Members
 
-        public IEnumerator<AlphaBlockRef> GetEnumerator ()
-        {
+        public IEnumerator<AlphaBlockRef> GetEnumerator () {
             return new AlphaBlockEnumerator(this);
         }
 
@@ -910,21 +815,18 @@ namespace Substrate
 
         #region IEnumerable Members
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
-        {
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator () {
             return new AlphaBlockEnumerator(this);
         }
 
         #endregion
 
-        public class AlphaBlockEnumerator : IEnumerator<AlphaBlockRef>
-        {
+        public class AlphaBlockEnumerator : IEnumerator<AlphaBlockRef> {
             private AlphaBlockCollection _collection;
             private int _index;
             private int _size;
 
-            public AlphaBlockEnumerator (AlphaBlockCollection collection)
-            {
+            public AlphaBlockEnumerator (AlphaBlockCollection collection) {
                 _collection = collection;
                 _index = -1;
                 _size = collection.XDim * collection.YDim * collection.ZDim;
@@ -932,10 +834,8 @@ namespace Substrate
 
             #region IEnumerator<Entity> Members
 
-            public AlphaBlockRef Current
-            {
-                get
-                {
+            public AlphaBlockRef Current {
+                get {
                     if (_index == -1 || _index == _size) {
                         throw new InvalidOperationException();
                     }
@@ -953,13 +853,11 @@ namespace Substrate
 
             #region IEnumerator Members
 
-            object System.Collections.IEnumerator.Current
-            {
+            object System.Collections.IEnumerator.Current {
                 get { return Current; }
             }
 
-            public bool MoveNext ()
-            {
+            public bool MoveNext () {
                 if (++_index == _size) {
                     return false;
                 }
@@ -967,8 +865,7 @@ namespace Substrate
                 return true;
             }
 
-            public void Reset ()
-            {
+            public void Reset () {
                 _index = -1;
             }
 

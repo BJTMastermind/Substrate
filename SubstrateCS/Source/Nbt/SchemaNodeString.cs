@@ -1,20 +1,17 @@
 ﻿using System;
 
-namespace Substrate.Nbt
-{
+namespace Substrate.Nbt {
     /// <summary>
     /// A concrete <see cref="SchemaNode"/> representing a <see cref="TagNodeString"/>.
     /// </summary>
-    public sealed class SchemaNodeString : SchemaNode
-    {
+    public sealed class SchemaNodeString : SchemaNode {
         private string _value = "";
         private int _length;
 
         /// <summary>
         /// Gets the maximum length of a valid string.
         /// </summary>
-        public int Length
-        {
+        public int Length {
             get { return _length; }
         }
 
@@ -22,16 +19,14 @@ namespace Substrate.Nbt
         /// Gets the expected value of a valid string.
         /// </summary>
         /// <remarks>A <see cref="TagNodeString"/> must be set to this value to be considered valid.</remarks>
-        public string Value
-        {
+        public string Value {
             get { return _value; }
         }
 
         /// <summary>
         /// Indicates whether there is a maximum-length constraint on strings in this node.
         /// </summary>
-        public bool HasMaxLength
-        {
+        public bool HasMaxLength {
             get { return _length > 0; }
         }
 
@@ -40,8 +35,7 @@ namespace Substrate.Nbt
         /// </summary>
         /// <param name="name">The name of the corresponding <see cref="TagNodeString"/>.</param>
         public SchemaNodeString (string name)
-            : base(name)
-        {
+            : base(name) {
         }
 
         /// <summary>
@@ -50,8 +44,7 @@ namespace Substrate.Nbt
         /// <param name="name">The name of the corresponding <see cref="TagNodeString"/>.</param>
         /// <param name="options">One or more option flags modifying the processing of this node.</param>
         public SchemaNodeString (string name, SchemaOptions options)
-            : base(name, options)
-        {
+            : base(name, options) {
         }
 
         /// <summary>
@@ -60,8 +53,7 @@ namespace Substrate.Nbt
         /// <param name="name">The name of the corresponding <see cref="TagNodeString"/>.</param>
         /// <param name="value">The value that the corresponding <see cref="TagNodeString"/> must be set to.</param>
         public SchemaNodeString (string name, string value)
-            : base(name)
-        {
+            : base(name) {
             _value = value;
         }
 
@@ -72,8 +64,7 @@ namespace Substrate.Nbt
         /// <param name="value">The value that the corresponding <see cref="TagNodeString"/> must be set to.</param>
         /// <param name="options">One or more option flags modifying the processing of this node.</param>
         public SchemaNodeString (string name, string value, SchemaOptions options)
-            : base(name, options)
-        {
+            : base(name, options) {
             _value = value;
         }
 
@@ -83,8 +74,7 @@ namespace Substrate.Nbt
         /// <param name="name">The name of the corresponding <see cref="TagNodeString"/>.</param>
         /// <param name="length">The maximum length of strings in the corresponding <see cref="TagNodeString"/>.</param>
         public SchemaNodeString (string name, int length)
-            : base(name)
-        {
+            : base(name) {
             _length = length;
         }
 
@@ -95,8 +85,7 @@ namespace Substrate.Nbt
         /// <param name="length">The maximum length of strings in the corresponding <see cref="TagNodeString"/>.</param>
         /// <param name="options">One or more option flags modifying the processing of this node.</param>
         public SchemaNodeString (string name, int length, SchemaOptions options)
-            : base(name, options)
-        {
+            : base(name, options) {
             _length = length;
         }
 
@@ -104,8 +93,7 @@ namespace Substrate.Nbt
         /// Constructs a default <see cref="TagNodeString"/> satisfying the constraints of this node.
         /// </summary>
         /// <returns>A <see cref="TagNodeString"/> with a sensible default value.  If this node represents a particular string, the <see cref="TagNodeString"/> constructed will be set to that string.</returns>
-        public override TagNode BuildDefaultTree ()
-        {
+        public override TagNode BuildDefaultTree () {
             if (_value.Length > 0) {
                 return new TagNodeString(_value);
             }

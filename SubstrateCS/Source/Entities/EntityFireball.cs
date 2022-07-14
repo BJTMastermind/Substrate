@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.Entities
-{
+namespace Substrate.Entities {
     using Substrate.Nbt;
 
-    public class EntityFireball : TypedEntity
-    {
-        public static readonly SchemaNodeCompound FireballSchema = TypedEntity.Schema.MergeInto(new SchemaNodeCompound("")
-        {
+    public class EntityFireball : TypedEntity {
+        public static readonly SchemaNodeCompound FireballSchema = TypedEntity.Schema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeString("id", TypeId),
             new SchemaNodeScaler("xTile", TagType.TAG_SHORT),
             new SchemaNodeScaler("yTile", TagType.TAG_SHORT),
@@ -18,8 +15,7 @@ namespace Substrate.Entities
             new SchemaNodeScaler("inGround", TagType.TAG_BYTE),
         });
 
-        public static string TypeId
-        {
+        public static string TypeId {
             get { return "Fireball"; }
         }
 
@@ -29,49 +25,41 @@ namespace Substrate.Entities
         private byte _inTile;
         private byte _inGround;
 
-        public int XTile
-        {
+        public int XTile {
             get { return _xTile; }
             set { _xTile = (short)value; }
         }
 
-        public int YTile
-        {
+        public int YTile {
             get { return _yTile; }
             set { _yTile = (short)value; }
         }
 
-        public int ZTile
-        {
+        public int ZTile {
             get { return _zTile; }
             set { _zTile = (short)value; }
         }
 
-        public int InTile
-        {
+        public int InTile {
             get { return _inTile; }
             set { _inTile = (byte)value; }
         }
 
-        public bool IsInGround
-        {
+        public bool IsInGround {
             get { return _inGround == 1; }
             set { _inGround = (byte)(value ? 1 : 0); }
         }
 
         protected EntityFireball (string id)
-            : base(id)
-        {
+            : base(id) {
         }
 
         public EntityFireball ()
-            : this(TypeId)
-        {
+            : this(TypeId) {
         }
 
         public EntityFireball (TypedEntity e)
-            : base(e)
-        {
+            : base(e) {
             EntityFireball e2 = e as EntityFireball;
             if (e2 != null) {
                 _xTile = e2._xTile;
@@ -85,8 +73,7 @@ namespace Substrate.Entities
 
         #region INBTObject<Entity> Members
 
-        public override TypedEntity LoadTree (TagNode tree)
-        {
+        public override TypedEntity LoadTree (TagNode tree) {
             TagNodeCompound ctree = tree as TagNodeCompound;
             if (ctree == null || base.LoadTree(tree) == null) {
                 return null;
@@ -101,8 +88,7 @@ namespace Substrate.Entities
             return this;
         }
 
-        public override TagNode BuildTree ()
-        {
+        public override TagNode BuildTree () {
             TagNodeCompound tree = base.BuildTree() as TagNodeCompound;
             tree["xTile"] = new TagNodeShort(_xTile);
             tree["yTile"] = new TagNodeShort(_yTile);
@@ -113,8 +99,7 @@ namespace Substrate.Entities
             return tree;
         }
 
-        public override bool ValidateTree (TagNode tree)
-        {
+        public override bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, FireballSchema).Verify();
         }
 
@@ -123,8 +108,7 @@ namespace Substrate.Entities
 
         #region ICopyable<Entity> Members
 
-        public override TypedEntity Copy ()
-        {
+        public override TypedEntity Copy () {
             return new EntityFireball(this);
         }
 

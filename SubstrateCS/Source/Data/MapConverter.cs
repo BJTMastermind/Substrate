@@ -4,13 +4,11 @@ using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace Substrate.Data
-{
+namespace Substrate.Data {
     /// <summary>
     /// Represents a range of color index values that pertains to an individual group of blocks.
     /// </summary>
-    public enum ColorGroup
-    {
+    public enum ColorGroup {
         Unexplored = 0,
         Grass = 1,
         Sand = 2,
@@ -30,8 +28,7 @@ namespace Substrate.Data
     /// <summary>
     /// A utility class for converting <see cref="Map"/> colors and data.
     /// </summary>
-    public class MapConverter
-    {
+    public class MapConverter {
         private static Color[] _defaultColorIndex;
 
         private Color[] _colorIndex;
@@ -44,8 +41,7 @@ namespace Substrate.Data
         /// <summary>
         /// Creates a new <see cref="MapConverter"/> with a Minecraft-default color-index and block-index.
         /// </summary>
-        public MapConverter ()
-        {
+        public MapConverter () {
             _colorIndex = new Color[256];
             _labIndex = new Vector3[256];
             _defaultColorIndex.CopyTo(_colorIndex, 0);
@@ -90,11 +86,9 @@ namespace Substrate.Data
         /// Gets or sets the number of color levels within each color group.  The Minecraft default is 4.
         /// </summary>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the property is assigned a non-positive value.</exception>
-        public int ColorGroupSize
-        {
+        public int ColorGroupSize {
             get { return _groupSize; }
-            set
-            {
+            set {
                 if (value <= 0) {
                     throw new ArgumentOutOfRangeException("The ColorGroupSize property must be a positive number.");
                 }
@@ -105,16 +99,14 @@ namespace Substrate.Data
         /// <summary>
         /// Gets the color index table, used to translate map color index values to RGB color values.
         /// </summary>
-        public Color[] ColorIndex
-        {
+        public Color[] ColorIndex {
             get { return _colorIndex; }
         }
 
         /// <summary>
         /// Gets the block index table, used to translate block IDs to <see cref="ColorGroup"/>s that represent them.
         /// </summary>
-        public ColorGroup[] BlockIndex
-        {
+        public ColorGroup[] BlockIndex {
             get { return _blockIndex; }
         }
 
@@ -124,8 +116,7 @@ namespace Substrate.Data
         /// <param name="blockId">The ID of a block.</param>
         /// <returns>A color index value.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="blockId"/> is out of its normal range.</exception>
-        public int BlockToColorIndex (int blockId)
-        {
+        public int BlockToColorIndex (int blockId) {
             return BlockToColorIndex(blockId, 0);
         }
 
@@ -154,8 +145,7 @@ namespace Substrate.Data
         /// <returns>A <see cref="Color"/> value.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="blockId"/> is out of its normal range.</exception>
         /// <exception cref="InvalidOperationException">Thrown when <paramref name="blockId"/> maps to an invalid color index.</exception>
-        public Color BlockToColor (int blockId)
-        {
+        public Color BlockToColor (int blockId) {
             return BlockToColor(blockId, 0);
         }
 
@@ -167,8 +157,7 @@ namespace Substrate.Data
         /// <returns>A <see cref="Color"/> value.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when either <paramref name="blockId"/> or <paramref name="level"/> are out of their normal ranges.</exception>
         /// <exception cref="InvalidOperationException">Thrown when <paramref name="blockId"/> maps to an invalid color index.</exception>
-        public Color BlockToColor (int blockId, int level)
-        {
+        public Color BlockToColor (int blockId, int level) {
             int ci = BlockToColorIndex(blockId, level);
             if (ci < 0 || ci >= 256) {
                 throw new InvalidOperationException("The specified Block ID mapped to an invalid color index.");
@@ -182,14 +171,12 @@ namespace Substrate.Data
         /// </summary>
         /// <param name="colorIndex">A color index value.</param>
         /// <returns>A <see cref="ColorGroup"/> value.</returns>
-        public ColorGroup ColorIndexToGroup (int colorIndex)
-        {
+        public ColorGroup ColorIndexToGroup (int colorIndex) {
             int group = colorIndex / _groupSize;
 
             try {
                 return (ColorGroup)group;
-            }
-            catch {
+            } catch {
                 return ColorGroup.Other;
             }
         }
@@ -199,8 +186,7 @@ namespace Substrate.Data
         /// </summary>
         /// <param name="group">A <see cref="ColorGroup"/> value.</param>
         /// <returns>The baseline (level = 0) color index value for the given <see cref="ColorGroup"/>.</returns>
-        public int GroupToColorIndex (ColorGroup group)
-        {
+        public int GroupToColorIndex (ColorGroup group) {
             return GroupToColorIndex(group, 0);
         }
 
@@ -211,8 +197,7 @@ namespace Substrate.Data
         /// <param name="level">A level value within the <see cref="ColorGroup"/>.</param>
         /// <returns>The color index value for the given <see cref="ColorGroup"/> and group level.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="level"/> is out of range with respect to the current <see cref="ColorGroupSize"/> parameter.</exception>
-        public int GroupToColorIndex (ColorGroup group, int level)
-        {
+        public int GroupToColorIndex (ColorGroup group, int level) {
             if (level < 0 || level >= _groupSize) {
                 throw new ArgumentOutOfRangeException("level", level, "Argument 'level' must be in range [0, " + (_groupSize - 1) + "]");
             }
@@ -225,8 +210,7 @@ namespace Substrate.Data
         /// </summary>
         /// <param name="group">A <see cref="ColorGroup"/> value.</param>
         /// <returns>The baseline (level = 0) <see cref="Color"/> for the given <see cref="ColorGroup"/>.</returns>
-        public Color GroupToColor (ColorGroup group)
-        {
+        public Color GroupToColor (ColorGroup group) {
             return GroupToColor(group, 0);
         }
 
@@ -238,8 +222,7 @@ namespace Substrate.Data
         /// <returns>The <see cref="Color"/> for the given <see cref="ColorGroup"/> and group level.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the <paramref name="level"/> is out of range with respect to the current <see cref="ColorGroupSize"/> parameter.</exception>
         /// <exception cref="InvalidOperationException">Thrown when the <paramref name="group"/> and <paramref name="level"/> map to an invalid color index.</exception>
-        public Color GroupToColor (ColorGroup group, int level)
-        {
+        public Color GroupToColor (ColorGroup group, int level) {
             int ci = GroupToColorIndex(group, level);
             if (ci < 0 || ci >= 256) {
                 throw new InvalidOperationException("The specified group mapped to an invalid color index.");
@@ -251,8 +234,7 @@ namespace Substrate.Data
         /// <summary>
         /// Rebuilds the internal color conversion tables.  Should be called after modifying the <see cref="ColorIndex"/> table.
         /// </summary>
-        public void RefreshColorCache ()
-        {
+        public void RefreshColorCache () {
             for (int i = 0; i < _colorIndex.Length; i++) {
                 _labIndex[i] = RgbToLab(_colorIndex[i]);
             }
@@ -264,8 +246,7 @@ namespace Substrate.Data
         /// <param name="color">The source <see cref="Color"/>.</param>
         /// <returns>The closest matching color index value.</returns>
         /// <remarks>This method performs color comparisons in the CIELAB color space, to find the best match according to human perception.</remarks>
-        public int NearestColorIndex (Color color)
-        {
+        public int NearestColorIndex (Color color) {
             double min = double.MaxValue;
             int minIndex = 0;
 
@@ -296,8 +277,7 @@ namespace Substrate.Data
         /// <param name="color">The source <see cref="Color"/>.</param>
         /// <returns>The closest matching <see cref="Color"/>.</returns>
         /// <remarks>This method performs color comparisons in the CIELAB color space, to find the best match according to human perception.</remarks>
-        public Color NearestColor (Color color)
-        {
+        public Color NearestColor (Color color) {
             return _colorIndex[NearestColorIndex(color)];
         }
 
@@ -307,8 +287,7 @@ namespace Substrate.Data
         /// <param name="map">The <see cref="Map"/> to modify.</param>
         /// <param name="bmp">The source <see cref="Bitmap"/>.</param>
         /// <exception cref="InvalidOperationException">Thrown when the <paramref name="map"/> and <paramref name="bmp"/> objects have different dimensions.</exception>
-        public void BitmapToMap (Map map, Bitmap bmp) 
-        {
+        public void BitmapToMap (Map map, Bitmap bmp) {
             if (map.Width != bmp.Width || map.Height != bmp.Height) {
                 throw new InvalidOperationException("The source map and bitmap must have the same dimensions.");
             }
@@ -326,8 +305,7 @@ namespace Substrate.Data
         /// </summary>
         /// <param name="map">The source <see cref="Map"/> object.</param>
         /// <returns>A 32bpp <see cref="Bitmap"/> with the same dimensions and pixel data as the source <see cref="Map"/>.</returns>
-        public Bitmap MapToBitmap (Map map)
-        {
+        public Bitmap MapToBitmap (Map map) {
             Bitmap bmp = new Bitmap(map.Width, map.Height, PixelFormat.Format32bppArgb);
 
             for (int x = 0; x < map.Width; x++) {
@@ -340,8 +318,7 @@ namespace Substrate.Data
             return bmp;
         }
 
-        private Vector3 RgbToXyz (Color color)
-        {
+        private Vector3 RgbToXyz (Color color) {
             double r = color.R / 255.0;
             double g = color.G / 255.0;
             double b = color.B / 255.0;
@@ -369,8 +346,7 @@ namespace Substrate.Data
             return xyz;
         }
 
-        private Vector3 XyzToLab (Vector3 xyz)
-        {
+        private Vector3 XyzToLab (Vector3 xyz) {
             double x = xyz.X / 95.047;
             double y = xyz.Y / 100.0;
             double z = xyz.Z / 108.883;
@@ -394,13 +370,11 @@ namespace Substrate.Data
             return lab;
         }
 
-        private Vector3 RgbToLab (Color rgb)
-        {
+        private Vector3 RgbToLab (Color rgb) {
             return XyzToLab(RgbToXyz(rgb));
         }
 
-        static MapConverter ()
-        {
+        static MapConverter () {
             _defaultColorIndex = new Color[] {
                 Color.FromArgb(0, 0, 0, 0),         // Unexplored
                 Color.FromArgb(0, 0, 0, 0),

@@ -2,42 +2,34 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Substrate.Entities
-{
+namespace Substrate.Entities {
     using Substrate.Nbt;
 
-    public class EntitySnowman : EntityMob
-    {
-        public static readonly SchemaNodeCompound SnowmanSchema = MobSchema.MergeInto(new SchemaNodeCompound("")
-        {
+    public class EntitySnowman : EntityMob {
+        public static readonly SchemaNodeCompound SnowmanSchema = MobSchema.MergeInto(new SchemaNodeCompound("") {
             new SchemaNodeString("id", TypeId),
         });
 
-        public static new string TypeId
-        {
+        public static new string TypeId {
             get { return "SnowMan"; }
         }
 
         protected EntitySnowman (string id)
-            : base(id)
-        {
+            : base(id) {
         }
 
         public EntitySnowman ()
-            : this(TypeId)
-        {
+            : this(TypeId) {
         }
 
         public EntitySnowman (TypedEntity e)
-            : base(e)
-        {
+            : base(e) {
         }
 
 
         #region INBTObject<Entity> Members
 
-        public override bool ValidateTree (TagNode tree)
-        {
+        public override bool ValidateTree (TagNode tree) {
             return new NbtVerifier(tree, SnowmanSchema).Verify();
         }
 
@@ -46,8 +38,7 @@ namespace Substrate.Entities
 
         #region ICopyable<Entity> Members
 
-        public override TypedEntity Copy ()
-        {
+        public override TypedEntity Copy () {
             return new EntitySnowman(this);
         }
 

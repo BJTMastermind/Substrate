@@ -1,6 +1,6 @@
 # Substrate
 
-Copyright ©️ 2011 Justin Aquadro
+Copyright (C) 2011 Justin Aquadro
 
 ## LICENSE:
 

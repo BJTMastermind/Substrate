@@ -23,7 +23,7 @@ namespace GoodyChest {
             }
 
             string dest = args[0];
-            double p = Convert.ToDouble(args[1]);
+            double p = Double.Parse(args[1]);
 
             rand = new Random();
 

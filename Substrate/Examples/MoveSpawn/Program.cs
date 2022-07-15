@@ -13,9 +13,9 @@ namespace MoveSpawn {
             }
 
             string dest = args[0];
-            int x = Convert.ToInt32(args[1]);
-            int y = Convert.ToInt32(args[2]);
-            int z = Convert.ToInt32(args[3]);
+            int x = Int32.Parse(args[1]);
+            int y = Int32.Parse(args[2]);
+            int z = Int32.Parse(args[3]);
 
             // Open our world
             NbtWorld world = NbtWorld.Open(dest);

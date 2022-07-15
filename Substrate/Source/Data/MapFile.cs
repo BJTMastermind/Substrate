@@ -23,7 +23,7 @@ namespace Substrate.Data {
 
         public static int IdFromFilename (string filename) {
             if (filename.EndsWith(".dat")) {
-                return Convert.ToInt32(filename.Substring(4).Remove(filename.Length - 4));
+                return Int32.Parse(filename.Substring(4).Remove(filename.Length - 4));
             }
 
             throw new FormatException("Filename '" + filename + "' is not a .dat file");

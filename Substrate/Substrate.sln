@@ -8,21 +8,21 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Substrate.Tests", "..\Substrate.Tests\Substrate.Tests.csproj", "{5D875E2D-AD97-43DB-9180-DBA3F26DC569}"
 EndProject
 Global
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{206E4ECE-F094-48E1-A6AF-F9D4C1463692}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{206E4ECE-F094-48E1-A6AF-F9D4C1463692}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{206E4ECE-F094-48E1-A6AF-F9D4C1463692}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{206E4ECE-F094-48E1-A6AF-F9D4C1463692}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5D875E2D-AD97-43DB-9180-DBA3F26DC569}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D875E2D-AD97-43DB-9180-DBA3F26DC569}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5D875E2D-AD97-43DB-9180-DBA3F26DC569}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{5D875E2D-AD97-43DB-9180-DBA3F26DC569}.Release|Any CPU.Build.0 = Debug|Any CPU
-	EndGlobalSection
+    GlobalSection(SolutionConfigurationPlatforms) = preSolution
+        Debug|Any CPU = Debug|Any CPU
+        Release|Any CPU = Release|Any CPU
+    EndGlobalSection
+    GlobalSection(SolutionProperties) = preSolution
+        HideSolutionNode = FALSE
+    EndGlobalSection
+    GlobalSection(ProjectConfigurationPlatforms) = postSolution
+        {206E4ECE-F094-48E1-A6AF-F9D4C1463692}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {206E4ECE-F094-48E1-A6AF-F9D4C1463692}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {206E4ECE-F094-48E1-A6AF-F9D4C1463692}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {206E4ECE-F094-48E1-A6AF-F9D4C1463692}.Release|Any CPU.Build.0 = Release|Any CPU
+        {5D875E2D-AD97-43DB-9180-DBA3F26DC569}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {5D875E2D-AD97-43DB-9180-DBA3F26DC569}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {5D875E2D-AD97-43DB-9180-DBA3F26DC569}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+        {5D875E2D-AD97-43DB-9180-DBA3F26DC569}.Release|Any CPU.Build.0 = Debug|Any CPU
+    EndGlobalSection
 EndGlobal

@@ -522,8 +522,8 @@ namespace Substrate.Core {
                 return RegionKey.InvalidRegion;
             }
 
-            x = Convert.ToInt32(match.Groups[1].Value);
-            z = Convert.ToInt32(match.Groups[2].Value);
+            x = Int32.Parse(match.Groups[1].Value);
+            z = Int32.Parse(match.Groups[2].Value);
 
             return new RegionKey(x, z);
         }

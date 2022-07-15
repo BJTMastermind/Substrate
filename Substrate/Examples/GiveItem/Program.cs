@@ -15,8 +15,8 @@ namespace GiveItem {
 
             string dest = args[0];
             string player = args[1];
-            int itemid = Convert.ToInt32(args[2]);
-            int count = Convert.ToInt32(args[3]);
+            int itemid = Int32.Parse(args[2]);
+            int count = Int32.Parse(args[3]);
 
             // Open the world and grab its player manager
             NbtWorld world = NbtWorld.Open(dest);

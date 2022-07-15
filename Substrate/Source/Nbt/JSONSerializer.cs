@@ -184,7 +184,8 @@ namespace Substrate.Nbt {
                     break;
 
                 case TagType.TAG_BYTE_ARRAY:
-                    str.Append(Convert.ToBase64String(tag.ToTagByteArray().Data));
+                    Encoding utf8 = Encoding.UTF8;
+                    str.Append(utf8.GetString(tag.ToTagByteArray().Data, 0, tag.ToTagByteArray().Data.Length));
                     /*if (tag.ToTagByteArray().Length == (16 * 16 * 128 / 2)) {
                         str.Append(Base16.Encode(tag.ToTagByteArray().Data, 1));
                     } else {

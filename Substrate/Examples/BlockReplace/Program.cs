@@ -18,8 +18,8 @@ namespace BlockReplace {
             }
 
             string dest = args[0];
-            int before = Convert.ToInt32(args[1]);
-            int after = Convert.ToInt32(args[2]);
+            int before = Int32.Parse(args[1]);
+            int after = Int32.Parse(args[2]);
 
             // Open our world
             NbtWorld world = NbtWorld.Open(dest);

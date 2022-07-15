@@ -10,7 +10,7 @@ using System.IO;
 
 namespace Convert {
     class Program {
-        static void Main (string[] args) {
+        public static void Main (string[] args) {
             if (args.Length != 3) {
                 Console.WriteLine("Usage: Convert <world> <dest> <alpha|beta|anvil>");
                 return;

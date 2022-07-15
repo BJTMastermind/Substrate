@@ -26,10 +26,10 @@ namespace PurgeEntities {
 
             // If we have all coordinate parameters, set the bounding box
             if (args.Length == 6) {
-                x1 = Convert.ToInt32(args[2]);
-                z1 = Convert.ToInt32(args[3]);
-                x2 = Convert.ToInt32(args[4]);
-                z2 = Convert.ToInt32(args[5]);
+                x1 = Int32.Parse(args[2]);
+                z1 = Int32.Parse(args[3]);
+                x2 = Int32.Parse(args[4]);
+                z2 = Int32.Parse(args[5]);
             }
 
             // Load world

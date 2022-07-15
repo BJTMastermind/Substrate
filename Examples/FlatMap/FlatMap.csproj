@@ -3,13 +3,13 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <RootNamespace>GoodyChest</RootNamespace>
+    <RootNamespace>FlatMap</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Substrate.csproj" />
+    <ProjectReference Include="..\..\Substrate\Substrate.csproj" />
   </ItemGroup>
 
 </Project>

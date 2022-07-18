@@ -445,11 +445,28 @@ namespace Substrate {
         public static ItemInfo NetherQuartz;
         public static ItemInfo TntMinecart;
         public static ItemInfo HopperMinecart;
+        public static ItemInfo PrismarineShard;
+        public static ItemInfo PrismarineCrystals;
+        public static ItemInfo RawRabbit;
+        public static ItemInfo CookedRabbit;
+        public static ItemInfo RabbitStew;
+        public static ItemInfo RabbitsFoot;
+        public static ItemInfo RabbitHide;
+        public static ItemInfo ArmorStand;
         public static ItemInfo IronHorseArmor;
         public static ItemInfo GoldHorseArmor;
         public static ItemInfo DiamondHorseArmor;
         public static ItemInfo Lead;
         public static ItemInfo NameTag;
+        public static ItemInfo MinecartWithCommandBlock;
+        public static ItemInfo RawMutton;
+        public static ItemInfo CookedMutton;
+        public static ItemInfo Banner;
+        public static ItemInfo SpruceDoor;
+        public static ItemInfo BirchDoor;
+        public static ItemInfo JungleDoor;
+        public static ItemInfo AcaciaDoor;
+        public static ItemInfo DarkOakDoor;
         public static ItemInfo MusicDisc13;
         public static ItemInfo MusicDiscCat;
         public static ItemInfo MusicDiscBlocks;
@@ -461,6 +478,7 @@ namespace Substrate {
         public static ItemInfo MusicDiscStrad;
         public static ItemInfo MusicDiscWard;
         public static ItemInfo MusicDisc11;
+        public static ItemInfo MusicDiscWait;
 
         static ItemInfo () {
             _itemTable = new Dictionary<int, ItemInfo>();
@@ -619,11 +637,30 @@ namespace Substrate {
             NetherQuartz = new ItemInfo(406, "Nether Quartz").SetStackSize(64);
             TntMinecart = new ItemInfo(407, "Minecart with TNT");
             HopperMinecart = new ItemInfo(408, "Minecart with Hopper");
+            PrismarineShard = new ItemInfo(409, "Prismarine Shard");
+            PrismarineCrystals = new ItemInfo(410, "Prismarine Crystals");
+            RawRabbit = new ItemInfo(411, "Raw Rabbit");
+            CookedRabbit = new ItemInfo(412, "Cooked Rabbit");
+            RabbitStew = new ItemInfo(413, "Rabbit Stew");
+            RabbitsFoot = new ItemInfo(414, "Rabbit's Foot");
+            RabbitHide = new ItemInfo(415, "Rabbit Hide");
+            ArmorStand = new ItemInfo(416, "Armor Stand");
             IronHorseArmor = new ItemInfo(417, "Iron Horse Armor");
             GoldHorseArmor = new ItemInfo(418, "Gold Horse Armor");
             DiamondHorseArmor = new ItemInfo(419, "Diamond Horse Armor");
             Lead = new ItemInfo(420, "Lead").SetStackSize(64);
             NameTag = new ItemInfo(421, "Name Tag").SetStackSize(64);
+            MinecartWithCommandBlock = new ItemInfo(422, "Minecart With Command Block");
+            RawMutton = new ItemInfo(423, "Raw Mutton");
+            CookedMutton = new ItemInfo(424, "Cooked Mutton");
+            Banner = new ItemInfo(425, "Banner");
+
+            SpruceDoor = new ItemInfo(427, "Spruce Door");
+            BirchDoor = new ItemInfo(428, "Birch Door");
+            JungleDoor = new ItemInfo(429, "Jungle Door");
+            AcaciaDoor = new ItemInfo(430, "Acacia Door");
+            DarkOakDoor = new ItemInfo(431, "Dark Oak Door");
+
             MusicDisc13 = new ItemInfo(2256, "13 Disc");
             MusicDiscCat = new ItemInfo(2257, "Cat Disc");
             MusicDiscBlocks = new ItemInfo(2258, "Blocks Disc");
@@ -635,6 +672,7 @@ namespace Substrate {
             MusicDiscStrad = new ItemInfo(2264, "Strad Disc");
             MusicDiscWard = new ItemInfo(2265, "Ward Disc");
             MusicDisc11 = new ItemInfo(2266, "11 Disc");
+            MusicDiscWait = new ItemInfo(2267, "Wait Disc");
         }
     }
 }

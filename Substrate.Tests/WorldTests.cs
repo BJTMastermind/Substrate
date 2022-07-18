@@ -55,5 +55,11 @@ namespace Substrate.Tests {
             NbtWorld world = NbtWorld.Open(@"../../../Data/1_9_2-debug/");
             Assert.IsNotNull(world);
         }
+
+        [TestMethod]
+        public void OpenTest_1_12_2_debug() {
+            NbtWorld world = NbtWorld.Open(@"../../../Data/1_12_2-debug/");
+            Assert.IsNotNull(world);
+        }
     }
 }

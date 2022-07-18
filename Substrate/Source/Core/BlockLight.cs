@@ -840,6 +840,6 @@ namespace Substrate.Core {
             return null;
         }
 
-        
+
     }
 }

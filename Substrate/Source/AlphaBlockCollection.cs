@@ -133,8 +133,8 @@ namespace Substrate {
 
         public event NeighborLookupHandler ResolveNeighbor {
             add {
-                _lightManager.ResolveNeighbor += delegate(int relx, int rely, int relz) { 
-                    return value(relx, rely, relz); 
+                _lightManager.ResolveNeighbor += delegate(int relx, int rely, int relz) {
+                    return value(relx, rely, relz);
                 };
                 _fluidManager.ResolveNeighbor += delegate(int relx, int rely, int relz) {
                     return value(relx, rely, relz);
@@ -192,7 +192,7 @@ namespace Substrate {
             set { _dirty = value; }
         }
 
-        
+
 
         /// <summary>
         /// Returns a new <see cref="AlphaBlock"/> object from local coordinates relative to this collection.

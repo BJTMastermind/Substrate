@@ -10,7 +10,7 @@ Substrate is licensed under the MIT License. See [LICENSE](./LICENSE).
 
 Substrate is a fully-developed .NET SDK for editing Minecraft worlds. Substrate
 provides high-level APIs for manipulating Alpha and Beta-compatible
-maps and player data. Substrate is developed in C# as a CLS-compliant assembly,
+maps and player data. Substrate is developed in C# as a CLS-compliant (Needs to be verified that this is still true) assembly,
 and example code is provided in C#. A brief list of
 Substrate's capabilities are:
 

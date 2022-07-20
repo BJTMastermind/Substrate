@@ -1,8 +1,6 @@
-﻿using System;
+﻿namespace Substrate;
 
-namespace Substrate {
-    public class Orientation {
-        public double Pitch { get; set; }
-        public double Yaw { get; set; }
-    }
+public class Orientation {
+    public double Pitch { get; set; }
+    public double Yaw { get; set; }
 }

@@ -1,130 +1,128 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace Substrate.Core;
+
 using Substrate.Nbt;
 
-namespace Substrate.Core {
-    public delegate BlockKey BlockCoordinateHandler (int lx, int ly, int lz);
+public delegate BlockKey BlockCoordinateHandler(int lx, int ly, int lz);
 
-    public class BlockTileEntities {
-        private IDataArray3 _blocks;
-        private TagNodeList _tileEntities;
+public class BlockTileEntities {
+    private IDataArray3 blocks;
+    private TagNodeList tileEntities;
 
-        private Dictionary<BlockKey, TagNodeCompound> _tileEntityTable;
+    private Dictionary<BlockKey, TagNodeCompound> tileEntityTable;
 
-        public event BlockCoordinateHandler TranslateCoordinates;
+    public event BlockCoordinateHandler TranslateCoordinates;
 
-        public BlockTileEntities (IDataArray3 blocks, TagNodeList tileEntities) {
-            _blocks = blocks;
-            _tileEntities = tileEntities;
+    public BlockTileEntities(IDataArray3 blocks, TagNodeList tileEntities) {
+        this.blocks = blocks;
+        this.tileEntities = tileEntities;
 
-            BuildTileEntityCache();
+        BuildTileEntityCache();
+    }
+
+    public BlockTileEntities(BlockTileEntities bte) {
+        this.blocks = bte.blocks;
+        this.tileEntities = bte.tileEntities;
+
+        BuildTileEntityCache();
+    }
+
+    public TileEntity GetTileEntity(int x, int y, int z) {
+        BlockKey key = (TranslateCoordinates != null)
+            ? TranslateCoordinates(x, y, z)
+            : new BlockKey(x, y, z);
+
+        TagNodeCompound te;
+
+        if(!this.tileEntityTable.TryGetValue(key, out te)) {
+            return null;
+        }
+        return TileEntityFactory.CreateGeneric(te);
+    }
+
+    public void SetTileEntity(int x, int y, int z, TileEntity te) {
+        BlockInfoEx info = BlockInfo.BlockTable[this.blocks[x, y, z]] as BlockInfoEx;
+        if(info != null) {
+            if(te.GetType() != TileEntityFactory.Lookup(info.TileEntityName)) {
+                throw new ArgumentException("The TileEntity type is not valid for this block.", "te");
+            }
         }
 
-        public BlockTileEntities (BlockTileEntities bte) {
-            _blocks = bte._blocks;
-            _tileEntities = bte._tileEntities;
+        BlockKey key = (TranslateCoordinates != null)
+            ? TranslateCoordinates(x, y, z)
+            : new BlockKey(x, y, z);
 
-            BuildTileEntityCache();
+        TagNodeCompound oldte;
+
+        if(this.tileEntityTable.TryGetValue(key, out oldte)) {
+            this.tileEntities.Remove(oldte);
         }
 
-        public TileEntity GetTileEntity (int x, int y, int z) {
-            BlockKey key = (TranslateCoordinates != null)
-                ? TranslateCoordinates(x, y, z)
-                : new BlockKey(x, y, z);
+        te.X = key.x;
+        te.Y = key.y;
+        te.Z = key.z;
 
-            TagNodeCompound te;
+        TagNodeCompound tree = te.BuildTree() as TagNodeCompound;
 
-            if (!_tileEntityTable.TryGetValue(key, out te)) {
-                return null;
-            }
+        this.tileEntities.Add(tree);
+        this.tileEntityTable[key] = tree;
+    }
 
-            return TileEntityFactory.CreateGeneric(te);
+    public void CreateTileEntity(int x, int y, int z) {
+        BlockInfoEx info = BlockInfo.BlockTable[this.blocks[x, y, z]] as BlockInfoEx;
+        if(info == null) {
+            throw new InvalidOperationException("The given block is of a type that does not support TileEntities.");
         }
 
-        public void SetTileEntity (int x, int y, int z, TileEntity te) {
-            BlockInfoEx info = BlockInfo.BlockTable[_blocks[x, y, z]] as BlockInfoEx;
-            if (info != null) {
-                if (te.GetType() != TileEntityFactory.Lookup(info.TileEntityName))
-                    throw new ArgumentException("The TileEntity type is not valid for this block.", "te");
-            }
-
-            BlockKey key = (TranslateCoordinates != null)
-                ? TranslateCoordinates(x, y, z)
-                : new BlockKey(x, y, z);
-
-            TagNodeCompound oldte;
-
-            if (_tileEntityTable.TryGetValue(key, out oldte)) {
-                _tileEntities.Remove(oldte);
-            }
-
-            te.X = key.x;
-            te.Y = key.y;
-            te.Z = key.z;
-
-            TagNodeCompound tree = te.BuildTree() as TagNodeCompound;
-
-            _tileEntities.Add(tree);
-            _tileEntityTable[key] = tree;
+        TileEntity te = TileEntityFactory.Create(info.TileEntityName);
+        if(te == null) {
+            throw new UnknownTileEntityException("The TileEntity type '" + info.TileEntityName + "' has not been registered with the TileEntityFactory.");
         }
 
-        public void CreateTileEntity (int x, int y, int z) {
-            BlockInfoEx info = BlockInfo.BlockTable[_blocks[x, y, z]] as BlockInfoEx;
-            if (info == null) {
-                throw new InvalidOperationException("The given block is of a type that does not support TileEntities.");
-            }
+        BlockKey key = (TranslateCoordinates != null)
+            ? TranslateCoordinates(x, y, z)
+            : new BlockKey(x, y, z);
 
-            TileEntity te = TileEntityFactory.Create(info.TileEntityName);
-            if (te == null) {
-                throw new UnknownTileEntityException("The TileEntity type '" + info.TileEntityName + "' has not been registered with the TileEntityFactory.");
-            }
+        TagNodeCompound oldte;
 
-            BlockKey key = (TranslateCoordinates != null)
-                ? TranslateCoordinates(x, y, z)
-                : new BlockKey(x, y, z);
-
-            TagNodeCompound oldte;
-
-            if (_tileEntityTable.TryGetValue(key, out oldte)) {
-                _tileEntities.Remove(oldte);
-            }
-
-            te.X = key.x;
-            te.Y = key.y;
-            te.Z = key.z;
-
-            TagNodeCompound tree = te.BuildTree() as TagNodeCompound;
-
-            _tileEntities.Add(tree);
-            _tileEntityTable[key] = tree;
+        if(this.tileEntityTable.TryGetValue(key, out oldte)) {
+            this.tileEntities.Remove(oldte);
         }
 
-        public void ClearTileEntity (int x, int y, int z) {
-            BlockKey key = (TranslateCoordinates != null)
-                ? TranslateCoordinates(x, y, z)
-                : new BlockKey(x, y, z);
+        te.X = key.x;
+        te.Y = key.y;
+        te.Z = key.z;
 
-            TagNodeCompound te;
+        TagNodeCompound tree = te.BuildTree() as TagNodeCompound;
 
-            if (!_tileEntityTable.TryGetValue(key, out te)) {
-                return;
-            }
+        this.tileEntities.Add(tree);
+        this.tileEntityTable[key] = tree;
+    }
 
-            _tileEntities.Remove(te);
-            _tileEntityTable.Remove(key);
+    public void ClearTileEntity(int x, int y, int z) {
+        BlockKey key = (TranslateCoordinates != null)
+            ? TranslateCoordinates(x, y, z)
+            : new BlockKey(x, y, z);
+
+        TagNodeCompound te;
+
+        if(!this.tileEntityTable.TryGetValue(key, out te)) {
+            return;
         }
 
-        private void BuildTileEntityCache () {
-            _tileEntityTable = new Dictionary<BlockKey, TagNodeCompound>();
+        this.tileEntities.Remove(te);
+        this.tileEntityTable.Remove(key);
+    }
 
-            foreach (TagNodeCompound te in _tileEntities) {
-                int tex = te["x"].ToTagInt();
-                int tey = te["y"].ToTagInt();
-                int tez = te["z"].ToTagInt();
+    private void BuildTileEntityCache() {
+        this.tileEntityTable = new Dictionary<BlockKey, TagNodeCompound>();
 
-                BlockKey key = new BlockKey(tex, tey, tez);
-                _tileEntityTable[key] = te;
-            }
+        foreach(TagNodeCompound te in this.tileEntities) {
+            int tex = te["x"].ToTagInt();
+            int tey = te["y"].ToTagInt();
+            int tez = te["z"].ToTagInt();
+
+            BlockKey key = new BlockKey(tex, tey, tez);
+            this.tileEntityTable[key] = te;
         }
     }
 }

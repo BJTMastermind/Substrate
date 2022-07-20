@@ -1,9 +1,4 @@
-﻿using System;
-using Substrate;
-using Substrate.Core;
-using Substrate.Nbt;
-
-// This example will reset and rebuild the lighting (heightmap, block light,
+﻿// This example will reset and rebuild the lighting (heightmap, block light,
 // skylight) for all chunks in a map.
 
 // Note: If it looks silly to reset the lighting, loading and saving
@@ -12,53 +7,58 @@ using Substrate.Nbt;
 // before rebuilding the light in any chunks.  That's just how the
 // algorithms work, in order to limit the number of chunks that must
 // be loaded at any given time.
+namespace Relight;
 
-namespace Relight {
-    class Program {
-        static void Main (string[] args) {
-            if (args.Length < 1) {
-                Console.WriteLine("You must specify a target directory");
-                return;
-            }
-            string dest = args[0];
+using Substrate;
+using Substrate.Core;
+using Substrate.Nbt;
 
-            NbtVerifier.InvalidTagType += (e) => {
-                throw new Exception("Invalid Tag Type: " + e.TagName + " [" + e.Tag + "]");
-            };
-            NbtVerifier.InvalidTagValue += (e) => {
-                throw new Exception("Invalid Tag Value: " + e.TagName + " [" + e.Tag + "]");
-            };
-            NbtVerifier.MissingTag += (e) => {
-                throw new Exception("Missing Tag: " + e.TagName);
-            };
+class Program {
+    static void Main(string[] args) {
+        if(args.Length < 1) {
+            Console.WriteLine("You must specify a target directory");
+            return;
+        }
+        string dest = args[0];
 
-            // Opening an NbtWorld will try to autodetect if a world is Alpha-style or Beta-style
-            NbtWorld world = NbtWorld.Open(dest);
+        NbtVerifier.InvalidTagType += (e) => {
+            throw new Exception("Invalid Tag Type: " + e.TagName + " [" + e.Tag + "]");
+        };
 
-            // Grab a generic chunk manager reference
-            IChunkManager cm = world.GetChunkManager();
+        NbtVerifier.InvalidTagValue += (e) => {
+            throw new Exception("Invalid Tag Value: " + e.TagName + " [" + e.Tag + "]");
+        };
 
-            // First blank out all of the lighting in all of the chunks
-            foreach (ChunkRef chunk in cm) {
-                chunk.Blocks.RebuildHeightMap();
-                chunk.Blocks.ResetBlockLight();
-                chunk.Blocks.ResetSkyLight();
+        NbtVerifier.MissingTag += (e) => {
+            throw new Exception("Missing Tag: " + e.TagName);
+        };
 
-                cm.Save();
+        // Opening an NbtWorld will try to autodetect if a world is Alpha-style or Beta-style
+        NbtWorld world = NbtWorld.Open(dest);
 
-                Console.WriteLine("Reset Chunk {0},{1}", chunk.X, chunk.Z);
-            }
+        // Grab a generic chunk manager reference
+        IChunkManager cm = world.GetChunkManager();
 
-            // In a separate pass, reconstruct the light
-            foreach (ChunkRef chunk in cm) {
-                chunk.Blocks.RebuildBlockLight();
-                chunk.Blocks.RebuildSkyLight();
+        // First blank out all of the lighting in all of the chunks
+        foreach(ChunkRef chunk in cm) {
+            chunk.Blocks.RebuildHeightMap();
+            chunk.Blocks.ResetBlockLight();
+            chunk.Blocks.ResetSkyLight();
 
-                // Save the chunk to disk so it doesn't hang around in RAM
-                cm.Save();
+            cm.Save();
 
-                Console.WriteLine("Lit Chunk {0},{1}", chunk.X, chunk.Z);
-            }
+            Console.WriteLine("Reset Chunk {0},{1}", chunk.X, chunk.Z);
+        }
+
+        // In a separate pass, reconstruct the light
+        foreach(ChunkRef chunk in cm) {
+            chunk.Blocks.RebuildBlockLight();
+            chunk.Blocks.RebuildSkyLight();
+
+            // Save the chunk to disk so it doesn't hang around in RAM
+            cm.Save();
+
+            Console.WriteLine("Lit Chunk {0},{1}", chunk.X, chunk.Z);
         }
     }
 }

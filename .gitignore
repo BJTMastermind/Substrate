@@ -1,8 +1,9 @@
+# Ignore Directories.
+**/Release/*
 **/Debug/*
 **/bin/*
 **/obj/*
-*.suo
-SubstrateCS/Release/
-*.sdf
-*.user
+**/TestResults/*
+
+# Ignore File Types.
 *.sh

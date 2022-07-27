@@ -10,8 +10,9 @@ using IO = System.IO;
 /// Represents an Anvil-compatible (Release 1.2 or higher) Minecraft world.
 /// </summary>
 public class AnvilWorld : NbtWorld {
-    private const string _REGION_DIR = "region";
-    private const string _PLAYER_DIR = "players";
+    private const string REGION_DIR = "region";
+    private const string PLAYER_DIR_OLD = "players";
+    private const string PLAYER_DIR_1_7_6_PLUS = "playerdata";
     private string levelFile = "level.dat";
 
     private Level level;
@@ -255,7 +256,11 @@ public class AnvilWorld : NbtWorld {
             return this.playerMan;
         }
 
-        string path = IO.Path.Combine(Path, _PLAYER_DIR);
+        string path = IO.Path.Combine(Path, PLAYER_DIR_OLD);
+
+        if(!Directory.Exists(path)) {
+            path = IO.Path.Combine(Path, PLAYER_DIR_1_7_6_PLUS);
+        }
 
         this.playerMan = new PlayerManager(path);
         return this.playerMan;
@@ -282,10 +287,10 @@ public class AnvilWorld : NbtWorld {
     private void OpenDimension(string dim) {
         string path = Path;
         if(String.IsNullOrEmpty(dim)) {
-            path = IO.Path.Combine(path, _REGION_DIR);
+            path = IO.Path.Combine(path, REGION_DIR);
         } else {
             path = IO.Path.Combine(path, dim);
-            path = IO.Path.Combine(path, _REGION_DIR);
+            path = IO.Path.Combine(path, REGION_DIR);
         }
 
         if(!Directory.Exists(path)) {
@@ -334,7 +339,7 @@ public class AnvilWorld : NbtWorld {
             Directory.CreateDirectory(path);
         }
 
-        string regpath = IO.Path.Combine(path, _REGION_DIR);
+        string regpath = IO.Path.Combine(path, REGION_DIR);
         if(!Directory.Exists(regpath)) {
             Directory.CreateDirectory(regpath);
         }
@@ -370,7 +375,7 @@ public class AnvilWorld : NbtWorld {
                 return;
             }
 
-            string regPath = IO.Path.Combine(e.Path, _REGION_DIR);
+            string regPath = IO.Path.Combine(e.Path, REGION_DIR);
             if(!Directory.Exists(regPath)) {
                 return;
             }

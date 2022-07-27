@@ -42,7 +42,6 @@ public class AlphaChunkManager : IChunkManager, IEnumerable<ChunkRef> {
             if(nbtstr == null) {
                 return null;
             }
-
             return new NbtTree(nbtstr);
         }
     }
@@ -53,10 +52,8 @@ public class AlphaChunkManager : IChunkManager, IEnumerable<ChunkRef> {
             if(zipstr == null) {
                 return false;
             }
-
             tree.WriteTo(zipstr);
         }
-
         return true;
     }
 
@@ -90,7 +87,6 @@ public class AlphaChunkManager : IChunkManager, IEnumerable<ChunkRef> {
         if(!ChunkExists(cx, cz)) {
             return null;
         }
-
         return AlphaChunk.CreateVerified(GetChunkTree(cx, cz));
     }
 
@@ -108,7 +104,6 @@ public class AlphaChunkManager : IChunkManager, IEnumerable<ChunkRef> {
         if(c != null) {
             this.cache[k] = c;
         }
-
         return c;
     }
 
@@ -178,7 +173,6 @@ public class AlphaChunkManager : IChunkManager, IEnumerable<ChunkRef> {
                 }
             }
         }
-
         this.dirty.Clear();
         return saved;
     }
@@ -191,7 +185,6 @@ public class AlphaChunkManager : IChunkManager, IEnumerable<ChunkRef> {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -212,7 +205,6 @@ public class AlphaChunkManager : IChunkManager, IEnumerable<ChunkRef> {
         if(cf == null) {
             return 0;
         }
-
         return cf.GetModifiedTime();
     }
 
@@ -265,7 +257,6 @@ public class AlphaChunkManager : IChunkManager, IEnumerable<ChunkRef> {
             foreach(string file in files) {
                 this.sld.Enqueue(file);
             }
-
             return true;
         }
 
@@ -297,7 +288,6 @@ public class AlphaChunkManager : IChunkManager, IEnumerable<ChunkRef> {
                     this.chunks.Enqueue(cref);
                 }
             }
-
             return true;
         }
 
@@ -307,7 +297,6 @@ public class AlphaChunkManager : IChunkManager, IEnumerable<ChunkRef> {
                     return false;
                 }
             }
-
             this.curchunk = this.chunks.Dequeue();
             return true;
         }

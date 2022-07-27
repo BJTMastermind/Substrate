@@ -10,8 +10,8 @@ using IO = System.IO;
 /// Represents a Beta-compatible (Beta 1.3 or higher) Minecraft world.
 /// </summary>
 public class BetaWorld : NbtWorld {
-    private const string _REGION_DIR = "region";
-    private const string _PLAYER_DIR = "players";
+    private const string REGION_DIR = "region";
+    private const string PLAYER_DIR = "players";
     private string levelFile = "level.dat";
 
     private Level level;
@@ -257,7 +257,7 @@ public class BetaWorld : NbtWorld {
             return this.playerMan;
         }
 
-        string path = IO.Path.Combine(Path, _PLAYER_DIR);
+        string path = IO.Path.Combine(Path, PLAYER_DIR);
 
         this.playerMan = new PlayerManager(path);
         return this.playerMan;
@@ -284,10 +284,10 @@ public class BetaWorld : NbtWorld {
     private void OpenDimension(string dim) {
         string path = Path;
         if(String.IsNullOrEmpty(dim)) {
-            path = IO.Path.Combine(path, _REGION_DIR);
+            path = IO.Path.Combine(path, REGION_DIR);
         } else {
             path = IO.Path.Combine(path, dim);
-            path = IO.Path.Combine(path, _REGION_DIR);
+            path = IO.Path.Combine(path, REGION_DIR);
         }
 
         if(!Directory.Exists(path)) {
@@ -336,7 +336,7 @@ public class BetaWorld : NbtWorld {
             throw new DirectoryNotFoundException("Directory '" + path + "' not found");
         }
 
-        string regpath = IO.Path.Combine(path, _REGION_DIR);
+        string regpath = IO.Path.Combine(path, REGION_DIR);
         if(!Directory.Exists(regpath)) {
             Directory.CreateDirectory(regpath);
         }
@@ -373,7 +373,7 @@ public class BetaWorld : NbtWorld {
                 return;
             }
 
-            string regPath = IO.Path.Combine(e.Path, _REGION_DIR);
+            string regPath = IO.Path.Combine(e.Path, REGION_DIR);
             if(!Directory.Exists(regPath)) {
                 return;
             }

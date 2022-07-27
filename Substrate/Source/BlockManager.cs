@@ -216,7 +216,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null) {
             return 0;
         }
-
         return this.cache.Blocks.GetID(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask);
     }
 
@@ -258,7 +257,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return;
         }
-
         this.cache.Blocks.SetBlock(x, y, z, block);
     }
 
@@ -268,7 +266,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null) {
             return 0;
         }
-
         return this.cache.Blocks.GetData(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask);
     }
 
@@ -278,7 +275,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return;
         }
-
         this.cache.Blocks.SetData(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask, data);
     }
     #endregion
@@ -299,7 +295,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return;
         }
-
         this.cache.Blocks.SetBlock(x, y, z, block);
     }
 
@@ -309,7 +304,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null) {
             return 0;
         }
-
         return this.cache.Blocks.GetBlockLight(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask);
     }
 
@@ -319,7 +313,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null) {
             return 0;
         }
-
         return this.cache.Blocks.GetSkyLight(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask);
     }
 
@@ -329,7 +322,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return;
         }
-
         this.cache.Blocks.SetBlockLight(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask, light);
     }
 
@@ -339,7 +331,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return;
         }
-
         this.cache.Blocks.SetSkyLight(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask, light);
     }
 
@@ -349,7 +340,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, 0, z)) {
             return 0;
         }
-
         return this.cache.Blocks.GetHeight(x & this.chunkXMask, z & this.chunkZMask);
     }
 
@@ -359,7 +349,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, 0, z)) {
             return;
         }
-
         this.cache.Blocks.SetHeight(x & this.chunkXMask, z & this.chunkZMask, height);
     }
 
@@ -369,7 +358,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return;
         }
-
         this.cache.Blocks.UpdateBlockLight(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask);
     }
 
@@ -379,7 +367,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return;
         }
-
         this.cache.Blocks.UpdateBlockLight(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask);
     }
     #endregion
@@ -399,7 +386,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return;
         }
-
         this.cache.Blocks.SetBlock(x, y, z, block);
     }
 
@@ -409,7 +395,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return null;
         }
-
         return this.cache.Blocks.GetTileEntity(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask);
     }
 
@@ -419,7 +404,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return;
         }
-
         this.cache.Blocks.SetTileEntity(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask, te);
     }
 
@@ -429,7 +413,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return;
         }
-
         this.cache.Blocks.CreateTileEntity(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask);
     }
 
@@ -439,7 +422,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return;
         }
-
         this.cache.Blocks.ClearTileEntity(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask);
     }
     #endregion
@@ -459,7 +441,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return;
         }
-
         this.cache.Blocks.SetBlock(x, y, z, block);
     }
 
@@ -469,7 +450,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return 0;
         }
-
         return this.cache.Blocks.GetTileTickValue(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask);
     }
 
@@ -479,7 +459,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return;
         }
-
         this.cache.Blocks.SetTileTickValue(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask, tickValue);
     }
 
@@ -489,7 +468,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return null;
         }
-
         return this.cache.Blocks.GetTileTick(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask);
     }
 
@@ -499,7 +477,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return;
         }
-
         this.cache.Blocks.SetTileTick(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask, te);
     }
 
@@ -509,7 +486,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return;
         }
-
         this.cache.Blocks.CreateTileTick(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask);
     }
 
@@ -519,7 +495,6 @@ public abstract class BlockManager : IVersion10BlockManager, IBlockManager {
         if(this.cache == null || !Check(x, y, z)) {
             return;
         }
-
         this.cache.Blocks.ClearTileTick(x & this.chunkXMask, y & this.chunkYMask, z & this.chunkZMask);
     }
     #endregion

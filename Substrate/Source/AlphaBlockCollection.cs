@@ -68,13 +68,8 @@ public class AlphaBlockCollection : IBoundedAlphaBlockCollection, IBoundedActive
     /// <param name="skyLight">An array of sky light nibbles.</param>
     /// <param name="heightMap">An array of height map values.</param>
     /// <param name="tileEntities">A list of tile entities corresponding to blocks in this collection.</param>
-    public AlphaBlockCollection(IDataArray3 blocks,
-        IDataArray3 data,
-        IDataArray3 blockLight,
-        IDataArray3 skyLight,
-        IDataArray2 heightMap,
-        TagNodeList tileEntities)
-        : this(blocks, data, blockLight, skyLight, heightMap, tileEntities, null) { }
+    public AlphaBlockCollection(IDataArray3 blocks, IDataArray3 data, IDataArray3 blockLight, IDataArray3 skyLight,
+      IDataArray2 heightMap, TagNodeList tileEntities) : this(blocks, data, blockLight, skyLight, heightMap, tileEntities, null) { }
 
     /// <summary>
     /// Creates a new <see cref="AlphaBlockCollection"/> overlay on top of Alpha-specific units of data.

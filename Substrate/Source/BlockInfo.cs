@@ -710,7 +710,7 @@ public class BlockInfo {
     public static BlockInfo CakeBlock;
     public static BlockInfo RedstoneRepeater;
     public static BlockInfo RedstoneRepeaterOn;
-    // public static BlockInfo LockedChest;
+    // public static BlockInfoEx LockedChest;
     public static BlockInfo StainedGlass;
     public static BlockInfo Trapdoor;
     public static BlockInfo SilverfishStone;
